@@ -1,4 +1,4 @@
-#ifndef CDSTATE_Hf
+#ifndef CDSTATE_H
 #define CDSTATE_H
 
 #include <iostream>

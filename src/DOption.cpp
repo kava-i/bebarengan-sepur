@@ -1,8 +1,8 @@
 #include "CDOption.hpp"
 
-CDOption::CDOption(std::string sID, std::string sText, std::string sTarget, bool active)
+CDOption::CDOption(size_t ID, std::string sText, std::string sTarget, bool active)
 {
-    m_sID = sID;
+    m_ID = ID;
     m_sText = sText;
     m_sTarget = sTarget;
     m_active = active; 
@@ -10,4 +10,5 @@ CDOption::CDOption(std::string sID, std::string sText, std::string sTarget, bool
 
 // *** GETTER *** //
 std::string CDOption::getText() { return m_sText; }
+std::string CDOption::getTargetState() { return m_sTarget; }
 

@@ -15,13 +15,17 @@
 class CCommandParser
 {
 public:
+    typedef std::pair<std::string, std::string> event;
+
+    event parse(std::string sInput, std::string status);
 
     /**
     * parseCommand: parse a command the player enter into an event. 
     * @parameter string (player input)
     * @return CEvent* (Pointer to event created)
     */
-    std::pair<std::string, std::string> parseCommand(std::string sInput);
+    event parseCommand(std::string sInput);
+    event parseDialogCommand(std::string sInput, std::string status);
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include "CCharacter.hpp"
 #include "CCommandParser.hpp"
 #include "json.hpp"
+#include "fuzzy.hpp"
 
 //#include <Python.h>
 
@@ -50,7 +51,9 @@ public:
     void showChars(std::string sType, std::string sIdentifier);
     void goTo(std::string sType, std::string sIdentifier);
     void startDialog(std::string sType, std::string sIdentifier);
+    void callDialog(std::string sType, std::string sIdentifier);
 
+    void callDialogState(std::string dialogStateID);
 
     /*
     //Convert yaml to json
