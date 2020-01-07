@@ -25,8 +25,9 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
 {
     //Create regular expressions for different command the player might have choosen
     std::regex showExits("((S|s)how).*exits");
-    std::regex goTo("(G|g)(o to) (.*)");
     std::regex showCharacters("(S|s)how.*(P|p)eople.*");
+    std::regex showDescription("(S|s)how.*(D|d)escription.*");
+    std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
     //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
     //std::regex showSolved("(((Z|z)eig(e?) )?.*(G|g)elöste(n?) (Q|q)uests)");
@@ -46,6 +47,10 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
     //Show characters:
     else if(std::regex_match(sInput, showCharacters))
         newEvent = std::make_pair("showChars", "");
+
+    //Show description:
+    else if(std::regex_match(sInput, showDescription))
+        newEvent = std::make_pair("showDesc", "");
 
     //Change room
     else if(std::regex_search(sInput, m, goTo))

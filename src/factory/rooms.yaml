@@ -1,49 +1,52 @@
 ---
 
  - name: "Compartment A"
-   id: "compartment-a"
-   description: "An empty compartment. Empty, but one mysterious passenger: Parsen"  
+   id: compartment-a
+   description: "The compartment is empty. Empty, but one mysterious passenger: Parsen"  
+   entry: "You enter your appartment.\n"
    exits:
-     trainCorridor: "Corridor"
+     trainCorridor: Corridor
    characters:
      - name: "Parsen"
-       id: "parsen"
+       id: parsen
        dialog: parsenDialog
 
  - name: "Compartment B"
-   id: "compartment-b"
-   description: "Another compartment. To grumpy women are sitting together, playing cards."  
+   id: compartment-b
+   description: "Another compartment. Two grumpy women are sitting together, playing cards."  
    exits:
-     trainCorridor: "Corridor"
+     trainCorridor: Corridor
    characters:
-     - name: "Old woman in pink"
-       id: "pink_woman"
+     - name: Old woman in pink
+       id: pink_woman
      - name: "Old woman in blue"
-       id: "blue_woman"
+       id: blue_woman
 
  - name: "Compartment C"
-   id: "compartment-c"
+   id: compartment-c
    description: "An empty compartment."
    exits:
-     trainCorridor: "Corridor"
+     trainCorridor: Corridor
    characters:
 
  - name: "Compartment D"
-   id: "compartment-d"
+   id: Compartment-d
    description: "An empty compartment. Its cold here "  
    exits:
-     trainCorridor: "Corridor"
+     trainCorridor: Corridor
    characters:
 
  - name: "Corridor"
-   id: "trainCorridor"
-   description: "You enter the corridor of the train. A man seems to by pissing between compartment B and C."
+   id: trainCorridor
+   description: "The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin."
+   entry: "You leave the compartment and enter the corridor of the train.\n"
    exits: 
-     compartment-a: "Compartment A"
-     compartment-b: "Compartment B"
-     compartment-c: "Compartment C"
-     compartment-d: "Compartment D"
+     compartment-a: Compartment A
+     compartment-b: Compartment B
+     compartment-c: Compartment C
+     compartment-d: Compartment D
    characters:
      - name: "Pissing man"
-       id: "pissing_man"
+       description: "A man is standing shy between compartment B and C and seems to be having a piss."
+       id: pissing_man
    

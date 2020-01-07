@@ -49,6 +49,7 @@ public:
     // *** EVENTHANDLERS *** // 
     void showExits(std::string sType, std::string sIdentifier);
     void showChars(std::string sType, std::string sIdentifier);
+    void showDesc(std::string sType, std::string sIdentifier);
     void goTo(std::string sType, std::string sIdentifier);
     void startDialog(std::string sType, std::string sIdentifier);
     void callDialog(std::string sType, std::string sIdentifier);

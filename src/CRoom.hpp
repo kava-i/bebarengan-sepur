@@ -10,17 +10,19 @@ class CRoom
 private:
     std::string m_sName;
     std::string m_sDescription;
+    std::string m_sEntry;
     
     typedef std::map<std::string, std::string> objectmap;
     objectmap m_exists;
     objectmap m_characters;
 
 public:
-    CRoom(std::string sName, std::string sDescription, objectmap exits, objectmap characters);
+    CRoom(std::string sName, std::string sDescription, std::string sEntry, objectmap exits, objectmap characters);
 
     // *** getter *** // 
     std::string getName();
     std::string getDescription();
+    std::string getEntry();
     objectmap& getExtits();
     objectmap& getCharacters();
 };

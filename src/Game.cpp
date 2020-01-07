@@ -10,6 +10,7 @@ void CGame::worldFactory()
     //Add eventhandlers to eventmanager 
     m_eventmanager["showExits"] = {&CGame::showExits};
     m_eventmanager["showChars"] = {&CGame::showChars};
+    m_eventmanager["showDesc"]  = {&CGame::showDesc};
     m_eventmanager["goTo"]      = {&CGame::goTo};
     m_eventmanager["talkTo"]    = {&CGame::startDialog};
     m_eventmanager["dialog"]    = {&CGame::callDialog};
@@ -29,7 +30,7 @@ void CGame::roomFactory()
         objectmap mapChars = characterFactory(j_room["characters"]);
 
         //Create new room
-        CRoom* room = new CRoom(j_room["name"], j_room["description"], j_room["exits"], mapChars); 
+        CRoom* room = new CRoom(j_room["name"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
         m_rooms[j_room["id"]] = room;
     }
 }
@@ -46,7 +47,7 @@ std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_char
         else
             newDialog = dialogFactory("defaultDialog");
 
-        CCharacter* character = new CCharacter(j_char["name"], newDialog);
+        CCharacter* character = new CCharacter(j_char["name"],j_char.value("description",""), newDialog);
         m_characters[j_char["id"]] = character;
         mapChars[j_char["id"]] = j_char["name"];
     }
@@ -56,8 +57,6 @@ std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_char
 
 std::map<std::string, CDState*> CGame::dialogFactory(std::string sPath)
 {
-    std::cout << "Parsing dialog...\n";
-
     //Read json creating all rooms
     std::ifstream read("factory/"+sPath+".json");
     nlohmann::json j_states;
@@ -114,6 +113,7 @@ void CGame::showExits(std::string sType, std::string sIdentifier) {
         counter++;
     }
 }
+
 void CGame::showChars(std::string sType, std::string sIdentifier) {
     m_player.appendPrint("Characters: \n");
     size_t counter=1;
@@ -122,13 +122,21 @@ void CGame::showChars(std::string sType, std::string sIdentifier) {
         counter++;
     }
 }
+
+void CGame::showDesc(std::string sType, std::string sIdentifier) {
+    m_player.appendPrint(m_player.getRoom()->getDescription());
+}
+
 void CGame::goTo(std::string sType, std::string sIdentifier) {
 
     for(auto it : m_player.getRoom()->getExtits())
     {
         if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2)
         {
+            m_player.appendPrint(m_rooms[it.first]->getEntry());
             m_player.appendPrint(m_rooms[it.first]->getDescription() + "\n");
+            for(auto jt : m_rooms[it.first]->getCharacters())
+                m_player.appendPrint(m_characters[jt.first]->getDescription());
             m_player.setRoom(m_rooms[it.first]);
             return;
         }

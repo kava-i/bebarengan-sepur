@@ -10,16 +10,18 @@ class CCharacter
 { 
 private:
     std::string m_sName;
+    std::string m_sDescription;
 
     //Dialog
     typedef std::map<std::string, CDState*> dialog;
     dialog m_dialog;
 
 public:
-    CCharacter(std::string sName, dialog newDialog);
+    CCharacter(std::string sName, std::string sDescription, dialog newDialog);
 
     // *** GETTER *** // 
     std::string getName();
+    std::string getDescription();
     dialog getDialog();
 
     // *** SETTER *** //
