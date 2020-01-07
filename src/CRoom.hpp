@@ -1,12 +1,28 @@
+#ifndef CROOM_H
+#define CROOM_H
+
+#include <iostream>
+#include <string>
+#include <map>
+
 class CRoom
 { 
 private:
     std::string m_sName;
     std::string m_sDescription;
     
-    std::map<std::string, CRoom*> m_mapOfExists;
+    typedef std::map<std::string, std::string> objectmap;
+    objectmap m_exists;
+    objectmap m_characters;
 
 public:
-    CRoom CRoom(std::string sName, std::string sDescription)
+    CRoom(std::string sName, std::string sDescription, objectmap exits, objectmap characters);
 
+    // *** getter *** // 
+    std::string getName();
+    std::string getDescription();
+    objectmap& getExtits();
+    objectmap& getCharacters();
+};
     
+#endif
