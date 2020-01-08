@@ -1,5 +1,6 @@
 #include "CGame.hpp"
 
+// ****************** FACTORYS ********************** //
 void CGame::worldFactory()
 {
     //Create rooms
@@ -8,12 +9,11 @@ void CGame::worldFactory()
     m_player.setRoom(m_rooms["compartment-a"]);
 
     //Add eventhandlers to eventmanager 
-    m_eventmanager["showExits"] = {&CGame::showExits};
-    m_eventmanager["showChars"] = {&CGame::showChars};
-    m_eventmanager["showDesc"]  = {&CGame::showDesc};
+    m_eventmanager["show"]      = {&CGame::show};
     m_eventmanager["goTo"]      = {&CGame::goTo};
     m_eventmanager["talkTo"]    = {&CGame::startDialog};
     m_eventmanager["dialog"]    = {&CGame::callDialog};
+    m_eventmanager["error"]     = {&CGame::error};
 }
 
 void CGame::roomFactory()
@@ -82,6 +82,8 @@ std::map<std::string, CDState*> CGame::dialogFactory(std::string sPath)
 }
 
 
+// ****************** FUNCTIONS CALLER ********************** //
+
 std::string CGame::play(std::string sInput)
 {
     //Create parser
@@ -97,105 +99,80 @@ std::string CGame::play(std::string sInput)
     return m_player.getPrint(); 
 }
 
+
+// ****************** EVENTMANAGER ********************** //
+
 void CGame::throw_event(std::pair<std::string, std::string> event)
 {
     if(m_eventmanager.count(event.first) == 0) return;
         
     for(auto it : m_eventmanager[event.first])
-        (this->*it)(event.first, event.second);
+        (this->*it)(event.second);
 }
 
-void CGame::showExits(std::string sType, std::string sIdentifier) {
-    m_player.appendPrint("Exits: \n");
-    size_t counter=1;
-    for(auto it : m_player.getRoom()->getExtits()) {
-        m_player.appendPrint(std::to_string(counter) + ": " + it.second + "\n");
-        counter++;
-    }
+
+// ****************** EVENTHANDLER ********************** //
+
+void CGame::show(std::string sIdentifier) {
+    if(sIdentifier == "exits")
+        m_player.appendPrint(m_player.getRoom()->showExits());
+    else if(sIdentifier == "chars")
+        m_player.appendPrint(m_player.getRoom()->showCharacters());
+    else if(sIdentifier == "room")
+        m_player.appendPrint(m_player.getRoom()->showDescription(m_characters));
 }
 
-void CGame::showChars(std::string sType, std::string sIdentifier) {
-    m_player.appendPrint("Characters: \n");
-    size_t counter=1;
-    for(auto it : m_player.getRoom()->getCharacters()) {
-        m_player.appendPrint(std::to_string(counter) + ": " + it.second + "\n");
-        counter++;
-    }
-}
+void CGame::goTo(std::string sIdentifier) {
 
-void CGame::showDesc(std::string sType, std::string sIdentifier) {
-    m_player.appendPrint(m_player.getRoom()->getDescription());
-}
+    //Get selected room
+    std::string room = getObject(m_player.getRoom()->getExtits(), sIdentifier);
 
-void CGame::goTo(std::string sType, std::string sIdentifier) {
-
-    for(auto it : m_player.getRoom()->getExtits())
-    {
-        if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2)
-        {
-            m_player.appendPrint(m_rooms[it.first]->getEntry());
-            m_player.appendPrint(m_rooms[it.first]->getDescription() + "\n");
-            for(auto jt : m_rooms[it.first]->getCharacters())
-                m_player.appendPrint(m_characters[jt.first]->getDescription());
-            m_player.setRoom(m_rooms[it.first]);
-            return;
-        }
-    }
-
-    m_player.appendPrint("Room not found.\n");
-}
-
-void CGame::startDialog(std::string sType, std::string sIdentifier)
-{
-    dialog dia;
-
-    //Get dialog
-    for(auto it : m_player.getRoom()->getCharacters()) {
-        if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2)
-            dia = m_characters[it.first]->getDialog();
-    }
-    if(dia.size() == 0) {
-        m_player.appendPrint("Character not found");
+    //Check if room was found
+    if(room == "") {
+        m_player.appendPrint("Room/ exit not found");
         return;
     }
 
-    //Update player status
-    m_player.setDialog(dia);
-    
-    //Call dialog state
-    callDialogState("START");
+    //Print description and change players current room
+    m_player.appendPrint(m_rooms[room]->showEntryDescription(m_characters));
+    m_player.setRoom(m_rooms[room]);
 }
 
-void CGame::callDialog(std::string sType, std::string sIdentifier)
+void CGame::startDialog(std::string sIdentifier)
 {
-    dialog dia = m_player.getDialog();
-    std::string status = m_player.getStatus();
-    size_t pos = status.find("/");
-    std::string cur_id  = status.substr(pos+1, status.length()-pos);
-    std::cout << cur_id << "\n";
-    std::string next_id = dia[cur_id]->getOptions()[stoi(sIdentifier)]->getTargetState();
-    callDialogState(next_id);
-}
+    //Get selected character
+    std::string character = getObject(m_player.getRoom()->getCharacters(), sIdentifier);
 
-void CGame::callDialogState(std::string dialogStateID)
-{
-    //Print first text
-    m_player.appendPrint(m_player.getDialog()[dialogStateID]->getText()+"\n");
-
-    if(m_player.getDialog()[dialogStateID]->getOptions().size() == 0)
+    //Check if character was found
+    if(character == "")
     {
-        m_player.appendPrint("Dialog enden.\n\n");
-        m_player.setStatus("standard");
+        m_player.appendPrint("Characters not found");
         return;
     }
 
-    size_t counter = 1;
-    for(auto it : m_player.getDialog()[dialogStateID]->getOptions())
-    {
-        m_player.appendPrint(std::to_string(counter) + ": " + it.second->getText() + "\n");
-        counter++;
+    //Update player status and call dialog state
+    m_player.setDialog(m_characters[character]->getDialog());
+    m_player.callDialogState("START");
+}
+
+void CGame::callDialog(std::string sIdentifier) {
+    m_player.callDialog(sIdentifier);
+}
+
+void CGame::error(std::string sIdentifier) {
+    m_player.appendPrint("This command is unkown.\n");
+}
+
+
+// ****************** VARIOUS FUNCTIONS ********************** //
+
+std::string CGame::getObject(objectmap& mapObjects, std::string sIdentifier)
+{
+    for(auto it : mapObjects) {
+    if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2) 
+        return it.first;
     }
-    m_player.setStatus("dialog/" + dialogStateID);
+    return "";
 }
 
 /*

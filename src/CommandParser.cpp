@@ -26,7 +26,7 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
     //Create regular expressions for different command the player might have choosen
     std::regex showExits("((S|s)how).*exits");
     std::regex showCharacters("(S|s)how.*(P|p)eople.*");
-    std::regex showDescription("(S|s)how.*(D|d)escription.*");
+    std::regex showDescription("(S|s)how.*(R|r)oom.*");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
     //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
@@ -42,15 +42,15 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
 
     //Show exits:
     if(std::regex_match(sInput, showExits))
-        newEvent = std::make_pair("showExits", "");
+        newEvent = std::make_pair("show", "exits");
 
     //Show characters:
     else if(std::regex_match(sInput, showCharacters))
-        newEvent = std::make_pair("showChars", "");
+        newEvent = std::make_pair("show", "chars");
 
     //Show description:
     else if(std::regex_match(sInput, showDescription))
-        newEvent = std::make_pair("showDesc", "");
+        newEvent = std::make_pair("show", "room");
 
     //Change room
     else if(std::regex_search(sInput, m, goTo))
@@ -59,6 +59,9 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
     //Talk to 
     else if(std::regex_search(sInput, m, talkTo))
         newEvent = std::make_pair("talkTo", m[3]);
+
+    else
+        newEvent = std::make_pair("error", "");
 
     return newEvent;
 }

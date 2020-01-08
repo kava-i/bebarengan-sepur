@@ -24,7 +24,7 @@ private:
     bool m_endGame;
 
     typedef std::map<std::string, CDState*> dialog;
-    typedef std::map<std::string, std::vector<void(CGame::*)(std::string, std::string)>>eventmanager; 
+    typedef std::map<std::string, std::vector<void(CGame::*)(std::string)>>eventmanager; 
     eventmanager m_eventmanager;
 
 public: 
@@ -38,7 +38,7 @@ public:
     void worldFactory();
     void roomFactory();
     objectmap characterFactory(nlohmann::json j_characters);
-    dialog dialogFactory(std::string sPath); 
+    dialog    dialogFactory(std::string sPath); 
 
 
     std::string play(std::string sInput);
@@ -47,14 +47,14 @@ public:
     void throw_event(std::pair<std::string, std::string> event);
 
     // *** EVENTHANDLERS *** // 
-    void showExits(std::string sType, std::string sIdentifier);
-    void showChars(std::string sType, std::string sIdentifier);
-    void showDesc(std::string sType, std::string sIdentifier);
-    void goTo(std::string sType, std::string sIdentifier);
-    void startDialog(std::string sType, std::string sIdentifier);
-    void callDialog(std::string sType, std::string sIdentifier);
+    void show       (std::string sIdentifier);
+    void goTo       (std::string sIdentifier);
+    void startDialog(std::string sIdentifier);
+    void callDialog (std::string sIdentifier);
+    void error      (std::string sIdentifier);
 
-    void callDialogState(std::string dialogStateID);
+    // *** various functions *** //
+    std::string getObject(objectmap& mapObjects, std::string sIdentifierr);
 
     /*
     //Convert yaml to json

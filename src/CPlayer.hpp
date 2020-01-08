@@ -36,6 +36,11 @@ public:
     void setStatus(std::string);
     void setDialog(dialog newDialog);
 
+    //*** FUNCTIONS *** // 
+    void callDialog(std::string sPlayerChoice);
+    void callDialogState(std::string sDialogStateID); 
+    void dialogEnd(std::string sDialogStateID);
+
 };
 
 #endif

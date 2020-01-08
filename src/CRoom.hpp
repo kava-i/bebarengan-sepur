@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "CCharacter.hpp"
+#include "fuzzy.hpp"
 
 class CRoom
 { 
@@ -25,6 +27,12 @@ public:
     std::string getEntry();
     objectmap& getExtits();
     objectmap& getCharacters();
+
+    // *** various functions *** //
+    std::string showEntryDescription(std::map<std::string, CCharacter*>& mapChars);
+    std::string showDescription(std::map<std::string, CCharacter*>& mapChars); 
+    std::string showExits();
+    std::string showCharacters();
 };
     
 #endif

@@ -20,7 +20,7 @@
     targetstate: durstlöscher2
 
 - id: durstlöscher2
-  text: "PARSEN Ich sagte, wie schmeckt Zitrone. Der Durstlöscher.\ Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Die fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."
+  text: "PARSEN Ich sagte, wie schmeckt Zitrone. Der Durstlöscher.\n Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."
   options:
   - id: 1 
     text: "Lecker. Echt ein leckerer Durstlöscher. Ich bin Anna. Sehr erfreut."
