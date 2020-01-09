@@ -1,6 +1,8 @@
 ---
 - id: START
-  text: "YOU Darf ich mich vorstellen? \nParsen schaut von seinem Platz auf, schaut dir in die Augen und schweigt."
+  text: "YOU may I introduce myself?\nParsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."
+  altTexts:
+  - "Parsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."
   options:
   - id: 1 
     text: "Blick aufrechthalten und warten."

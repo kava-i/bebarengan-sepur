@@ -5,13 +5,7 @@ int main()
 {
     CGame game;
 
-    std::string sName;
-    std::cout << "Who do you want to play? (Anna, Jan) \n> ";
-    getline(std::cin, sName);
-    if(sName == "Anna") sName = "anna-bronec";
-    if(sName == "Jan")  sName = "jan-van-dick";
-
-
+    std::string sName = "anna-bronec";
 
     //First output
     std::cout << "Anna wakes up in her compartment.\n";

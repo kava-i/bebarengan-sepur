@@ -1,10 +1,11 @@
 #include "CDState.hpp"
 
-CDState::CDState(std::string sID, std::string sText, std::string func, dialogoptions opts, dialog* dia)
+CDState::CDState(std::string sID, std::string sText, std::string func, std::vector<std::string> alternativeTexts, dialogoptions opts, dialog* dia)
 {
     m_sID = sID;
     m_sText = sText;
     m_sFunction = func;
+    m_alternativeTexts = alternativeTexts;
     m_options = opts;
     m_dialog = dia;
 }
@@ -12,6 +13,9 @@ CDState::CDState(std::string sID, std::string sText, std::string func, dialogopt
 // *** GETTER *** //
 std::string CDState::getText() { return m_sText; }
 std::map<int, CDOption*>& CDState::getOptions() { return m_options; }
+
+// *** SETTER *** //
+void CDState::setText(size_t text) { m_sText = m_alternativeTexts[text]; }
 
 // *** FUNCTIONS *** // 
 
@@ -44,20 +48,30 @@ std::string CDState::parsen1()
 {
     std::cout << "called parsen1() \n";
     std::string sOutput = standard();
-    addDialogOption("START", -1);
-    deleteDialogOption("START", 1);
-    m_sFunction = "standard";
+    addDialogOption("START", -1);       //Add new option (4)
+    deleteDialogOption("START", 1);     //Delete old option (1)
+    changeStateText("START", 0);        //Change text (0)
+    m_sFunction = "standard";           
     return sOutput;
 }
 
+void CDState::changeStateText(std::string sStateID, size_t text) {
+    (*m_dialog)["START"]->setText(text);
+}
 void CDState::addDialogOption(std::string sStateID, size_t optID) {
     (*m_dialog)["START"]->getOptions()[(*m_dialog)["START"]->numOptions()+1] = (*m_dialog)["START"]->getOptions()[-1];
 }
 
 void CDState::deleteDialogOption(std::string sStateID, size_t optID) {
     (*m_dialog)["START"]->getOptions().erase(optID);
+
+    for(size_t i=optID+1; i<(*m_dialog)["START"]->numOptions()+2; i++)
+    {
+        auto nodeHandler = (*m_dialog)["START"]->getOptions().extract(i);
+        nodeHandler.key() = i-1;
+        (*m_dialog)["START"]->getOptions().insert(std::move(nodeHandler));
+    }
 } 
-     
 
 size_t CDState::numOptions()
 {

@@ -81,11 +81,14 @@ std::map<std::string, CDState*>* CGame::dialogFactory(std::string sPath)
         if(j_state.count("options") != 0)
         {
             for(auto j_opt : j_state["options"])
-                options[j_opt["id"]] = new CDOption (j_opt["id"], j_opt["text"], j_opt["targetstate"], j_opt.value("active", false));
+                options[j_opt["id"]] = new CDOption (j_opt["text"], j_opt["targetstate"]);
         }
 
         // *** parse state *** //
-        (*newDialog)[j_state["id"]] = new CDState(j_state["id"], j_state["text"], j_state.value("function", "standard"), options, newDialog);
+
+        std::vector<std::string> altTexts;
+        if(j_state.count("altTexts") > 0) altTexts = j_state["altTexts"].get<std::vector<std::string>>();
+        (*newDialog)[j_state["id"]] = new CDState(j_state["id"], j_state["text"], j_state.value("function", "standard"), altTexts, options, newDialog);
     }
 
     return newDialog;
