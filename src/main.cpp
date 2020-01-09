@@ -5,7 +5,13 @@ int main()
 {
     CGame game;
 
-    game.worldFactory();
+    std::string sName;
+    std::cout << "Who do you want to play? (Anna, Jan) \n> ";
+    getline(std::cin, sName);
+    if(sName == "Anna") sName = "anna-bronec";
+    if(sName == "Jan")  sName = "jan-van-dick";
+
+
 
     //First output
     std::cout << "Anna wakes up in her compartment.\n";
@@ -19,8 +25,17 @@ int main()
 
         if(sInput == ":q")
             break;
+        else if(sInput == "change character")
+        {
+            std::cout << "Who do you want to play? (Anna, Jan) \n> ";
+            getline(std::cin, sName);
+            if(sName == "Anna") sName = "anna-bronec";
+            if(sName == "Jan")  sName = "jan-van-dick";
+            continue;
+        }
 
-        std::cout << game.play(sInput) << "\n";
+
+        std::cout << game.play(sInput, sName) << "\n";
     }
 
 

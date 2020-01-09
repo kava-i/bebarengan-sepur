@@ -1,12 +1,19 @@
 #include "CGame.hpp"
 
+
+CGame::CGame() {
+    worldFactory();
+}
+
 // ****************** FACTORYS ********************** //
 void CGame::worldFactory()
 {
     //Create rooms
+    CDState::initializeFunctions();
     roomFactory();
 
-    m_player.setRoom(m_rooms["compartment-a"]);
+    //Create players
+    playerFactory();
 
     //Add eventhandlers to eventmanager 
     m_eventmanager["show"]      = {&CGame::show};
@@ -26,6 +33,7 @@ void CGame::roomFactory()
     
     for(auto j_room : j_rooms )
     {
+        std::cout << "Parsing " << j_room["name"] << "...\n";
         //Parse characters 
         objectmap mapChars = characterFactory(j_room["characters"]);
 
@@ -40,8 +48,9 @@ std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_char
     objectmap mapChars;
     for(auto j_char : j_characters)
     {
+        std::cout << "Parsing " << j_char["name"] << "...\n";
         //Create dialog 
-        dialog newDialog;
+        dialog* newDialog = new dialog;
         if(j_char.count("dialog") > 0)
             newDialog = dialogFactory(j_char["dialog"]); 
         else
@@ -55,7 +64,7 @@ std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_char
     return mapChars;
 }
 
-std::map<std::string, CDState*> CGame::dialogFactory(std::string sPath)
+std::map<std::string, CDState*>* CGame::dialogFactory(std::string sPath)
 {
     //Read json creating all rooms
     std::ifstream read("factory/"+sPath+".json");
@@ -63,11 +72,12 @@ std::map<std::string, CDState*> CGame::dialogFactory(std::string sPath)
     read >> j_states;
     read.close();
 
-    dialog newDialog;
+    std::cout << "Parsing dialog...\n";
+    dialog* newDialog = new dialog;
     for(auto j_state : j_states)
     {
         // *** parse options *** //
-        std::map<size_t, CDOption*> options;
+        std::map<int, CDOption*> options;
         if(j_state.count("options") != 0)
         {
             for(auto j_opt : j_state["options"])
@@ -75,28 +85,47 @@ std::map<std::string, CDState*> CGame::dialogFactory(std::string sPath)
         }
 
         // *** parse state *** //
-        newDialog[j_state["id"]] = new CDState(j_state["id"], j_state["text"], options);
+        (*newDialog)[j_state["id"]] = new CDState(j_state["id"], j_state["text"], j_state.value("function", "standard"), options, newDialog);
     }
 
     return newDialog;
 }
 
+void CGame::playerFactory()
+{
+    //Read json creating all rooms
+    std::ifstream read("factory/players.json");
+    nlohmann::json j_players;
+    read >> j_players;
+    read.close();
+
+    for(auto j_player : j_players)
+    {
+        CPlayer* player = new CPlayer(j_player["name"], j_player["id"], m_rooms[j_player["room"]]);
+        m_players[j_player["id"]] = player;
+    }
+}
+
+
 
 // ****************** FUNCTIONS CALLER ********************** //
 
-std::string CGame::play(std::string sInput)
+std::string CGame::play(std::string sInput, std::string sPlayerID)
 {
     //Create parser
     CCommandParser parser;
-    m_player.setPrint("");
+
+    //Create player
+    m_curPlayer = m_players[sPlayerID];
+    m_curPlayer->setPrint("");
 
     //Parse command and create event
-    std::pair<std::string, std::string> event = parser.parse(sInput, m_player.getStatus());
+    std::pair<std::string, std::string> event = parser.parse(sInput, m_curPlayer->getStatus());
 
     //Throw event and delete afterwards
     throw_event(event);
 
-    return m_player.getPrint(); 
+    return m_curPlayer->getPrint(); 
 }
 
 
@@ -115,52 +144,54 @@ void CGame::throw_event(std::pair<std::string, std::string> event)
 
 void CGame::show(std::string sIdentifier) {
     if(sIdentifier == "exits")
-        m_player.appendPrint(m_player.getRoom()->showExits());
+        m_curPlayer->appendPrint(m_curPlayer->getRoom()->showExits());
     else if(sIdentifier == "chars")
-        m_player.appendPrint(m_player.getRoom()->showCharacters());
+        m_curPlayer->appendPrint(m_curPlayer->getRoom()->showCharacters());
     else if(sIdentifier == "room")
-        m_player.appendPrint(m_player.getRoom()->showDescription(m_characters));
+        m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDescription(m_characters));
+    else if(sIdentifier == "stats")
+        m_curPlayer->appendPrint(m_curPlayer->showStats());
 }
 
 void CGame::goTo(std::string sIdentifier) {
 
     //Get selected room
-    std::string room = getObject(m_player.getRoom()->getExtits(), sIdentifier);
+    std::string room = getObject(m_curPlayer->getRoom()->getExtits(), sIdentifier);
 
     //Check if room was found
     if(room == "") {
-        m_player.appendPrint("Room/ exit not found");
+        m_curPlayer->appendPrint("Room/ exit not found");
         return;
     }
 
     //Print description and change players current room
-    m_player.appendPrint(m_rooms[room]->showEntryDescription(m_characters));
-    m_player.setRoom(m_rooms[room]);
+    m_curPlayer->appendPrint(m_rooms[room]->showEntryDescription(m_characters));
+    m_curPlayer->setRoom(m_rooms[room]);
 }
 
 void CGame::startDialog(std::string sIdentifier)
 {
     //Get selected character
-    std::string character = getObject(m_player.getRoom()->getCharacters(), sIdentifier);
+    std::string character = getObject(m_curPlayer->getRoom()->getCharacters(), sIdentifier);
 
     //Check if character was found
     if(character == "")
     {
-        m_player.appendPrint("Characters not found");
+        m_curPlayer->appendPrint("Characters not found");
         return;
     }
 
     //Update player status and call dialog state
-    m_player.setDialog(m_characters[character]->getDialog());
-    m_player.callDialogState("START");
+    m_curPlayer->setDialog(m_characters[character]->getDialog());
+    m_curPlayer->callDialogState("START");
 }
 
 void CGame::callDialog(std::string sIdentifier) {
-    m_player.callDialog(sIdentifier);
+    m_curPlayer->callDialog(sIdentifier);
 }
 
 void CGame::error(std::string sIdentifier) {
-    m_player.appendPrint("This command is unkown.\n");
+    m_curPlayer->appendPrint("This command is unkown.\n");
 }
 
 

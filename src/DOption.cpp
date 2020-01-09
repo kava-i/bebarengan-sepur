@@ -1,6 +1,6 @@
 #include "CDOption.hpp"
 
-CDOption::CDOption(size_t ID, std::string sText, std::string sTarget, bool active)
+CDOption::CDOption(int ID, std::string sText, std::string sTarget, bool active)
 {
     m_ID = ID;
     m_sText = sText;

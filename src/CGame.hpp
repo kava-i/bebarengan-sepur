@@ -16,10 +16,11 @@
 class CGame
 {
 private:
+    std::map<std::string, CPlayer*>    m_players;
     std::map<std::string, CRoom*>      m_rooms;
     std::map<std::string, CCharacter*> m_characters;
 
-    CPlayer m_player;
+    CPlayer* m_curPlayer;
 
     bool m_endGame;
 
@@ -28,20 +29,19 @@ private:
     eventmanager m_eventmanager;
 
 public: 
-    CGame() : m_player("", NULL) {
-        m_endGame = false;
-        m_player = CPlayer("", NULL);
-    }
+
+    CGame();
    
     // *** FACTORYS *** // 
     typedef std::map<std::string, std::string> objectmap;
     void worldFactory();
     void roomFactory();
+    void playerFactory();
     objectmap characterFactory(nlohmann::json j_characters);
-    dialog    dialogFactory(std::string sPath); 
+    dialog*   dialogFactory(std::string sPath); 
 
 
-    std::string play(std::string sInput);
+    std::string play(std::string sInput, std::string sPlayerID);
 
     // *** Event Manager function *** // 
     void throw_event(std::pair<std::string, std::string> event);

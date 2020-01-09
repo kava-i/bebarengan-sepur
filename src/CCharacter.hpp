@@ -14,18 +14,18 @@ private:
 
     //Dialog
     typedef std::map<std::string, CDState*> dialog;
-    dialog m_dialog;
+    dialog* m_dialog;
 
 public:
-    CCharacter(std::string sName, std::string sDescription, dialog newDialog);
+    CCharacter(std::string sName, std::string sDescription, dialog* newDialog);
 
     // *** GETTER *** // 
     std::string getName();
     std::string getDescription();
-    dialog getDialog();
+    dialog* getDialog();
 
     // *** SETTER *** //
-    void setDialog(dialog newDialog);
+    void setDialog(dialog* newDialog);
 
 };
     

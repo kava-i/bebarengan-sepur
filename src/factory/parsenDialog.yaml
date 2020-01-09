@@ -1,6 +1,6 @@
 ---
 - id: START
-  text: "STORY TELLER Darf ich mich vorstellen? \nParsen schaut von seinem Platz auf, schaut dir in die Augen und schweigt."
+  text: "YOU Darf ich mich vorstellen? \nParsen schaut von seinem Platz auf, schaut dir in die Augen und schweigt."
   options:
   - id: 1 
     text: "Blick aufrechthalten und warten."
@@ -11,6 +11,9 @@
   - id: 3 
     text: "Blick ausweichen."
     targetstate: feigling
+  - id: -1
+    text: "Can I tell you about that dream I had recently?"
+    targetstate: dream
 
 - id: durstlöscher
   text: "PARSEN wie scmhetk Eizthirone?"
@@ -28,12 +31,16 @@
 
 - id: bekanntschaft 
   text: "PARSEN Mein Name ist Parsen. ebenfalls sehr erfreut. Noch eine gute Fahrt. Parsen läschelt dir freundlich zu und ließt dann weiter in seinem Buch."
+  function: parsen1
 
 - id: stress
   text: "PARSEN Lass mich in Ruhe und kümmere dich um anderes!"
   
 - id: feigling
   text: "PARSEN Hahahahaha. You can't even bear a man looking at you fuck off and leave me alone."
+
+- id: dream
+  text: "Shure, go ahead, what to you want to tell me?"
 
       
 

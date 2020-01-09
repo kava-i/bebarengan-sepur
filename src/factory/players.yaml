@@ -1,0 +1,9 @@
+---
+
+- name: "Anna"
+  id: "anna-bronec"
+  room: "compartment-a"
+
+- name: "Jan"
+  id: "jan-van-dick"
+  room: "trainCorridor"

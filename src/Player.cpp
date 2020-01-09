@@ -1,8 +1,9 @@
 #include "CPlayer.hpp"
 
-CPlayer::CPlayer(std::string sName, CRoom* room)
+CPlayer::CPlayer(std::string sName, std::string sID, CRoom* room)
 {
     m_sName = sName;
+    m_sID = sID;
     m_room = room;
     m_status = "standard";
 }
@@ -12,51 +13,44 @@ std::string CPlayer::getName() { return m_sName; }
 CRoom* CPlayer::getRoom() { return m_room; }
 std::string CPlayer::getPrint() { return m_sPrint; }
 std::string CPlayer::getStatus() { return m_status; };
-std::map<std::string, CDState*> CPlayer::getDialog() { return m_curDialog; }
+std::map<std::string, CDState*>* CPlayer::getDialog() { return m_curDialog; }
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room) { m_room = room; }
 void CPlayer::setPrint(std::string newPrint) { m_sPrint = newPrint; }
 void CPlayer::appendPrint(std::string newPrint) { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(std::string status) { m_status = status; }
-void CPlayer::setDialog(dialog newDialog) { m_curDialog = newDialog; }
+void CPlayer::setDialog(dialog* newDialog) { m_curDialog = newDialog; }
 
 //*** FUNCTIONS *** // 
 
 void CPlayer::callDialog(std::string sPlayerChoice)
 {
+    //Parse input
     size_t pos = m_status.find("/");
     std::string cur_id = m_status.substr(pos+1, m_status.length()-pos);
-    std::string next_id = m_curDialog[cur_id]->getOptions()[stoi(sPlayerChoice)]->getTargetState();
+    std::string next_id = (*m_curDialog)[cur_id]->getOptions()[stoi(sPlayerChoice)]->getTargetState();
+
+    //Call state
     callDialogState(next_id);
 }
 
 void CPlayer::callDialogState(std::string sDialogStateID)
 {
-    appendPrint(m_curDialog[sDialogStateID]->getText()+"\n");
+    //Call state
+    appendPrint((*m_curDialog)[sDialogStateID]->callState());
 
-    if(m_curDialog[sDialogStateID]->getOptions().size() == 0) {
-        dialogEnd(sDialogStateID);
-        return;
-    }
-
-    size_t counter = 1;
-    for(auto it : m_curDialog[sDialogStateID]->getOptions()) {
-        appendPrint(std::to_string(counter) + ": " + it.second->getText() + "\n");
-        counter++;
-    }
-    m_status = "dialog/" + sDialogStateID;
+    //Update status
+    if(m_sPrint.find("Dialog ended") != std::string::npos)
+        m_status = "standard";
+    else
+        m_status = "dialog/" + sDialogStateID;
 }
 
-void CPlayer::dialogEnd(std::string sDialogStateID)
-{
-    appendPrint("Dialog ended.\n");
-    m_status = "standard";
-    return;
+std::string CPlayer::showStats() {
+    std::string stats = "Name: " + m_sName + "\nID: " + m_sID + "\nStatus: " + m_status + "\n";
+    return stats;
 }
-
-
-
 
 
 

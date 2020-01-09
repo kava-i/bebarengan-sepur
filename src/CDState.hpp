@@ -11,15 +11,34 @@ class CDState
 private:
     std::string m_sID;
     std::string m_sText;
+    std::string m_sFunction;
 
-    std::map<size_t, CDOption*> m_options;
+    typedef std::map<int, CDOption*> dialogoptions;
+    typedef std::map<std::string, CDState*> dialog;
+    dialogoptions m_options;
+    dialog* m_dialog;
+
+    static std::map<std::string, std::string (CDState::*)()> m_functions;
 
 public:
-    CDState(std::string sID, std::string sText, std::map<size_t, CDOption*> states);
+    CDState(std::string sID, std::string sText, std::string function, dialogoptions states, dialog* dia);
 
     // *** GETTER *** //
     std::string getText();
-    std::map<size_t, CDOption*> getOptions();
+    dialogoptions& getOptions();
+
+    static void initializeFunctions();
+    std::string callState();
+
+    // *** functions *** //
+    std::string standard();
+    std::string parsen1();
+
+    void addDialogOption(std::string sStateID, size_t optID);
+    void deleteDialogOption(std::string sStateID, size_t optID);
+
+
+    size_t numOptions();
 };
     
 #endif

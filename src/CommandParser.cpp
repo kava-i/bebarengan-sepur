@@ -27,6 +27,7 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
     std::regex showExits("((S|s)how).*exits");
     std::regex showCharacters("(S|s)how.*(P|p)eople.*");
     std::regex showDescription("(S|s)how.*(R|r)oom.*");
+    std::regex showStats("(S|s)how.*(S|s)tats.*");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
     //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
@@ -51,6 +52,11 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
     //Show description:
     else if(std::regex_match(sInput, showDescription))
         newEvent = std::make_pair("show", "room");
+
+    //Show stats:
+    else if(std::regex_match(sInput, showStats))
+        newEvent = std::make_pair("show", "stats");
+
 
     //Change room
     else if(std::regex_search(sInput, m, goTo))

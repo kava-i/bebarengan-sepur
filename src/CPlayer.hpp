@@ -10,36 +10,37 @@ class CPlayer
 {
 private:
     std::string m_sName;
+    std::string m_sID;
     CRoom* m_room;
 
     std::string m_sPrint;
     std::string m_status;
 
     typedef std::map<std::string, CDState*> dialog;
-    dialog m_curDialog;
+    dialog* m_curDialog;
 
 public:
     CPlayer() {};
-    CPlayer(std::string sName, CRoom* room);
+    CPlayer(std::string sName, std::string sID, CRoom* room);
 
     // *** GETTER *** // 
     std::string getName();
     CRoom* getRoom();
     std::string getPrint();
     std::string getStatus();
-    dialog getDialog();
+    dialog* getDialog();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
     void setPrint(std::string);
     void appendPrint(std::string);
     void setStatus(std::string);
-    void setDialog(dialog newDialog);
+    void setDialog(dialog* newDialog);
 
     //*** FUNCTIONS *** // 
     void callDialog(std::string sPlayerChoice);
     void callDialogState(std::string sDialogStateID); 
-    void dialogEnd(std::string sDialogStateID);
+    std::string showStats();
 
 };
 
