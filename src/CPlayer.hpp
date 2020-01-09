@@ -38,7 +38,7 @@ public:
     void setDialog(dialog* newDialog);
 
     //*** FUNCTIONS *** // 
-    void callDialog(std::string sPlayerChoice);
+    std::string callDialog(std::string sPlayerChoice);
     void callDialogState(std::string sDialogStateID); 
     std::string showStats();
 

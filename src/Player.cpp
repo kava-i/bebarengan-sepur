@@ -24,7 +24,7 @@ void CPlayer::setDialog(dialog* newDialog) { m_curDialog = newDialog; }
 
 //*** FUNCTIONS *** // 
 
-void CPlayer::callDialog(std::string sPlayerChoice)
+std::string CPlayer::callDialog(std::string sPlayerChoice)
 {
     //Parse input
     size_t pos = m_status.find("/");
@@ -33,6 +33,7 @@ void CPlayer::callDialog(std::string sPlayerChoice)
 
     //Call state
     callDialogState(next_id);
+    return next_id;
 }
 
 void CPlayer::callDialogState(std::string sDialogStateID)

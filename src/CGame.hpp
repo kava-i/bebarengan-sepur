@@ -44,7 +44,8 @@ public:
     std::string play(std::string sInput, std::string sPlayerID);
 
     // *** Event Manager function *** // 
-    void throw_event(std::pair<std::string, std::string> event);
+    typedef std::pair<std::string, std::string> event;
+    void throw_event(event newEvent);
 
     // *** EVENTHANDLERS *** // 
     void show       (std::string sIdentifier);
@@ -52,6 +53,8 @@ public:
     void startDialog(std::string sIdentifier);
     void callDialog (std::string sIdentifier);
     void error      (std::string sIdentifier);
+    
+    void pissingman_fuckoff(std::string sIdentifier);
 
     // *** various functions *** //
     std::string getObject(objectmap& mapObjects, std::string sIdentifierr);

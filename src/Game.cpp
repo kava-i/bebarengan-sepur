@@ -21,12 +21,14 @@ void CGame::worldFactory()
     m_eventmanager["talkTo"]    = {&CGame::startDialog};
     m_eventmanager["dialog"]    = {&CGame::callDialog};
     m_eventmanager["error"]     = {&CGame::error};
+
+    m_eventmanager["fuckoff"]   = {&CGame::pissingman_fuckoff};
 }
 
 void CGame::roomFactory()
 {
     //Read json creating all rooms
-    std::ifstream read("factory/rooms.json");
+    std::ifstream read("factory/jsons/rooms.json");
     nlohmann::json j_rooms;
     read >> j_rooms;
     read.close();
@@ -39,6 +41,7 @@ void CGame::roomFactory()
 
         //Create new room
         CRoom* room = new CRoom(j_room["name"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
+
         m_rooms[j_room["id"]] = room;
     }
 }
@@ -48,7 +51,6 @@ std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_char
     objectmap mapChars;
     for(auto j_char : j_characters)
     {
-        std::cout << "Parsing " << j_char["name"] << "...\n";
         //Create dialog 
         dialog* newDialog = new dialog;
         if(j_char.count("dialog") > 0)
@@ -67,12 +69,11 @@ std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_char
 std::map<std::string, CDState*>* CGame::dialogFactory(std::string sPath)
 {
     //Read json creating all rooms
-    std::ifstream read("factory/"+sPath+".json");
+    std::ifstream read("factory/jsons/"+sPath+".json");
     nlohmann::json j_states;
     read >> j_states;
     read.close();
 
-    std::cout << "Parsing dialog...\n";
     dialog* newDialog = new dialog;
     for(auto j_state : j_states)
     {
@@ -97,7 +98,7 @@ std::map<std::string, CDState*>* CGame::dialogFactory(std::string sPath)
 void CGame::playerFactory()
 {
     //Read json creating all rooms
-    std::ifstream read("factory/players.json");
+    std::ifstream read("factory/jsons/players.json");
     nlohmann::json j_players;
     read >> j_players;
     read.close();
@@ -123,10 +124,10 @@ std::string CGame::play(std::string sInput, std::string sPlayerID)
     m_curPlayer->setPrint("");
 
     //Parse command and create event
-    std::pair<std::string, std::string> event = parser.parse(sInput, m_curPlayer->getStatus());
+    event newEvent = parser.parse(sInput, m_curPlayer->getStatus());
 
     //Throw event and delete afterwards
-    throw_event(event);
+    throw_event(newEvent);
 
     return m_curPlayer->getPrint(); 
 }
@@ -134,12 +135,12 @@ std::string CGame::play(std::string sInput, std::string sPlayerID)
 
 // ****************** EVENTMANAGER ********************** //
 
-void CGame::throw_event(std::pair<std::string, std::string> event)
+void CGame::throw_event(event newEvent)
 {
-    if(m_eventmanager.count(event.first) == 0) return;
+    if(m_eventmanager.count(newEvent.first) == 0) return;
         
-    for(auto it : m_eventmanager[event.first])
-        (this->*it)(event.second);
+    for(auto it : m_eventmanager[newEvent.first])
+        (this->*it)(newEvent.second);
 }
 
 
@@ -190,11 +191,18 @@ void CGame::startDialog(std::string sIdentifier)
 }
 
 void CGame::callDialog(std::string sIdentifier) {
-    m_curPlayer->callDialog(sIdentifier);
+    event newEvent = std::make_pair(m_curPlayer->callDialog(sIdentifier), "");
+    throw_event(newEvent);
 }
 
 void CGame::error(std::string sIdentifier) {
     m_curPlayer->appendPrint("This command is unkown.\n");
+}
+
+
+// *** DIALOG HANDLER *** //
+void CGame::pissingman_fuckoff(std::string sIdentifier) {
+    m_characters["pissing_man"]->setDialog(dialogFactory("defaultDialog"));
 }
 
 

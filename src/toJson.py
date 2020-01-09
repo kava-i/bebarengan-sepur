@@ -7,8 +7,10 @@ for filename in os.listdir("factory"):
         path = "factory/"+filename
         files.append(path)
 
-for filename in files:
+for path in files:
     print (filename)
-    with open(filename, 'r') as yaml_in, open(filename.replace(".yaml", ".json"), "w") as json_out:
+    newPath = path.replace(".yaml", ".json")
+    newPath = newPath[:8] + "jsons/"+ newPath[8:]
+    with open(path, 'r') as yaml_in, open(newPath, "w") as json_out:
         yaml_object = yaml.safe_load(yaml_in) # yaml_object will be a list or a dict
         json.dump(yaml_object, json_out)

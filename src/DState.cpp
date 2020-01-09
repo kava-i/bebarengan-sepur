@@ -22,14 +22,15 @@ void CDState::setText(size_t text) { m_sText = m_alternativeTexts[text]; }
 std::map<std::string, std::string (CDState::*)()> CDState::m_functions = {};
 void CDState::initializeFunctions()
 {
-    m_functions["standard"] = &CDState::standard;
-    m_functions["parsen1"]  = &CDState::parsen1;
+    m_functions["standard"]     = &CDState::standard;
+    m_functions["parsen1"]      = &CDState::parsen1;
 }
 
 std::string CDState::callState() {
     return (this->*m_functions[m_sFunction])();
 }
 
+// *** FUNCTION POINTER *** //
 std::string CDState::standard()
 {
     std::string sOutput = m_sText + "\n";
@@ -46,7 +47,6 @@ std::string CDState::standard()
 
 std::string CDState::parsen1()
 {
-    std::cout << "called parsen1() \n";
     std::string sOutput = standard();
     addDialogOption("START", -1);       //Add new option (4)
     deleteDialogOption("START", 1);     //Delete old option (1)
@@ -55,6 +55,7 @@ std::string CDState::parsen1()
     return sOutput;
 }
 
+// *** VARIOUS FUNCTIONS *** // 
 void CDState::changeStateText(std::string sStateID, size_t text) {
     (*m_dialog)["START"]->setText(text);
 }
@@ -83,7 +84,3 @@ size_t CDState::numOptions()
     return counter;
 }
         
-
-
-
-
