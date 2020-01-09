@@ -1,7 +1,7 @@
 // *** CommandParser *** //
 #include "CCommandParser.hpp"
 
-std::pair<std::string, std::string> CCommandParser::parse(std::string sInput, std::string status)
+CCommandParser::event CCommandParser::parse(std::string sInput, std::string status)
 {
     event newEvent;
     if(status=="standard")
@@ -21,7 +21,7 @@ std::pair<std::string, std::string> CCommandParser::parse(std::string sInput, st
 * @parameter string (player input)
 * @return CEvent* (Pointer to event created)
 */
-std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sInput)
+CCommandParser::event CCommandParser::parseCommand(std::string sInput)
 {
     //Create regular expressions for different command the player might have choosen
     std::regex showExits("((S|s)how).*exits");
@@ -72,7 +72,7 @@ std::pair<std::string, std::string> CCommandParser::parseCommand(std::string sIn
     return newEvent;
 }
 
-std::pair<std::string, std::string> CCommandParser::parseDialogCommand(std::string sInput, std::string status)
+CCommandParser::event CCommandParser::parseDialogCommand(std::string sInput, std::string status)
 {
     event newEvent;
     newEvent.first = "dialog";

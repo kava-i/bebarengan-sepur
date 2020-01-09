@@ -9,7 +9,7 @@ CCharacter::CCharacter(std::string sName, std::string sDescription, dialog* newD
 // *** GETTER *** //
 std::string CCharacter::getName() {return m_sName; }
 std::string CCharacter::getDescription() {return m_sDescription; }
-std::map<std::string, CDState*>* CCharacter::getDialog() { return m_dialog; }
+CCharacter::dialog* CCharacter::getDialog() { return m_dialog; }
 
 // *** SETTER *** //
 void CCharacter::setDialog(dialog* newDialog) { m_dialog = newDialog; };

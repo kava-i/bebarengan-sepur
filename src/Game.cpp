@@ -46,7 +46,7 @@ void CGame::roomFactory()
     }
 }
 
-std::map<std::string, std::string> CGame::characterFactory(nlohmann::json j_characters)
+CGame::objectmap CGame::characterFactory(nlohmann::json j_characters)
 {
     objectmap mapChars;
     for(auto j_char : j_characters)

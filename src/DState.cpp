@@ -12,7 +12,7 @@ CDState::CDState(std::string sID, std::string sText, std::string func, std::vect
 
 // *** GETTER *** //
 std::string CDState::getText() { return m_sText; }
-std::map<int, CDOption*>& CDState::getOptions() { return m_options; }
+CDState::dialogoptions& CDState::getOptions() { return m_options; }
 
 // *** SETTER *** //
 void CDState::setText(size_t text) { m_sText = m_alternativeTexts[text]; }

@@ -15,8 +15,8 @@ CRoom::CRoom(std::string sName, std::string sDescription, std::string sEntry, ob
 std::string CRoom::getName()        { return m_sName; }
 std::string CRoom::getDescription() { return m_sDescription; }
 std::string CRoom::getEntry() { return m_sEntry; }
-std::map<std::string, std::string>& CRoom::getExtits()    { return m_exists; }
-std::map<std::string, std::string>& CRoom::getCharacters(){ return m_characters; }
+CRoom::objectmap& CRoom::getExtits()    { return m_exists; }
+CRoom::objectmap& CRoom::getCharacters(){ return m_characters; }
 
 
 // *** VARIOUS FUNCTIONS *** //

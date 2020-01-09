@@ -16,11 +16,15 @@ private:
     
     std::vector<std::string> m_alternativeTexts;
 
+    //Map of options 
     typedef std::map<int, CDOption*> dialogoptions;
-    typedef std::map<std::string, CDState*> dialog;
     dialogoptions m_options;
+
+    //Referenc to the complete dialog
+    typedef std::map<std::string, CDState*> dialog;
     dialog* m_dialog;
 
+    //Static map of all state-functions
     static std::map<std::string, std::string (CDState::*)()> m_functions;
 
 public:

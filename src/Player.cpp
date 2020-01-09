@@ -13,7 +13,7 @@ std::string CPlayer::getName() { return m_sName; }
 CRoom* CPlayer::getRoom() { return m_room; }
 std::string CPlayer::getPrint() { return m_sPrint; }
 std::string CPlayer::getStatus() { return m_status; };
-std::map<std::string, CDState*>* CPlayer::getDialog() { return m_curDialog; }
+CPlayer::dialog* CPlayer::getDialog() { return m_curDialog; }
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room) { m_room = room; }
