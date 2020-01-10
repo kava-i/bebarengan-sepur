@@ -30,6 +30,11 @@ namespace fuzzy
     * @return bool 
     */
     double fuzzy_cmp(std::string sWord1, std::string sWord2);
+    
+    /**
+    * @param[in, out] str string to be modified
+    */
+    void convertToLower(std::string &str);
 }
 
 #ifdef __DEFINE_ONE__

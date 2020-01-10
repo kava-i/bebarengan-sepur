@@ -4,28 +4,33 @@
 #include <map>
 #include <vector>
 #include <stdio.h>
+#include <filesystem>
 #include "CRoom.hpp"
 #include "CPlayer.hpp"
 #include "CCharacter.hpp"
+#include "CDialog.hpp"
 #include "CCommandParser.hpp"
 #include "json.hpp"
 #include "fuzzy.hpp"
 
 //#include <Python.h>
 
+using std::string;
+using std::map;
+using std::vector;
+
 class CGame
 {
 private:
-    std::map<std::string, CPlayer*>    m_players;
-    std::map<std::string, CRoom*>      m_rooms;
-    std::map<std::string, CCharacter*> m_characters;
+    map<string, CPlayer*>    m_players;
+    map<string, CRoom*>      m_rooms;
+    map<string, CCharacter*> m_characters;
 
     CPlayer* m_curPlayer;
 
     bool m_endGame;
 
-    typedef std::map<std::string, CDState*> dialog;
-    typedef std::map<std::string, std::vector<void(CGame::*)(std::string)>>eventmanager; 
+    typedef map<string, vector<void(CGame::*)(string)>>eventmanager; 
     eventmanager m_eventmanager;
 
 public: 
@@ -33,35 +38,36 @@ public:
     CGame();
    
     // *** FACTORYS *** // 
-    typedef std::map<std::string, std::string> objectmap;
+    typedef map<string, string> objectmap;
     void worldFactory();
     void roomFactory();
+    void roomFactory(string sPath);
     void playerFactory();
     objectmap characterFactory(nlohmann::json j_characters);
-    dialog*   dialogFactory(std::string sPath); 
+    SDialog* dialogFactory(string sPath); 
 
 
-    std::string play(std::string sInput, std::string sPlayerID);
+    string play(string sInput, string sPlayerID);
 
     // *** Event Manager function *** // 
-    typedef std::pair<std::string, std::string> event;
+    typedef std::pair<string, string> event;
     void throw_event(event newEvent);
 
     // *** EVENTHANDLERS *** // 
-    void show       (std::string sIdentifier);
-    void goTo       (std::string sIdentifier);
-    void startDialog(std::string sIdentifier);
-    void callDialog (std::string sIdentifier);
-    void error      (std::string sIdentifier);
+    void show       (string sIdentifier);
+    void goTo       (string sIdentifier);
+    void startDialog(string sIdentifier);
+    void callDialog (string sIdentifier);
+    void error      (string sIdentifier);
     
-    void pissingman_fuckoff(std::string sIdentifier);
+    void pissingman_fuckoff(string sIdentifier);
 
     // *** various functions *** //
-    std::string getObject(objectmap& mapObjects, std::string sIdentifierr);
+    string getObject(objectmap& mapObjects, string sIdentifierr);
 
     /*
     //Convert yaml to json
-    void toJson(std::string filename);
+    void toJson(string filename);
     */
 };
     

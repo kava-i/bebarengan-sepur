@@ -1,33 +1,35 @@
-#ifndef CCHARACTER_H
-#define CCHARACTER_H
+#ifndef CPERSON_H
+#define CPERSON_H
 
 #include <iostream>
-#include <string>
 #include <map>
 #include "CDialog.hpp"
 
 using std::string;
 
-class CCharacter
-{ 
-private:
+class CPerson
+{
+protected:
     string m_sName;
-    string m_sDescription;
+    string m_sID;
+
+    //Stats
+    int m_hp;
+    size_t strength;
 
     //Dialog
     SDialog* m_dialog;
 
 public:
-    CCharacter(string sName, string sDescription, SDialog* newDialog);
 
     // *** GETTER *** // 
     string getName();
-    string getDescription();
+    int getHp();
+    size_t getStrength();
     SDialog* getDialog();
 
     // *** SETTER *** //
     void setDialog(SDialog* newDialog);
+}
 
-};
-    
-#endif
+        

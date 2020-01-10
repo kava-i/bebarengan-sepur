@@ -5,7 +5,7 @@
    description: "The compartment is empty. Empty, but one mysterious passenger: Parsen"  
    entry: "You enter your appartment.\n"
    exits:
-     trainCorridor: Corridor
+     hospital_foyer: Corridor
    characters:
      - name: "Parsen"
        id: parsen

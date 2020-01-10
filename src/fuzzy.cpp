@@ -82,6 +82,10 @@ double fast_search(const char* chS, const char* chIn, size_t lenS, size_t lenIn)
 */
 double fuzzy_cmp(std::string sWord1, std::string sWord2)
 {
+    //Convert both string to lowercase
+    convertToLower(sWord1);
+    convertToLower(sWord2);
+
     //Check lengths
     double len1 = sWord1.length();
     double len2 = sWord2.length();
@@ -105,6 +109,16 @@ double fuzzy_cmp(std::string sWord1, std::string sWord2)
 
     //Calculate score
     return static_cast<double>(distance)/ len2;
+}
+
+/**
+* @param[in, out] str string to be modified
+*/
+void convertToLower(std::string &str)
+{
+    std::locale loc1("de_DE.UTF8");
+    for(unsigned int i=0; i<str.length(); i++)
+        str[i] = tolower(str[i], loc1);
 }
 
 } //Close namespace

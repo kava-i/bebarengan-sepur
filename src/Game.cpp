@@ -1,5 +1,6 @@
 #include "CGame.hpp"
 
+namespace fs = std::filesystem;
 
 CGame::CGame() {
     worldFactory();
@@ -10,10 +11,12 @@ void CGame::worldFactory()
 {
     //Create rooms
     CDState::initializeFunctions();
+
     roomFactory();
 
     //Create players
     playerFactory();
+    std::cout << "Finished parsing!\n";
 
     //Add eventhandlers to eventmanager 
     m_eventmanager["show"]      = {&CGame::show};
@@ -22,13 +25,21 @@ void CGame::worldFactory()
     m_eventmanager["dialog"]    = {&CGame::callDialog};
     m_eventmanager["error"]     = {&CGame::error};
 
-    m_eventmanager["fuckoff"]   = {&CGame::pissingman_fuckoff};
+    m_eventmanager["pissingManDialog/fuckoff"]   = {&CGame::pissingman_fuckoff};
 }
 
 void CGame::roomFactory()
 {
+    for(auto& p : fs::directory_iterator("factory/jsons/rooms"))
+        roomFactory(p.path());
+}
+
+void CGame::roomFactory(string sPath)
+{
+    std::cout << sPath << std::endl;
+
     //Read json creating all rooms
-    std::ifstream read("factory/jsons/rooms.json");
+    std::ifstream read(sPath);
     nlohmann::json j_rooms;
     read >> j_rooms;
     read.close();
@@ -40,9 +51,7 @@ void CGame::roomFactory()
         objectmap mapChars = characterFactory(j_room["characters"]);
 
         //Create new room
-        CRoom* room = new CRoom(j_room["name"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
-
-        m_rooms[j_room["id"]] = room;
+        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
     }
 }
 
@@ -51,57 +60,74 @@ CGame::objectmap CGame::characterFactory(nlohmann::json j_characters)
     objectmap mapChars;
     for(auto j_char : j_characters)
     {
+        std::cout << "Parsing " << j_char["name"] << "\n";
+
         //Create dialog 
-        dialog* newDialog = new dialog;
+        SDialog* newDialog = new SDialog;
         if(j_char.count("dialog") > 0)
             newDialog = dialogFactory(j_char["dialog"]); 
         else
             newDialog = dialogFactory("defaultDialog");
 
-        CCharacter* character = new CCharacter(j_char["name"],j_char.value("description",""), newDialog);
-        m_characters[j_char["id"]] = character;
+        //Create character and add to maps
+        m_characters[j_char["id"]] = new CCharacter(j_char["name"],j_char.value("description",""), newDialog);
         mapChars[j_char["id"]] = j_char["name"];
     }
 
     return mapChars;
 }
 
-std::map<std::string, CDState*>* CGame::dialogFactory(std::string sPath)
+SDialog* CGame::dialogFactory(string sPath)
 {
     //Read json creating all rooms
-    std::ifstream read("factory/jsons/"+sPath+".json");
+    std::ifstream read("factory/jsons/dialogs/"+sPath+".json");
     nlohmann::json j_states;
     read >> j_states;
     read.close();
 
-    dialog* newDialog = new dialog;
+    //Create new dialog
+    map<string, CDState*> mapStates;
+    struct SDialog* newDialog = new SDialog();
+
     for(auto j_state : j_states)
     {
+        std::cout << "Parsing " << j_state["id"] << "\n";
+
         // *** parse options *** //
-        std::map<int, CDOption*> options;
+        map<int, SDOption> options;
         if(j_state.count("options") != 0)
         {
             for(auto j_opt : j_state["options"])
-                options[j_opt["id"]] = new CDOption (j_opt["text"], j_opt["targetstate"]);
+                options[j_opt["id"]] = {j_opt["text"], j_opt["targetstate"]};
         }
 
         // *** parse state *** //
 
-        std::vector<std::string> altTexts;
-        if(j_state.count("altTexts") > 0) altTexts = j_state["altTexts"].get<std::vector<std::string>>();
-        (*newDialog)[j_state["id"]] = new CDState(j_state["id"], j_state["text"], j_state.value("function", "standard"), altTexts, options, newDialog);
+        //Parse alternative texts
+        vector<string> altTexts;
+        if(j_state.count("altTexts") > 0) 
+            altTexts = j_state["altTexts"].get<vector<string>>();
+
+        //Create state
+        mapStates[j_state["id"]] = new CDState(j_state["text"], j_state.value("function", "standard"), altTexts, options, newDialog);
     }
 
+    //Update dialog values and return
+    newDialog->sName = sPath;
+    newDialog->states= mapStates;
     return newDialog;
 }
 
 void CGame::playerFactory()
 {
+    std::cout << "Parsing players... \n";
     //Read json creating all rooms
-    std::ifstream read("factory/jsons/players.json");
+    std::ifstream read("factory/jsons/players/players.json");
     nlohmann::json j_players;
     read >> j_players;
     read.close();
+
+    std::cout << "Reading json complete\n";
 
     for(auto j_player : j_players)
     {
@@ -114,7 +140,7 @@ void CGame::playerFactory()
 
 // ****************** FUNCTIONS CALLER ********************** //
 
-std::string CGame::play(std::string sInput, std::string sPlayerID)
+string CGame::play(string sInput, string sPlayerID)
 {
     //Create parser
     CCommandParser parser;
@@ -146,7 +172,7 @@ void CGame::throw_event(event newEvent)
 
 // ****************** EVENTHANDLER ********************** //
 
-void CGame::show(std::string sIdentifier) {
+void CGame::show(string sIdentifier) {
     if(sIdentifier == "exits")
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showExits());
     else if(sIdentifier == "chars")
@@ -160,7 +186,7 @@ void CGame::show(std::string sIdentifier) {
 void CGame::goTo(std::string sIdentifier) {
 
     //Get selected room
-    std::string room = getObject(m_curPlayer->getRoom()->getExtits(), sIdentifier);
+    string room = getObject(m_curPlayer->getRoom()->getExtits(), sIdentifier);
 
     //Check if room was found
     if(room == "") {
@@ -173,14 +199,13 @@ void CGame::goTo(std::string sIdentifier) {
     m_curPlayer->setRoom(m_rooms[room]);
 }
 
-void CGame::startDialog(std::string sIdentifier)
+void CGame::startDialog(string sIdentifier)
 {
     //Get selected character
-    std::string character = getObject(m_curPlayer->getRoom()->getCharacters(), sIdentifier);
+    string character = getObject(m_curPlayer->getRoom()->getCharacters(), sIdentifier);
 
     //Check if character was found
-    if(character == "")
-    {
+    if(character == "") {
         m_curPlayer->appendPrint("Characters not found");
         return;
     }
@@ -190,35 +215,35 @@ void CGame::startDialog(std::string sIdentifier)
     m_curPlayer->callDialogState("START");
 }
 
-void CGame::callDialog(std::string sIdentifier) {
+void CGame::callDialog(string sIdentifier) {
     event newEvent = std::make_pair(m_curPlayer->callDialog(sIdentifier), "");
     throw_event(newEvent);
 }
 
-void CGame::error(std::string sIdentifier) {
+void CGame::error(string sIdentifier) {
     m_curPlayer->appendPrint("This command is unkown.\n");
 }
 
 
 // *** DIALOG HANDLER *** //
-void CGame::pissingman_fuckoff(std::string sIdentifier) {
+void CGame::pissingman_fuckoff(string sIdentifier) {
     m_characters["pissing_man"]->setDialog(dialogFactory("defaultDialog"));
 }
 
 
 // ****************** VARIOUS FUNCTIONS ********************** //
 
-std::string CGame::getObject(objectmap& mapObjects, std::string sIdentifier)
+string CGame::getObject(objectmap& mapObjects, string sIdentifier)
 {
     for(auto it : mapObjects) {
-    if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2) 
-        return it.first;
+        if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2) 
+            return it.first;
     }
     return "";
 }
 
 /*
-void CGame::toJson(std::string filename)
+void CGame::toJson(string filename)
 {
     //Convert yaml to json using python
 	Py_Initialize();

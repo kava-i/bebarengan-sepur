@@ -1,16 +1,16 @@
 #include "CCharacter.hpp"
 
-CCharacter::CCharacter(std::string sName, std::string sDescription, dialog* newDialog) {
+CCharacter::CCharacter(string sName, string sDescription, SDialog* newDialog) {
     m_sName = sName;
     m_sDescription = sDescription;
     m_dialog = newDialog;
 }
 
 // *** GETTER *** //
-std::string CCharacter::getName() {return m_sName; }
-std::string CCharacter::getDescription() {return m_sDescription; }
-CCharacter::dialog* CCharacter::getDialog() { return m_dialog; }
+string CCharacter::getName() {return m_sName; }
+string CCharacter::getDescription() {return m_sDescription; }
+SDialog* CCharacter::getDialog() { return m_dialog; }
 
 // *** SETTER *** //
-void CCharacter::setDialog(dialog* newDialog) { m_dialog = newDialog; };
+void CCharacter::setDialog(SDialog* newDialog) { m_dialog = newDialog; };
 

@@ -4,43 +4,50 @@
 #include <iostream>
 #include <map>
 #include "CRoom.hpp"
-#include "CDState.hpp"
+#include "CDialog.hpp"
+
+using std::string;
 
 class CPlayer
 {
 private:
-    std::string m_sName;
-    std::string m_sID;
+    string m_sName;
+    string m_sID;
     CRoom* m_room;
 
-    std::string m_sPrint;
-    std::string m_status;
+    //Stats
+    size_t hp;
+    size_t strength;
 
-    typedef std::map<std::string, CDState*> dialog;
-    dialog* m_curDialog;
+    std::map<string, CAttack*> attacks;
+
+    string m_sPrint;
+    string m_status;
+
+    SDialog* m_curDialog;
 
 public:
     CPlayer() {};
-    CPlayer(std::string sName, std::string sID, CRoom* room);
+    CPlayer(string sName, string sID, CRoom* room);
 
     // *** GETTER *** // 
-    std::string getName();
+    string getName();
     CRoom* getRoom();
-    std::string getPrint();
-    std::string getStatus();
-    dialog* getDialog();
+    string getPrint();
+    string getStatus();
+    SDialog* getDialog();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
-    void setPrint(std::string);
-    void appendPrint(std::string);
-    void setStatus(std::string);
-    void setDialog(dialog* newDialog);
+    void setPrint(string);
+    void appendPrint(string);
+    void setStatus(string);
+    void setDialog(SDialog* newDialog);
 
     //*** FUNCTIONS *** // 
-    std::string callDialog(std::string sPlayerChoice);
-    void callDialogState(std::string sDialogStateID); 
-    std::string showStats();
+    string callDialog(string sPlayerChoice);
+    void callDialogState(string sDialogStateID); 
+    string showStats();
 
 };
 

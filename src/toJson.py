@@ -1,16 +1,15 @@
 import yaml, json
 import os
 
-files = []
-for filename in os.listdir("factory"):
-    if filename.endswith(".yaml"):
-        path = "factory/"+filename
-        files.append(path)
+folders = ["rooms", "dialogs", "players"]
 
-for path in files:
-    print (filename)
-    newPath = path.replace(".yaml", ".json")
-    newPath = newPath[:8] + "jsons/"+ newPath[8:]
-    with open(path, 'r') as yaml_in, open(newPath, "w") as json_out:
-        yaml_object = yaml.safe_load(yaml_in) # yaml_object will be a list or a dict
-        json.dump(yaml_object, json_out)
+for folder in folders: 
+    for filename in os.listdir("factory/"+folder):
+        path = "factory/"+folder+"/"+filename
+        newPath = "factory/jsons/"+folder+"/"+filename.replace(".yaml", ".json")
+        print(path)
+        with open(path, 'r') as yaml_in, open(newPath, "w") as json_out:
+            yaml_object = yaml.safe_load(yaml_in) # yaml_object will be a list or a dict
+            json.dump(yaml_object, json_out)
+
+
