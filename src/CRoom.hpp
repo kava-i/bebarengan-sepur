@@ -7,32 +7,36 @@
 #include "CCharacter.hpp"
 #include "fuzzy.hpp"
 
+using std::string;
+
 class CRoom
 { 
 private:
-    std::string m_sName;
-    std::string m_sDescription;
-    std::string m_sEntry;
+    string m_sName;
+    string m_sID;
+    string m_sDescription;
+    string m_sEntry;
     
-    typedef std::map<std::string, std::string> objectmap;
+    typedef std::map<string, std::string> objectmap;
     objectmap m_exists;
     objectmap m_characters;
 
 public:
-    CRoom(std::string sName, std::string sDescription, std::string sEntry, objectmap exits, objectmap characters);
+    CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters);
 
     // *** getter *** // 
-    std::string getName();
-    std::string getDescription();
-    std::string getEntry();
+    string getName();
+    string getID();
+    string getDescription();
+    string getEntry();
     objectmap& getExtits();
     objectmap& getCharacters();
 
     // *** various functions *** //
-    std::string showEntryDescription(std::map<std::string, CCharacter*>& mapChars);
-    std::string showDescription(std::map<std::string, CCharacter*>& mapChars); 
-    std::string showExits();
-    std::string showCharacters();
+    string showEntryDescription(std::map<string, CCharacter*>& mapChars);
+    string showDescription(std::map<string, CCharacter*>& mapChars); 
+    string showExits();
+    string showCharacters();
 };
     
 #endif

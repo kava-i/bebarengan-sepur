@@ -6,7 +6,7 @@
   output: "You punsch your oppenent in the face"
   power: 10
 
-- name: Kick
+- name: "Normal kick"
   id: kick
   description: "A hard and strong kick."
   output: "You use all your force to kick your oppenent in his kidnies"
@@ -17,5 +17,11 @@
   description: "Yes, when you're despreate it's sometimes the only way to go!"
   output: "You aim. You kick. It works."
   power: 15
+
+- name: "Bite"
+  id: bite 
+  description: "A hard bite, that might rip out some flesch"
+  output: "The bite was successfull!"
+  power: 12
 
 

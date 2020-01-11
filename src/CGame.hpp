@@ -10,6 +10,7 @@
 #include "CPlayer.hpp"
 #include "CCharacter.hpp"
 #include "CAttack.hpp"
+#include "CFight.hpp"
 #include "CDialog.hpp"
 #include "CCommandParser.hpp"
 #include "json.hpp"
@@ -48,6 +49,7 @@ public:
     void playerFactory();
     void attackFactory();
     void attackFactory(std::string sPath);
+    map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
     objectmap characterFactory(nlohmann::json j_characters);
     SDialog* dialogFactory(string sPath); 
 
@@ -63,9 +65,14 @@ public:
     void goTo       (string sIdentifier);
     void startDialog(string sIdentifier);
     void callDialog (string sIdentifier);
+    void callFight  (string sIdentifier);
     void error      (string sIdentifier);
     
+    //Dialogs
     void pissingman_fuckoff(string sIdentifier);
+
+    //Rooms
+    void firstZombieAttack(string sIdentifier);
 
     // *** various functions *** //
     string getObject(objectmap& mapObjects, string sIdentifierr);

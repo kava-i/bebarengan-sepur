@@ -17,7 +17,7 @@
    exits:
      trainCorridor: Corridor
    characters:
-     - name: Old woman in pink
+     - name: "Old woman in pink"
        id: pink_woman
      - name: "Old woman in blue"
        id: blue_woman

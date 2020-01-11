@@ -1,8 +1,9 @@
 #include "CRoom.hpp" 
 
-CRoom::CRoom(std::string sName, std::string sDescription, std::string sEntry, objectmap exits, objectmap characters)
+CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters)
 {
     m_sName = sName;
+    m_sID = sID;
     m_sDescription = sDescription;
     m_sEntry = sEntry;
     m_exists = exits;
@@ -12,36 +13,37 @@ CRoom::CRoom(std::string sName, std::string sDescription, std::string sEntry, ob
 
 // *** GETTER *** // 
 
-std::string CRoom::getName()        { return m_sName; }
-std::string CRoom::getDescription() { return m_sDescription; }
-std::string CRoom::getEntry() { return m_sEntry; }
+string CRoom::getName()         { return m_sName; }
+string CRoom::getID()           { return m_sID; }
+string CRoom::getDescription()  { return m_sDescription; }
+string CRoom::getEntry()        { return m_sEntry; }
 CRoom::objectmap& CRoom::getExtits()    { return m_exists; }
 CRoom::objectmap& CRoom::getCharacters(){ return m_characters; }
 
 
 // *** VARIOUS FUNCTIONS *** //
 
-std::string CRoom::showEntryDescription(std::map<std::string, CCharacter*>& mapChars)
+string CRoom::showEntryDescription(std::map<std::string, CCharacter*>& mapChars)
 {
-    std::string sDesc = m_sEntry + m_sDescription + "\n";
+    string sDesc = m_sEntry + m_sDescription + "\n";
     for(auto it : m_characters)
         sDesc.append(mapChars[it.first]->getDescription());
 
     return sDesc;
 }
 
-std::string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
+string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
 {
-    std::string sDesc = m_sDescription;
+    string sDesc = m_sDescription;
     for(auto it : m_characters) 
         sDesc.append("\n" + mapChars[it.first]->getDescription());
 
     return sDesc;
 }
 
-std::string CRoom::showExits()
+string CRoom::showExits()
 {
-    std::string exits = "Exits: \n";
+    string exits = "Exits: \n";
     size_t counter=1;
     for(auto it : m_exists) {
         exits += std::to_string(counter) + ": " + it.second + "\n";
@@ -49,9 +51,9 @@ std::string CRoom::showExits()
     }
     return exits;
 }
-std::string CRoom::showCharacters()
+string CRoom::showCharacters()
 {
-    std::string characters = "Characters: \n";
+    string characters = "Characters: \n";
     size_t counter=1;
     for(auto it : m_characters) {
         characters += std::to_string(counter) + ": " + it.second + "\n";

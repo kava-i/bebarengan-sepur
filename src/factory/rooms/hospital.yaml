@@ -9,11 +9,17 @@
 
 - name: Stairs
   id: hospital_stairs
-  description: The stairs are built of beautiful mamor. Another sign that this hospital probably hosts rich guests. You feel uneasy as you take step after step.\n Downstairs the statue in the foyer seems to be followiung your steps. Upstairs a door leads to the corridor.
+  description: The stairs are built of beautiful marmor. Another sign that this hospital probably hosts rich guests. You feel uneasy as you take step after step.\n Downstairs the statue in the foyer seems to be followiung your steps. Upstairs a door leads to the corridor.
   exits: 
     hospital_foyer: Foyer
     hospital_corridor: Corridor
   characters:
+    - name: "Zombie"
+      id: "hospital_zombie1"
+      hp: 40
+      strength: 12
+      attacks: 
+        bite: Bite
     
 - name: Corridor
   id: hospital_corridor

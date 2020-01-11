@@ -12,11 +12,11 @@ void CGame::worldFactory()
     //Initialize dialog-functions
     CDState::initializeFunctions();
 
-    //Create rooms
-    roomFactory();
-
     //Create attacks
     attackFactory();
+
+    //Create rooms
+    roomFactory();
 
     //Create players
     playerFactory();
@@ -27,9 +27,14 @@ void CGame::worldFactory()
     m_eventmanager["goTo"]      = {&CGame::goTo};
     m_eventmanager["talkTo"]    = {&CGame::startDialog};
     m_eventmanager["dialog"]    = {&CGame::callDialog};
+    m_eventmanager["fight"]     = {&CGame::callFight};
     m_eventmanager["error"]     = {&CGame::error};
 
+    //Dialogs
     m_eventmanager["pissingManDialog/fuckoff"]   = {&CGame::pissingman_fuckoff};
+
+    //Rooms
+    m_eventmanager["goTo"].push_back(&CGame::firstZombieAttack);
 }
 
 void CGame::roomFactory()
@@ -53,7 +58,7 @@ void CGame::roomFactory(string sPath)
         objectmap mapChars = characterFactory(j_room["characters"]);
 
         //Create new room
-        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
+        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
     }
 }
 
@@ -72,11 +77,10 @@ CGame::objectmap CGame::characterFactory(nlohmann::json j_characters)
             newDialog = dialogFactory("defaultDialog");
 
         //Create attacks
-        objectmap attacks;
-        if(j_char.count("attacks") > 0) attacks = j_char["attacks"].get<objectmap>();
+        map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CCharacter(j_char["name"],j_char.value("description",""), newDialog, attacks);
+        m_characters[j_char["id"]] = new CCharacter(j_char["name"], j_char["id"], j_char.value("description",""), j_char.value("hp", 30), j_char.value("strength", 7), newDialog, attacks);
         mapChars[j_char["id"]] = j_char["name"];
     }
 
@@ -98,6 +102,19 @@ void CGame::attackFactory(std::string sPath) {
 
     for(auto j_attack : j_attacks) 
         m_attacks[j_attack["id"]] = new CAttack(j_attack["name"], j_attack["description"], j_attack["output"], j_attack["power"]);
+}
+
+map<string, CAttack*> CGame::parsePersonAttacks(nlohmann::json j_person)
+{
+    map<string, CAttack*> mapAttacks;
+    if(j_person.count("attacks") == 0)
+        return mapAttacks;
+
+    objectmap person_attacks = j_person["attacks"].get<objectmap>();
+    for(auto attack : person_attacks) 
+        mapAttacks[attack.first] = m_attacks[attack.first];
+
+    return mapAttacks;
 }
 
 
@@ -153,11 +170,10 @@ void CGame::playerFactory()
     for(auto j_player : j_players) {
 
         //Create attacks
-        objectmap attacks;
-        if(j_player.count("attacks") > 0) attacks = j_player["attacks"].get<objectmap>();
+        map<string, CAttack*> attacks = parsePersonAttacks(j_player);
 
-
-        m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["id"], m_rooms[j_player["room"]], attacks);
+        //Create player
+        m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["id"], j_player.value("hp", 40), j_player.value("strength", 8), m_rooms[j_player["room"]], attacks);
     }
 }
 
@@ -205,7 +221,7 @@ void CGame::show(string sIdentifier) {
     else if(sIdentifier == "room")
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDescription(m_characters));
     else if(sIdentifier == "stats")
-        m_curPlayer->appendPrint(m_curPlayer->showStats(m_attacks));
+        m_curPlayer->appendPrint(m_curPlayer->showStats());
 }
 
 void CGame::goTo(std::string sIdentifier) {
@@ -241,8 +257,11 @@ void CGame::startDialog(string sIdentifier)
 }
 
 void CGame::callDialog(string sIdentifier) {
-    event newEvent = std::make_pair(m_curPlayer->callDialog(sIdentifier), "");
-    throw_event(newEvent);
+    throw_event(m_curPlayer->callDialog(sIdentifier));
+}
+
+void CGame::callFight(string sIdentifier) {
+    throw_event(m_curPlayer->callFight(sIdentifier));
 }
 
 void CGame::error(string sIdentifier) {
@@ -253,6 +272,23 @@ void CGame::error(string sIdentifier) {
 // *** DIALOG HANDLER *** //
 void CGame::pissingman_fuckoff(string sIdentifier) {
     m_characters["pissing_man"]->setDialog(dialogFactory("defaultDialog"));
+}
+
+// *** ROOM HANDLER *** //
+void CGame::firstZombieAttack(string sIdentifier)
+{
+    //Get selected room
+    if(m_curPlayer->getRoom()->getID() != "hospital_stairs")
+        return;
+
+    m_curPlayer->appendPrint("\n$"); 
+    //Create fight
+    CFight* fight = new CFight("First Fight", "A zombie comes running down the stairs and attacks you!", m_curPlayer, m_characters["hospital_zombie1"]);
+    m_curPlayer->setFight(fight);
+    m_curPlayer->setStatus("fight");
+    fight->initializeFight();
+
+    m_eventmanager["goTo"].erase(m_eventmanager["goTo"].begin()+1);
 }
 
 

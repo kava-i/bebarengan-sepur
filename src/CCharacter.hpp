@@ -16,7 +16,7 @@ private:
     string m_sDescription;
 
 public:
-    CCharacter(string sName, string sDescription, SDialog* newDialog, objectmap attacks);
+    CCharacter(string sName, string sID, string sDescription, int hp, size_t strength, SDialog* newDialog, attacks newAttacks);
 
     // *** GETTER *** // 
     string getDescription();

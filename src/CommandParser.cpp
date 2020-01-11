@@ -8,6 +8,8 @@ CCommandParser::event CCommandParser::parse(std::string sInput, std::string stat
         newEvent = parseCommand(sInput);
     else if(status.find("dialog") != std::string::npos)
         newEvent = parseDialogCommand(sInput, status);
+    else if(status == "fight")
+        newEvent = std::make_pair("fight", sInput);
     
     return newEvent;
 }

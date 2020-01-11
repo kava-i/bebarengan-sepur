@@ -1,32 +1,36 @@
 #include "CPlayer.hpp"
 
-CPlayer::CPlayer(string sName, string sID, CRoom* room, objectmap attacks)
+CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room, attacks newAttacks)
 {
     m_sName = sName;
     m_sID = sID;
+    m_hp = hp;
+    m_strength = strength;
     m_room = room;
     m_status = "standard";
-    m_attacks = attacks;
+    m_attacks = newAttacks;
 }
 
 // *** GETTER *** // 
 CRoom* CPlayer::getRoom()   { return m_room; }
 string CPlayer::getPrint()  { return m_sPrint; }
 string CPlayer::getStatus() { return m_status; };
+CFight* CPlayer::getFight() { return m_curFight; };
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room)          { m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
+void CPlayer::setFight(CFight* newFight)    { m_curFight = newFight; }
 
 //*** FUNCTIONS *** // 
 
-string CPlayer::callDialog(string sPlayerChoice)
+CPlayer::event CPlayer::callDialog(string sPlayerChoice)
 {
     if(isdigit(sPlayerChoice[0]) == false) {
         appendPrint("Please choose an number\n");
-        return "";
+        return std::make_pair("", "");
     }
 
     //Parse input
@@ -36,7 +40,10 @@ string CPlayer::callDialog(string sPlayerChoice)
 
     //Call state
     callDialogState(next_id);
-    return m_dialog->sName + "/" + next_id;
+
+    //Return event
+    event newEvent = std::make_pair(m_dialog->sName+"/"+next_id, "");
+    return newEvent;
 }
 
 void CPlayer::callDialogState(string sDialogStateID)
@@ -51,14 +58,15 @@ void CPlayer::callDialogState(string sDialogStateID)
         m_status = "dialog/" + sDialogStateID;
 }
 
-string CPlayer::showStats(map<string, CAttack*> attacks) {
+CPlayer::event CPlayer::callFight(string sPlayerChoice) 
+{
+    return m_curFight->fightRound(sPlayerChoice);
+}
+
+string CPlayer::showStats() {
     string stats = "Name: " + m_sName + "\nID: " + m_sID + "\nStatus: " + m_status + "\n";
-    stats += "Attacks: \n";
-    for(auto attack : m_attacks)
-        stats += "-> " + attack.second + ": " + attacks[attack.first]->getDescription() + "\n";
+    stats += printAttacks();
 
     return stats;
 }
-
-
 

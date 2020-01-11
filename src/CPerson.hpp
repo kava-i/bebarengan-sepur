@@ -1,9 +1,11 @@
-#ifndef CPERSON_H
+#ifndef CPERSON_H 
 #define CPERSON_H
 
 #include <iostream>
 #include <map>
 #include "CDialog.hpp"
+#include "CAttack.hpp"
+#include "fuzzy.hpp"
 
 using std::string;
 
@@ -17,8 +19,8 @@ protected:
     int m_hp;
     size_t m_strength;
 
-    typedef std::map<string, string> objectmap;
-    objectmap m_attacks;
+    typedef std::map<string, CAttack*> attacks;
+    attacks m_attacks;
 
     //Dialog
     SDialog* m_dialog;
@@ -27,13 +29,22 @@ public:
 
     // *** GETTER *** // 
     string getName();
+    string getID();
     int getHp();
     size_t getStrength();
     SDialog* getDialog();
-    std::map<string, string> getAttacks();
+    attacks& getAttacks();
 
     // *** SETTER *** //
     void setDialog(SDialog* newDialog);
+    void setHp(int hp);
+
+    string printAttacks();
+    string getAttack(string sPlayerChoice);
+
+    // *** Functions needed in CPlayer *** //
+    virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
+    virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }
 };
 
 #endif

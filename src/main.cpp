@@ -30,7 +30,19 @@ int main()
         }
 
 
-        std::cout << game.play(sInput, sName) << "\n";
+        std::string sOutput = game.play(sInput, sName);
+
+        for(auto i=0; i<sOutput.length(); i++)
+        {
+            if(sOutput[i] != '$') std::cout << sOutput[i];
+            else {
+                std::cout << "Continue... ";
+                int c=getchar();
+            }
+        }
+
+        std::cout << "\n";
+        
     }
 
 

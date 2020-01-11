@@ -2,7 +2,9 @@
 
 - name: "Anna"
   id: anna-bronec
-  room: compartment-a
+  room: hospital_foyer
+  hp: 50
+  strength: 10
   attacks: 
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
@@ -12,5 +14,7 @@
 - name: "Jan"
   id: jan-van-dick
   room: trainCorridor
+  hp: 55
+  strength: 8
   attacks:
     punsch: "Punsch"

@@ -1,10 +1,14 @@
 #include "CCharacter.hpp"
 
-CCharacter::CCharacter(string sName, string sDescription, SDialog* newDialog, objectmap attacks) {
+CCharacter::CCharacter(string sName, string sID, string sDescription, int hp, size_t strength, SDialog* newDialog, attacks newAttacks) {
+
     m_sName = sName;
+    m_sID = sID;
     m_sDescription = sDescription;
+    m_hp = hp;
+    m_strength = strength;
     m_dialog = newDialog;
-    m_attacks = attacks;
+    m_attacks = newAttacks;
 
 }
 // *** GETTER *** //
