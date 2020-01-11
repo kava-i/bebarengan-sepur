@@ -1,26 +1,24 @@
 #include "CPlayer.hpp"
 
-CPlayer::CPlayer(string sName, string sID, CRoom* room)
+CPlayer::CPlayer(string sName, string sID, CRoom* room, objectmap attacks)
 {
     m_sName = sName;
     m_sID = sID;
     m_room = room;
     m_status = "standard";
+    m_attacks = attacks;
 }
 
 // *** GETTER *** // 
-string CPlayer::getName() { return m_sName; }
-CRoom* CPlayer::getRoom() { return m_room; }
-string CPlayer::getPrint() { return m_sPrint; }
+CRoom* CPlayer::getRoom()   { return m_room; }
+string CPlayer::getPrint()  { return m_sPrint; }
 string CPlayer::getStatus() { return m_status; };
-SDialog* CPlayer::getDialog() { return m_curDialog; }
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room)          { m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
-void CPlayer::setDialog(SDialog* newDialog) { m_curDialog = newDialog; }
 
 //*** FUNCTIONS *** // 
 
@@ -34,17 +32,17 @@ string CPlayer::callDialog(string sPlayerChoice)
     //Parse input
     size_t pos = m_status.find("/");
     string cur_id = m_status.substr(pos+1, m_status.length()-pos);
-    string next_id = m_curDialog->states[cur_id]->getOptions()[stoi(sPlayerChoice)].sTarget;
+    string next_id = m_dialog->states[cur_id]->getOptions()[stoi(sPlayerChoice)].sTarget;
 
     //Call state
     callDialogState(next_id);
-    return m_curDialog->sName + "/" + next_id;
+    return m_dialog->sName + "/" + next_id;
 }
 
 void CPlayer::callDialogState(string sDialogStateID)
 {
     //Call state
-    appendPrint(m_curDialog->states[sDialogStateID]->callState());
+    appendPrint(m_dialog->states[sDialogStateID]->callState());
 
     //Update status
     if(m_sPrint.find("Dialog ended") != string::npos)
@@ -53,8 +51,12 @@ void CPlayer::callDialogState(string sDialogStateID)
         m_status = "dialog/" + sDialogStateID;
 }
 
-string CPlayer::showStats() {
+string CPlayer::showStats(map<string, CAttack*> attacks) {
     string stats = "Name: " + m_sName + "\nID: " + m_sID + "\nStatus: " + m_status + "\n";
+    stats += "Attacks: \n";
+    for(auto attack : m_attacks)
+        stats += "-> " + attack.second + ": " + attacks[attack.first]->getDescription() + "\n";
+
     return stats;
 }
 

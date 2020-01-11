@@ -25,6 +25,7 @@ int main()
             getline(std::cin, sName);
             if(sName == "Anna") sName = "anna-bronec";
             if(sName == "Jan")  sName = "jan-van-dick";
+            std::cout << "\n";
             continue;
         }
 

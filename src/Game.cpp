@@ -9,10 +9,14 @@ CGame::CGame() {
 // ****************** FACTORYS ********************** //
 void CGame::worldFactory()
 {
-    //Create rooms
+    //Initialize dialog-functions
     CDState::initializeFunctions();
 
+    //Create rooms
     roomFactory();
+
+    //Create attacks
+    attackFactory();
 
     //Create players
     playerFactory();
@@ -36,8 +40,6 @@ void CGame::roomFactory()
 
 void CGame::roomFactory(string sPath)
 {
-    std::cout << sPath << std::endl;
-
     //Read json creating all rooms
     std::ifstream read(sPath);
     nlohmann::json j_rooms;
@@ -69,13 +71,35 @@ CGame::objectmap CGame::characterFactory(nlohmann::json j_characters)
         else
             newDialog = dialogFactory("defaultDialog");
 
+        //Create attacks
+        objectmap attacks;
+        if(j_char.count("attacks") > 0) attacks = j_char["attacks"].get<objectmap>();
+
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CCharacter(j_char["name"],j_char.value("description",""), newDialog);
+        m_characters[j_char["id"]] = new CCharacter(j_char["name"],j_char.value("description",""), newDialog, attacks);
         mapChars[j_char["id"]] = j_char["name"];
     }
 
     return mapChars;
 }
+
+void CGame::attackFactory()
+{
+    for(auto& p : fs::directory_iterator("factory/jsons/attacks"))
+        attackFactory(p.path());
+}
+
+void CGame::attackFactory(std::string sPath) {
+    //Read json creating all rooms
+    std::ifstream read(sPath);
+    nlohmann::json j_attacks;
+    read >> j_attacks;
+    read.close();
+
+    for(auto j_attack : j_attacks) 
+        m_attacks[j_attack["id"]] = new CAttack(j_attack["name"], j_attack["description"], j_attack["output"], j_attack["power"]);
+}
+
 
 SDialog* CGame::dialogFactory(string sPath)
 {
@@ -91,8 +115,6 @@ SDialog* CGame::dialogFactory(string sPath)
 
     for(auto j_state : j_states)
     {
-        std::cout << "Parsing " << j_state["id"] << "\n";
-
         // *** parse options *** //
         map<int, SDOption> options;
         if(j_state.count("options") != 0)
@@ -121,18 +143,21 @@ SDialog* CGame::dialogFactory(string sPath)
 void CGame::playerFactory()
 {
     std::cout << "Parsing players... \n";
+
     //Read json creating all rooms
     std::ifstream read("factory/jsons/players/players.json");
     nlohmann::json j_players;
     read >> j_players;
     read.close();
 
-    std::cout << "Reading json complete\n";
+    for(auto j_player : j_players) {
 
-    for(auto j_player : j_players)
-    {
-        CPlayer* player = new CPlayer(j_player["name"], j_player["id"], m_rooms[j_player["room"]]);
-        m_players[j_player["id"]] = player;
+        //Create attacks
+        objectmap attacks;
+        if(j_player.count("attacks") > 0) attacks = j_player["attacks"].get<objectmap>();
+
+
+        m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["id"], m_rooms[j_player["room"]], attacks);
     }
 }
 
@@ -180,7 +205,7 @@ void CGame::show(string sIdentifier) {
     else if(sIdentifier == "room")
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDescription(m_characters));
     else if(sIdentifier == "stats")
-        m_curPlayer->appendPrint(m_curPlayer->showStats());
+        m_curPlayer->appendPrint(m_curPlayer->showStats(m_attacks));
 }
 
 void CGame::goTo(std::string sIdentifier) {

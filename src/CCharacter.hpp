@@ -4,29 +4,22 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "CPerson.hpp"
 #include "CDialog.hpp"
 
 using std::string;
+using std::map;
 
-class CCharacter
+class CCharacter : public CPerson
 { 
 private:
-    string m_sName;
     string m_sDescription;
 
-    //Dialog
-    SDialog* m_dialog;
-
 public:
-    CCharacter(string sName, string sDescription, SDialog* newDialog);
+    CCharacter(string sName, string sDescription, SDialog* newDialog, objectmap attacks);
 
     // *** GETTER *** // 
-    string getName();
     string getDescription();
-    SDialog* getDialog();
-
-    // *** SETTER *** //
-    void setDialog(SDialog* newDialog);
 
 };
     

@@ -6,8 +6,10 @@
 #include <stdio.h>
 #include <filesystem>
 #include "CRoom.hpp"
+#include "CPerson.hpp"
 #include "CPlayer.hpp"
 #include "CCharacter.hpp"
+#include "CAttack.hpp"
 #include "CDialog.hpp"
 #include "CCommandParser.hpp"
 #include "json.hpp"
@@ -25,6 +27,7 @@ private:
     map<string, CPlayer*>    m_players;
     map<string, CRoom*>      m_rooms;
     map<string, CCharacter*> m_characters;
+    map<string, CAttack*>    m_attacks;
 
     CPlayer* m_curPlayer;
 
@@ -43,6 +46,8 @@ public:
     void roomFactory();
     void roomFactory(string sPath);
     void playerFactory();
+    void attackFactory();
+    void attackFactory(std::string sPath);
     objectmap characterFactory(nlohmann::json j_characters);
     SDialog* dialogFactory(string sPath); 
 

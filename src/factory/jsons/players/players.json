@@ -1,1 +1,1 @@
-[{"name": "Anna", "id": "anna-bronec", "room": "compartment-a"}, {"name": "Jan", "id": "jan-van-dick", "room": "trainCorridor"}]
+[{"name": "Anna", "id": "anna-bronec", "room": "compartment-a", "attacks": {"kick": "Kick", "between_the_legs_kick": "Kick between the legs"}}, {"name": "Jan", "id": "jan-van-dick", "room": "trainCorridor", "attacks": {"punsch": "Punsch"}}]

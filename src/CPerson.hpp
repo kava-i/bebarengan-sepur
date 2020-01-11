@@ -15,7 +15,10 @@ protected:
 
     //Stats
     int m_hp;
-    size_t strength;
+    size_t m_strength;
+
+    typedef std::map<string, string> objectmap;
+    objectmap m_attacks;
 
     //Dialog
     SDialog* m_dialog;
@@ -27,9 +30,12 @@ public:
     int getHp();
     size_t getStrength();
     SDialog* getDialog();
+    std::map<string, string> getAttacks();
 
     // *** SETTER *** //
     void setDialog(SDialog* newDialog);
-}
+};
+
+#endif
 
         
