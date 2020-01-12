@@ -29,6 +29,7 @@ void CGame::worldFactory()
     m_eventmanager["dialog"]    = {&CGame::callDialog};
     m_eventmanager["fight"]     = {&CGame::callFight};
     m_eventmanager["error"]     = {&CGame::error};
+    m_eventmanager["deleteCharacter"] = {&CGame::deleteCharacter};
 
     //Dialogs
     m_eventmanager["pissingManDialog/fuckoff"]   = {&CGame::pissingman_fuckoff};
@@ -261,13 +262,22 @@ void CGame::callDialog(string sIdentifier) {
 }
 
 void CGame::callFight(string sIdentifier) {
-    throw_event(m_curPlayer->callFight(sIdentifier));
+    event newEvent = m_curPlayer->callFight(sIdentifier);
+    throw_event(newEvent);
 }
 
 void CGame::error(string sIdentifier) {
     m_curPlayer->appendPrint("This command is unkown.\n");
 }
 
+void CGame::deleteCharacter(string sIdentifier) {
+    delete m_characters[sIdentifier];
+
+    for(auto room : m_rooms) {
+        if(room.second->getCharacters().count(sIdentifier) > 0)
+            room.second->getCharacters().erase(sIdentifier);
+    }
+}
 
 // *** DIALOG HANDLER *** //
 void CGame::pissingman_fuckoff(string sIdentifier) {

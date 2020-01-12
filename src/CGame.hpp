@@ -67,6 +67,7 @@ public:
     void callDialog (string sIdentifier);
     void callFight  (string sIdentifier);
     void error      (string sIdentifier);
+    void deleteCharacter (string sIdentifier);
     
     //Dialogs
     void pissingman_fuckoff(string sIdentifier);
