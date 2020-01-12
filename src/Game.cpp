@@ -24,6 +24,7 @@ void CGame::worldFactory()
 
     //Add eventhandlers to eventmanager 
     m_eventmanager["show"]      = {&CGame::show};
+    m_eventmanager["lookIn"]    = {&CGame::lookIn};
     m_eventmanager["goTo"]      = {&CGame::goTo};
     m_eventmanager["talkTo"]    = {&CGame::startDialog};
     m_eventmanager["dialog"]    = {&CGame::callDialog};
@@ -76,16 +77,20 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
         string sID   = j_item["id"];
         string sDescription = j_item["description"];
          
-        std::cout << "Parsing ... " << sName << std::endl;
-        if(j_item.count("movable") == false)
+        if(j_item.count("moveable") > 0)
         {
             objectmap characters;
+            if(j_item.count("characters") > 0) 
+                characters = j_item["characters"].get<objectmap>();
             objectmap items;
-            mapItems[j_item["id"]] = new CFixxedItem(sName, sID, sDescription, characters, items);
-            std::cout << "finished parsing " << mapItems[j_item["id"]]->getName() << "\n";
+            if(j_item.count("items") > 0) 
+                items = j_item["items"].get<objectmap>();
+            mapItems[j_item["id"]] = new CFixxedItem(sName, sID, sDescription, j_item["look"], characters, items);
         }
-    } 
 
+        else
+            mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, j_item["value"], j_item.value("hidden", false));
+    } 
     return mapItems;
 } 
 
@@ -251,6 +256,11 @@ void CGame::show(string sIdentifier) {
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showItems());
     else if(sIdentifier == "stats")
         m_curPlayer->appendPrint(m_curPlayer->showStats());
+}
+
+void CGame::lookIn(string sIdentifier) {
+    std::cout << "At least here? \n";
+    m_curPlayer->appendPrint(m_curPlayer->getRoom()->look("in", sIdentifier));
 }
 
 void CGame::goTo(std::string sIdentifier) {

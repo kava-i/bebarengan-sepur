@@ -69,9 +69,27 @@ string CRoom::showItems()
     string items = "Items: \n";
     size_t counter=1;
     for(auto it : m_items) {
-        items += std::to_string(counter) + ": "+ it.second->getName() + "\n";
+        if(it.second->getHidden() == true) continue;
+        items += std::to_string(counter) + ": "+ it.second->getName()+" - "+it.second->getDescription() + "\n";
         counter++;
     }
     return items;
 } 
+
+string CRoom::look(string sWhere, string sWhat)
+{
+    std::cout << "Called correct function...\n";
+    string sOutput = "Found: \n";
+    for(auto item : m_items)
+    {
+        if(item.second->getLook() == sWhere && fuzzy::fuzzy_cmp(item.second->getName(), sWhere) > 0.2)
+        {
+            for(auto it : item.second->getItems()) {
+                sOutput += "- " + it.second + " - " + m_items[it.first]->getDescription() + "\n";
+                m_items[it.first]->setHidden(false);
+            }
+        }
+    }
+    return sOutput;
+}
 

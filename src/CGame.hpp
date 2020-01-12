@@ -63,6 +63,7 @@ public:
 
     // *** EVENTHANDLERS *** // 
     void show       (string sIdentifier);
+    void lookIn     (string sIdentifier);
     void goTo       (string sIdentifier);
     void startDialog(string sIdentifier);
     void callDialog (string sIdentifier);

@@ -7,10 +7,18 @@
     hospital_stairs: Stairs
   characters:
   items:
+    - name: Stick
+      id: hospital_stick
+      description: A wooden stick hard enough to course some pain.
+      value: 5
+      hidden: true
     - name: Small box
       id: hospital_small-box
       description: A small wooden box
       moveable: false
+      look: in
+      items:
+        hospital_stick: Stick
 
 - name: Stairs
   id: hospital_stairs

@@ -42,6 +42,7 @@ public:
     string showExits();
     string showCharacters();
     string showItems();
+    string look(string sWhere, string sWhat);
 };
     
 #endif
