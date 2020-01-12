@@ -29,6 +29,7 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     std::regex showExits("((S|s)how).*exits");
     std::regex showCharacters("(S|s)how.*(P|p)eople.*");
     std::regex showDescription("(S|s)how.*(R|r)oom.*");
+    std::regex showItems("(S|s)how.*(I|i)tems.*");
     std::regex showStats("(S|s)how.*(S|s)tats.*");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
@@ -54,6 +55,11 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     //Show description:
     else if(std::regex_match(sInput, showDescription))
         newEvent = std::make_pair("show", "room");
+    
+    //Show items
+    else if(std::regex_match(sInput, showItems))
+        newEvent = std::make_pair("show", "items");
+
 
     //Show stats:
     else if(std::regex_match(sInput, showStats))

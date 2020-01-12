@@ -1,6 +1,6 @@
 #include "CRoom.hpp" 
 
-CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters)
+CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items)
 {
     m_sName = sName;
     m_sID = sID;
@@ -8,6 +8,7 @@ CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objec
     m_sEntry = sEntry;
     m_exists = exits;
     m_characters = characters;
+    m_items = items;
 }
 
 
@@ -17,8 +18,9 @@ string CRoom::getName()         { return m_sName; }
 string CRoom::getID()           { return m_sID; }
 string CRoom::getDescription()  { return m_sDescription; }
 string CRoom::getEntry()        { return m_sEntry; }
-CRoom::objectmap& CRoom::getExtits()    { return m_exists; }
-CRoom::objectmap& CRoom::getCharacters(){ return m_characters; }
+CRoom::objectmap& CRoom::getExtits()        { return m_exists; }
+CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
+std::map<string, CItem*>& CRoom::getItems()  { return m_items; }
 
 
 // *** VARIOUS FUNCTIONS *** //
@@ -61,4 +63,15 @@ string CRoom::showCharacters()
     }
     return characters;
 }       
+
+string CRoom::showItems()
+{
+    string items = "Items: \n";
+    size_t counter=1;
+    for(auto it : m_items) {
+        items += std::to_string(counter) + ": "+ it.second->getName() + "\n";
+        counter++;
+    }
+    return items;
+} 
 

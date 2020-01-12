@@ -50,6 +50,7 @@ public:
     void attackFactory();
     void attackFactory(std::string sPath);
     map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
+    map<string, CItem*>   itemFactory(nlohmann::json j_room);
     objectmap characterFactory(nlohmann::json j_characters);
     SDialog* dialogFactory(string sPath); 
 

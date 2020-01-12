@@ -29,7 +29,6 @@ void CGame::worldFactory()
     m_eventmanager["dialog"]    = {&CGame::callDialog};
     m_eventmanager["fight"]     = {&CGame::callFight};
     m_eventmanager["error"]     = {&CGame::error};
-    m_eventmanager["deleteCharacter"] = {&CGame::deleteCharacter};
 
     //Dialogs
     m_eventmanager["pissingManDialog/fuckoff"]   = {&CGame::pissingman_fuckoff};
@@ -54,14 +53,41 @@ void CGame::roomFactory(string sPath)
     
     for(auto j_room : j_rooms )
     {
-        std::cout << "Parsing " << j_room["name"] << "...\n";
         //Parse characters 
         objectmap mapChars = characterFactory(j_room["characters"]);
 
+        //Parse items
+        map<string, CItem*> mapItems = itemFactory(j_room);
+
         //Create new room
-        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars); 
+        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars, mapItems);
     }
 }
+
+map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
+{
+    map<string, CItem*> mapItems;
+    if(j_room.count("items") == 0)
+        return mapItems;
+
+    for(auto j_item : j_room["items"])
+    {
+        string sName = j_item["name"];
+        string sID   = j_item["id"];
+        string sDescription = j_item["description"];
+         
+        std::cout << "Parsing ... " << sName << std::endl;
+        if(j_item.count("movable") == false)
+        {
+            objectmap characters;
+            objectmap items;
+            mapItems[j_item["id"]] = new CFixxedItem(sName, sID, sDescription, characters, items);
+            std::cout << "finished parsing " << mapItems[j_item["id"]]->getName() << "\n";
+        }
+    } 
+
+    return mapItems;
+} 
 
 CGame::objectmap CGame::characterFactory(nlohmann::json j_characters)
 {
@@ -221,6 +247,8 @@ void CGame::show(string sIdentifier) {
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showCharacters());
     else if(sIdentifier == "room")
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDescription(m_characters));
+    else if(sIdentifier == "items")
+        m_curPlayer->appendPrint(m_curPlayer->getRoom()->showItems());
     else if(sIdentifier == "stats")
         m_curPlayer->appendPrint(m_curPlayer->showStats());
 }
@@ -262,22 +290,13 @@ void CGame::callDialog(string sIdentifier) {
 }
 
 void CGame::callFight(string sIdentifier) {
-    event newEvent = m_curPlayer->callFight(sIdentifier);
-    throw_event(newEvent);
+    throw_event(m_curPlayer->callFight(sIdentifier));
 }
 
 void CGame::error(string sIdentifier) {
     m_curPlayer->appendPrint("This command is unkown.\n");
 }
 
-void CGame::deleteCharacter(string sIdentifier) {
-    delete m_characters[sIdentifier];
-
-    for(auto room : m_rooms) {
-        if(room.second->getCharacters().count(sIdentifier) > 0)
-            room.second->getCharacters().erase(sIdentifier);
-    }
-}
 
 // *** DIALOG HANDLER *** //
 void CGame::pissingman_fuckoff(string sIdentifier) {

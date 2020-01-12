@@ -6,6 +6,11 @@
     compartment-a: Entrance door
     hospital_stairs: Stairs
   characters:
+  items:
+    - name: Small box
+      id: hospital_small-box
+      description: A small wooden box
+      moveable: false
 
 - name: Stairs
   id: hospital_stairs

@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include "CCharacter.hpp"
+#include "CItem.hpp"
 #include "fuzzy.hpp"
 
 using std::string;
@@ -21,8 +22,10 @@ private:
     objectmap m_exists;
     objectmap m_characters;
 
+    std::map<string, CItem*> m_items;
+
 public:
-    CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters);
+    CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items);
 
     // *** getter *** // 
     string getName();
@@ -31,12 +34,14 @@ public:
     string getEntry();
     objectmap& getExtits();
     objectmap& getCharacters();
+    std::map<string, CItem*>& getItems();
 
     // *** various functions *** //
     string showEntryDescription(std::map<string, CCharacter*>& mapChars);
     string showDescription(std::map<string, CCharacter*>& mapChars); 
     string showExits();
     string showCharacters();
+    string showItems();
 };
     
 #endif
