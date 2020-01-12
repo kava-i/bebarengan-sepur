@@ -30,8 +30,10 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     std::regex showCharacters("(S|s)how.*(P|p)eople.*");
     std::regex showDescription("(S|s)how.*(R|r)oom.*");
     std::regex showItems("(S|s)how.*(I|i)tems.*");
+    std::regex showInventory("(S|s)how.*(I|i)nventory.*");
     std::regex showStats("(S|s)how.*(S|s)tats.*");
-    std::regex lookIn("(L|l)(ook in) (.*)");
+    std::regex lookIn("(L|l)(ook in )(.*)");
+    std::regex take("(take )(.*)");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
     //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
@@ -61,6 +63,10 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     else if(std::regex_match(sInput, showItems))
         newEvent = std::make_pair("show", "items");
 
+    //Show inventory
+    else if(std::regex_match(sInput, showInventory))
+        newEvent = std::make_pair("show", "inventory");
+
     //Show stats:
     else if(std::regex_match(sInput, showStats))
         newEvent = std::make_pair("show", "stats");
@@ -68,6 +74,11 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     //Look in
     else if(std::regex_search(sInput, m, lookIn))
         newEvent = std::make_pair("lookIn", m[3]); 
+
+    //Take
+    else if(std::regex_search(sInput, m, take))
+        newEvent = std::make_pair("take", m[2]); 
+
 
     //Change room
     else if(std::regex_search(sInput, m, goTo))

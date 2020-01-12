@@ -63,6 +63,22 @@ CPlayer::event CPlayer::callFight(string sPlayerChoice)
     return m_curFight->fightRound(sPlayerChoice);
 }
 
+void CPlayer::printInventory() {
+    m_sPrint += m_sName + "'s Inventory: \n";
+    for(auto it : m_inventory) 
+        m_sPrint += "  " + std::to_string(it.second.size()) + "x " + it.second[0]->getName() +"\n";
+}
+
+void CPlayer::addItem(CItem* item) {
+    if(item->getMoveable() == false) 
+        m_sPrint += "I can't move this. No fucking way can I move this!\n";
+
+    else {
+        m_inventory[item->getID()].push_back(item);
+        m_sPrint += "Item added to " + m_sName + "'s inventory.\n";
+    }
+}
+        
 string CPlayer::showStats() {
     string stats = "Name: " + m_sName + "\nID: " + m_sID + "\nStatus: " + m_status + "\n";
     stats += printAttacks();

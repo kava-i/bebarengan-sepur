@@ -78,14 +78,19 @@ string CRoom::showItems()
 
 string CRoom::look(string sWhere, string sWhat)
 {
-    std::cout << "Called correct function...\n";
-    string sOutput = "Found: \n";
+    string sOutput = "You found ";
     for(auto item : m_items)
     {
-        if(item.second->getLook() == sWhere && fuzzy::fuzzy_cmp(item.second->getName(), sWhere) > 0.2)
+        if(item.second->getLook() == sWhere && fuzzy::fuzzy_cmp(item.second->getName(), sWhat) <= 0.2)
         {
+            size_t counter = 1;
+            size_t numItems = item.second->getItems().size();
             for(auto it : item.second->getItems()) {
-                sOutput += "- " + it.second + " - " + m_items[it.first]->getDescription() + "\n";
+                sOutput += "a " + it.second + " (" + m_items[it.first]->getDescription() + ")";
+                if(counter == numItems) sOutput+= ".\n";
+                else if(counter == numItems-1) sOutput+= " and ";
+                else sOutput += ", ";
+                counter++;
                 m_items[it.first]->setHidden(false);
             }
         }
@@ -93,3 +98,14 @@ string CRoom::look(string sWhere, string sWhat)
     return sOutput;
 }
 
+CItem* CRoom::getItem(std::string sPlayerChoice)
+{
+    for(auto it : m_items)
+    {
+        if(it.second->getHidden() == true) 
+            continue;
+        if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2)
+            return it.second;
+    }
+    return NULL;
+}

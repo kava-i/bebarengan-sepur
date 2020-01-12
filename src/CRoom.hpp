@@ -43,6 +43,7 @@ public:
     string showCharacters();
     string showItems();
     string look(string sWhere, string sWhat);
+    CItem* getItem(string sPlayerChoice);
 };
     
 #endif

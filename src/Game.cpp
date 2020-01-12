@@ -29,6 +29,7 @@ void CGame::worldFactory()
     m_eventmanager["talkTo"]    = {&CGame::startDialog};
     m_eventmanager["dialog"]    = {&CGame::callDialog};
     m_eventmanager["fight"]     = {&CGame::callFight};
+    m_eventmanager["take"]      = {&CGame::take};
     m_eventmanager["error"]     = {&CGame::error};
 
     //Dialogs
@@ -254,12 +255,13 @@ void CGame::show(string sIdentifier) {
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDescription(m_characters));
     else if(sIdentifier == "items")
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showItems());
+    else if(sIdentifier == "inventory")
+        m_curPlayer->printInventory();
     else if(sIdentifier == "stats")
         m_curPlayer->appendPrint(m_curPlayer->showStats());
 }
 
 void CGame::lookIn(string sIdentifier) {
-    std::cout << "At least here? \n";
     m_curPlayer->appendPrint(m_curPlayer->getRoom()->look("in", sIdentifier));
 }
 
@@ -301,6 +303,13 @@ void CGame::callDialog(string sIdentifier) {
 
 void CGame::callFight(string sIdentifier) {
     throw_event(m_curPlayer->callFight(sIdentifier));
+}
+
+void CGame::take(string sIdentifier) {
+    CItem* item = m_curPlayer->getRoom()->getItem(sIdentifier);
+    if(item == NULL)
+        return;
+    m_curPlayer->addItem(item);
 }
 
 void CGame::error(string sIdentifier) {

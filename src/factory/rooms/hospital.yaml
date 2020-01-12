@@ -12,6 +12,16 @@
       description: A wooden stick hard enough to course some pain.
       value: 5
       hidden: true
+    - name: Wine
+      id: hospital_wine
+      description: A good dusty bottle of grandmas red wine
+      value: 20
+      hidden: true
+    - name: Pack of cigaretts
+      id: hospital_cigarettes
+      description: A pack of malboro gold, dusty and old, but they'll do when you're craving."
+      value: 6
+      hidden: true
     - name: Small box
       id: hospital_small-box
       description: A small wooden box
@@ -19,6 +29,8 @@
       look: in
       items:
         hospital_stick: Stick
+        hospital_wine: Wine
+        hospital_cigarettes: A pack of Cigarettes
 
 - name: Stairs
   id: hospital_stairs

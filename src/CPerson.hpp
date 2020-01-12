@@ -5,6 +5,7 @@
 #include <map>
 #include "CDialog.hpp"
 #include "CAttack.hpp"
+#include "CItem.hpp"
 #include "fuzzy.hpp"
 
 using std::string;
@@ -43,6 +44,7 @@ public:
     string getAttack(string sPlayerChoice);
 
     // *** Functions needed in CPlayer *** //
+    virtual void addItem(CItem*)     { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
     virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }
 };

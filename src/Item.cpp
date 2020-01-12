@@ -6,6 +6,8 @@ string CItem::getID()    { return m_sID; }
 string CItem::getDescription() { return m_sDescription; }
 size_t CItem::getValue() { return m_value; }
 bool CItem::getHidden()  { return m_hidden; }
+bool CItem::getMoveable()  { return m_moveable; }
+
 
 // *** SETTER *** //
 void CItem::setHidden(bool hidden) { m_hidden = hidden; }

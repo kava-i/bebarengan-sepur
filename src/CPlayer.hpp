@@ -22,6 +22,9 @@ private:
 
     CFight* m_curFight;
 
+    typedef map<string, vector<CItem*>> inventory;
+    inventory m_inventory;
+
 public:
     CPlayer() {};
     CPlayer(string sName, string sID, int hp, size_t strength,  CRoom* room, attacks newAttacks);
@@ -44,7 +47,9 @@ public:
     event callDialog(string sPlayerChoice);
     void callDialogState(string sDialogStateID); 
     event callFight(string sPlayerChoice);
-
+    
+    void printInventory();
+    void addItem(CItem* item);
     string showStats();
 };
 
