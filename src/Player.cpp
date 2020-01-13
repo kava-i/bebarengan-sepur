@@ -79,14 +79,9 @@ void CPlayer::printInventory() {
 }
 
 void CPlayer::addItem(CItem* item) {
-    if(item->getMoveable() == false) 
-        m_sPrint += "I can't move this. No fucking way can I move this!\n";
-
-    else {
-        m_inventory[item->getID()].push_back(item);
-        m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
-        m_room->getItems().erase(item->getID());
-    }
+    m_inventory[item->getID()].push_back(item);
+    m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
+    m_room->getItems().erase(item->getID());
 }
 
 void CPlayer::useItem(string sPlayerChoice) {

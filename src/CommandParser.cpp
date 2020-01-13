@@ -30,6 +30,7 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     std::regex showCharacters("(S|s)how.*(P|p)eople.*");
     std::regex showDescription("(S|s)how.*(R|r)oom.*");
     std::regex showItems("(S|s)how.*(I|i)tems.*");
+    std::regex showDetails("(S|s)how.*(D|d)etails.*");
     std::regex showInventory("(S|s)how.*(I|i)nventory.*");
     std::regex showStats("(S|s)how.*(S|s)tats.*");
     std::regex lookIn("(L|l)(ook in )(.*)");
@@ -63,6 +64,10 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     //Show items
     else if(std::regex_match(sInput, showItems))
         newEvent = std::make_pair("show", "items");
+
+    //Show details
+    else if(std::regex_match(sInput, showDetails))
+        newEvent = std::make_pair("show", "details");
 
     //Show inventory
     else if(std::regex_match(sInput, showInventory))
