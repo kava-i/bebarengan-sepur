@@ -13,16 +13,16 @@ bool CItem::getMoveable(){ return m_moveable; }
 // *** SETTER *** //
 void CItem::setHidden(bool hidden) { m_hidden = hidden; }
 
-std::map<string, string (CItem::*)()> CItem::m_functions = {};
+std::map<string, string (CItem::*)(size_t& )> CItem::m_functions = {};
 void CItem::initializeFunctions()
 {
     m_functions["fixxed"]  = &CItem::fixxed;
-    m_functions["equipe"]  = &CItem::equipe;
-    m_functions["consume"] = &CItem::consume;
+    m_functions["equipe_weapon"] = &CItem::equipeWeapon;
+    m_functions["consume_drug"] = &CItem::consumeDrug;
 }
 
-string CItem::callFunction() {
-    return (this->*m_functions[m_sFunction])();
+string CItem::callFunction(size_t& state) {
+    return (this->*m_functions[m_sFunction])(state);
 }
 
 // ********** FIXXEDITEMS ********** //
@@ -51,7 +51,7 @@ CFixxedItem::objectmap& CFixxedItem::getItems()      { return m_items; }
 
 // ********** EQUIPPABLEITEMS ********** //
 
-CEquippableItem::CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value,bool hidden)
+CEquippableItem::CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value,bool hidden, string sFunction)
 {
     m_sName = sName;
     m_sID = sID;
@@ -60,19 +60,30 @@ CEquippableItem::CEquippableItem(string sName, string sID, string sDescription, 
     m_value = value;
     m_hidden = hidden;
     m_moveable = true;
-    m_sFunction = "equipe";
+    m_sFunction = sFunction;
 }
 
-CConsumeableItem::CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t value,bool hidden)
+string CEquippableItem::equipeWeapon(size_t& state)
+{
+    return "You equiped weapon: " + m_sName + ".\n";
+}
+
+CConsumeableItem::CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t effekt, size_t value, bool hidden, string sFunction)
 {
     m_sName = sName;
     m_sID = sID;
     m_sDescription = sDescription;
     m_sType = sType;
+    m_effekt = effekt;
     m_value = value;
     m_hidden = hidden;
     m_moveable = true;
-    m_sFunction = "consume";
+    m_sFunction = sFunction;
 }
 
+string CConsumeableItem::consumeDrug(size_t& state)
+{
+    state += m_effekt;
+    return "You consume drug: " + m_sName + ". Highness inceased by " +std::to_string(m_effekt) + ".\n";
+}
 

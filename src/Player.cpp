@@ -6,6 +6,7 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
     m_sID = sID;
     m_hp = hp;
     m_strength = strength;
+    m_highness = 0;
     m_room = room;
     m_status = "standard";
     m_attacks = newAttacks;
@@ -91,7 +92,7 @@ void CPlayer::addItem(CItem* item) {
 void CPlayer::useItem(string sPlayerChoice) {
     for(auto it : m_inventory) {
         if(fuzzy::fuzzy_cmp(it.second[0]->getName(), sPlayerChoice) <= 0.2) {
-            m_sPrint += it.second[0]->callFunction();
+            m_sPrint += it.second[0]->callFunction(m_highness);
             return;
          }
     }
@@ -100,7 +101,7 @@ void CPlayer::useItem(string sPlayerChoice) {
 }       
 
 string CPlayer::showStats() {
-    string stats = "Name: " + m_sName + "\nID: " + m_sID + "\nStatus: " + m_status + "\n";
+    string stats = "Name: " + m_sName + "\nHP: " + std::to_string(m_hp) + "\nStrength: " + std::to_string(m_strength)+ "\nHighness: " + std::to_string(m_highness) + "\n";
     stats += printAttacks();
 
     return stats;

@@ -93,10 +93,10 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
         }
 
         else if(sType.find("equipe") != string::npos) 
-            mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false));
+            mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
 
         else
-            mapItems[j_item["id"]] = new CConsumeableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false));
+            mapItems[j_item["id"]] = new CConsumeableItem(sName, sID, sDescription, sType, j_item["effekt"], j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
         
         std::cout << "Created " << mapItems[j_item["id"]]->getName() << std::endl;
     } 

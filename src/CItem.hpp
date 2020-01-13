@@ -19,15 +19,15 @@ protected:
     string m_sFunction;
 
     //Static map f all state-functions
-    static std::map<string, string (CItem::*)()> m_functions;
+    static std::map<string, string (CItem::*)(size_t& )> m_functions;
 
     typedef std::map<string, string> objectmap;
     objectmap m_characters;
     objectmap m_items;
 
-    virtual string fixxed() { return ""; }
-    virtual string equipe() { return ""; }
-    virtual string consume() { return ""; }
+    virtual string fixxed(size_t&) { return ""; }
+    virtual string equipeWeapon(size_t&) { return ""; }
+    virtual string consumeDrug(size_t&) { return ""; }
 
 
 public:
@@ -49,7 +49,7 @@ public:
     void setHidden(bool hidden);
 
     static void initializeFunctions();
-    string callFunction();
+    string callFunction(size_t& state);
 };
 
 
@@ -58,6 +58,7 @@ class CFixxedItem : public CItem
 private: 
     string m_sLook;
 
+    string fixxed(size_t&) { std::cout << "FIXXED \n"; return ""; }
 public:
     CFixxedItem(string sName, string sID, string sDescription, string look, objectmap characters, objectmap items);
 
@@ -66,21 +67,23 @@ public:
     objectmap& getCharacters();
     objectmap& getItems();
 
-    string fixxed() { std::cout << "FIXXED \n"; return ""; }
 };
 
 class CEquippableItem : public CItem
 {
+private:
+    string equipeWeapon(size_t& state);
 public:
-    CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value, bool hidden);
-    string equipe() { std::cout << "EQUIPPED\n"; return ""; }
+    CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value, bool hidden, string sFunction);
 };
 
 class CConsumeableItem : public CItem
 {
+private:
+    size_t m_effekt;
+    string consumeDrug(size_t& state);
 public: 
-    CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t value, bool hidden);
-    string consume() { std::cout << "CONSUME\n"; return ""; }
+    CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t effekt, size_t value, bool hidden, string sFunction);
 };
 #endif
 
