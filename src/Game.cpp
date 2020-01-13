@@ -63,9 +63,33 @@ void CGame::roomFactory(string sPath)
         //Parse items
         map<string, CItem*> mapItems = itemFactory(j_room);
 
+        //Parse details
+        map<string, CDetail*> mapDetails = detailFactory(j_room);
+
         //Create new room
-        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars, mapItems);
+        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars, mapItems, mapDetails);
     }
+}
+
+map<string, CDetail*> CGame::detailFactory(nlohmann::json j_room)
+{
+    map<string, CDetail*> mapDetails;
+    if(j_room.count("details") == 0)
+        return mapDetails;
+
+    for(auto j_detail : j_room["details"])
+    {
+        objectmap characters;
+        if(j_detail.count("characters") > 0) 
+            characters = j_detail["characters"].get<objectmap>();
+        objectmap items;
+        if(j_detail.count("items") > 0) 
+            items = j_detail["items"].get<objectmap>();
+
+        mapDetails[j_detail["id"]] = new CDetail(j_detail["name"], j_detail["id"], j_detail["description"], j_detail["look"], characters, items);
+    }
+
+    return mapDetails;
 }
 
 map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
@@ -81,18 +105,7 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
         string sDescription = j_item["description"];
         string sType = j_item.value("type", "");
          
-        if(sType == "")
-        {
-            objectmap characters;
-            if(j_item.count("characters") > 0) 
-                characters = j_item["characters"].get<objectmap>();
-            objectmap items;
-            if(j_item.count("items") > 0) 
-                items = j_item["items"].get<objectmap>();
-            mapItems[j_item["id"]] = new CFixxedItem(sName, sID, sDescription, j_item["look"], characters, items);
-        }
-
-        else if(sType.find("equipe") != string::npos) 
+        if(sType.find("equipe") != string::npos) 
             mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
 
         else
@@ -263,6 +276,8 @@ void CGame::show(string sIdentifier) {
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDescription(m_characters));
     else if(sIdentifier == "items")
         m_curPlayer->appendPrint(m_curPlayer->getRoom()->showItems());
+    else if(sIdentifier == "details")
+        m_curPlayer->appendPrint(m_curPlayer->getRoom()->showDetails());
     else if(sIdentifier == "inventory")
         m_curPlayer->printInventory();
     else if(sIdentifier == "stats")

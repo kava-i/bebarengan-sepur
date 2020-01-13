@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <filesystem>
 #include "CRoom.hpp"
+#include "CDetail.hpp"
 #include "CPerson.hpp"
 #include "CPlayer.hpp"
 #include "CCharacter.hpp"
@@ -51,6 +52,7 @@ public:
     void attackFactory(std::string sPath);
     map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
     map<string, CItem*>   itemFactory(nlohmann::json j_room);
+    map<string, CDetail*>  detailFactory(nlohmann::json j_room);
     objectmap characterFactory(nlohmann::json j_characters);
     SDialog* dialogFactory(string sPath); 
 

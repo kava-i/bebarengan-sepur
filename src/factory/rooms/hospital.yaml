@@ -27,9 +27,10 @@
       effekt: 0
       value: 6
       hidden: true
+  details:
     - name: Small box
       id: hospital_small-box
-      description: A small wooden box
+      description: A small wooden box stands in the left corner of the room.
       look: in
       items:
         hospital_stick: Stick

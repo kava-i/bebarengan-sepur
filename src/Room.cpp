@@ -1,6 +1,6 @@
 #include "CRoom.hpp" 
 
-CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items)
+CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details)
 {
     m_sName = sName;
     m_sID = sID;
@@ -9,6 +9,7 @@ CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objec
     m_exists = exits;
     m_characters = characters;
     m_items = items;
+    m_details = details;
 }
 
 
@@ -76,22 +77,30 @@ string CRoom::showItems()
     return items;
 } 
 
+string CRoom::showDetails()
+{
+    string details;
+    for(auto it : m_details)
+        details += it.second->getDescription() + "\n";
+    return details;
+}
+
 string CRoom::look(string sWhere, string sWhat)
 {
     string sOutput;
-    for(auto item : m_items)
+    for(auto detail : m_details)
     {
-        if(item.second->getLook() == sWhere && fuzzy::fuzzy_cmp(item.second->getName(), sWhat) <= 0.2)
+        if(detail.second->getLook() == sWhere && fuzzy::fuzzy_cmp(detail.second->getName(), sWhat) <= 0.2)
         {
             size_t counter = 1;
-            size_t numItems = item.second->getItems().size();
+            size_t numItems = detail.second->getItems().size();
             if(numItems == 0) {
-                sOutput += item.second->getName() + " is empty. \n";
+                sOutput += detail.second->getName() + " is empty. \n";
                 continue;
             }
 
             sOutput += "You found ";
-            for(auto it : item.second->getItems()) {
+            for(auto it : detail.second->getItems()) {
                 sOutput += "a " + it.second + " (" + m_items[it.first]->getDescription() + ")";
                 if(counter == numItems-1) 
                     sOutput+= " and ";
@@ -100,8 +109,8 @@ string CRoom::look(string sWhere, string sWhat)
                 counter++;
                 m_items[it.first]->setHidden(false);
             }
-            sOutput += " in a" + item.second->getName() + ".\n";
-            item.second->getItems().clear();
+            sOutput += " in a" + detail.second->getName() + ".\n";
+            detail.second->getItems().clear();
         }
     }
     return sOutput;

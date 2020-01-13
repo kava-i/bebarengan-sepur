@@ -13,10 +13,22 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
 }
 
 // *** GETTER *** // 
-CRoom* CPlayer::getRoom()   { return m_room; }
-string CPlayer::getPrint()  { return m_sPrint; }
-string CPlayer::getStatus() { return m_status; };
-CFight* CPlayer::getFight() { return m_curFight; };
+CRoom* CPlayer::getRoom()   { 
+    return m_room; 
+}
+string CPlayer::getPrint()  { 
+    checkHighness();
+    return m_sPrint; 
+}
+string CPlayer::getStatus() { 
+    return m_status; 
+};
+CFight* CPlayer::getFight() { 
+    return m_curFight;
+};
+size_t CPlayer::getHighness() { 
+    return m_highness; 
+};
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room)          { m_room = room; }
@@ -24,6 +36,7 @@ void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
 void CPlayer::setFight(CFight* newFight)    { m_curFight = newFight; }
+void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 
 //*** FUNCTIONS *** // 
 
@@ -79,20 +92,15 @@ void CPlayer::printInventory() {
 }
 
 void CPlayer::addItem(CItem* item) {
-    if(item->getMoveable() == false) 
-        m_sPrint += "I can't move this. No fucking way can I move this!\n";
-
-    else {
-        m_inventory[item->getID()].push_back(item);
-        m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
-        m_room->getItems().erase(item->getID());
-    }
+    m_inventory[item->getID()].push_back(item);
+    m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
+    m_room->getItems().erase(item->getID());
 }
 
 void CPlayer::useItem(string sPlayerChoice) {
     for(auto it : m_inventory) {
         if(fuzzy::fuzzy_cmp(it.second[0]->getName(), sPlayerChoice) <= 0.2) {
-            m_sPrint += it.second[0]->callFunction(m_highness);
+            m_sPrint += it.second[0]->callFunction(this);
             return;
          }
     }
@@ -107,6 +115,28 @@ string CPlayer::showStats() {
     return stats;
 }
 
+void CPlayer::checkHighness()
+{
+    srand(time(NULL));
+    size_t num;
+    std::vector<string> words = func::split(m_sPrint, " ");
 
+    for(auto& word : words)
+    {
+        size_t inc = word.size()-m_highness;
+        for(size_t i=0; i<word.size(); i+=inc)
+        {
+            _cout << word << ", " << i << std::endl;
+            if(!isalpha(word[i]))
+                continue;
 
+            num = rand() % word.size();
+            if(!isalpha(word[num]))
+                continue;
+            char x = word[i];
+            word[i] = word[num];
+            word[num] = x;
+        }
+    }
+}
 
