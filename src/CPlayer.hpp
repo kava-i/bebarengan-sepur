@@ -50,6 +50,7 @@ public:
     
     void printInventory();
     void addItem(CItem* item);
+    void useItem(string sPlayerChoice);
     string showStats();
 };
 

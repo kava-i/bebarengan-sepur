@@ -34,6 +34,7 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     std::regex showStats("(S|s)how.*(S|s)tats.*");
     std::regex lookIn("(L|l)(ook in )(.*)");
     std::regex take("(take )(.*)");
+    std::regex use("(use )(.*)");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
     //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
@@ -79,6 +80,9 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     else if(std::regex_search(sInput, m, take))
         newEvent = std::make_pair("take", m[2]); 
 
+    //Use
+    else if(std::regex_search(sInput, m, use))
+        newEvent = std::make_pair("use", m[2]); 
 
     //Change room
     else if(std::regex_search(sInput, m, goTo))

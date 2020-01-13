@@ -65,8 +65,16 @@ CPlayer::event CPlayer::callFight(string sPlayerChoice)
 
 void CPlayer::printInventory() {
     m_sPrint += m_sName + "'s Inventory: \n";
-    for(auto it : m_inventory) 
-        m_sPrint += "  " + std::to_string(it.second.size()) + "x " + it.second[0]->getName() +"\n";
+
+    string m_sEquipment = "Equipment: ";
+    string m_sConsume = "Consume: ";
+    for(auto it : m_inventory) {
+        if(it.second[0]->getType().find("equipe") != string::npos)
+            m_sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getName() +", ";
+        else if(it.second[0]->getType().find("consume") != string::npos)
+            m_sConsume += std::to_string(it.second.size()) + "x " + it.second[0]->getName() +", ";
+    }
+    m_sPrint += m_sEquipment +"\n"+ m_sConsume +"\n";
 }
 
 void CPlayer::addItem(CItem* item) {
@@ -75,14 +83,29 @@ void CPlayer::addItem(CItem* item) {
 
     else {
         m_inventory[item->getID()].push_back(item);
-        m_sPrint += "Item added to " + m_sName + "'s inventory.\n";
+        m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
+        m_room->getItems().erase(item->getID());
     }
 }
-        
+
+void CPlayer::useItem(string sPlayerChoice) {
+    for(auto it : m_inventory) {
+        if(fuzzy::fuzzy_cmp(it.second[0]->getName(), sPlayerChoice) <= 0.2) {
+            m_sPrint += it.second[0]->callFunction();
+            return;
+         }
+    }
+
+    m_sPrint += "Item not in inventory.\n";
+}       
+
 string CPlayer::showStats() {
     string stats = "Name: " + m_sName + "\nID: " + m_sID + "\nStatus: " + m_status + "\n";
     stats += printAttacks();
 
     return stats;
 }
+
+
+
 

@@ -9,8 +9,9 @@ CGame::CGame() {
 // ****************** FACTORYS ********************** //
 void CGame::worldFactory()
 {
-    //Initialize dialog-functions
+    //Initialize functions
     CDState::initializeFunctions();
+    CItem::initializeFunctions();
 
     //Create attacks
     attackFactory();
@@ -30,6 +31,7 @@ void CGame::worldFactory()
     m_eventmanager["dialog"]    = {&CGame::callDialog};
     m_eventmanager["fight"]     = {&CGame::callFight};
     m_eventmanager["take"]      = {&CGame::take};
+    m_eventmanager["use"]       = {&CGame::use};
     m_eventmanager["error"]     = {&CGame::error};
 
     //Dialogs
@@ -77,8 +79,9 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
         string sName = j_item["name"];
         string sID   = j_item["id"];
         string sDescription = j_item["description"];
+        string sType = j_item.value("type", "");
          
-        if(j_item.count("moveable") > 0)
+        if(sType == "")
         {
             objectmap characters;
             if(j_item.count("characters") > 0) 
@@ -89,8 +92,13 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
             mapItems[j_item["id"]] = new CFixxedItem(sName, sID, sDescription, j_item["look"], characters, items);
         }
 
+        else if(sType.find("equipe") != string::npos) 
+            mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false));
+
         else
-            mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, j_item["value"], j_item.value("hidden", false));
+            mapItems[j_item["id"]] = new CConsumeableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false));
+        
+        std::cout << "Created " << mapItems[j_item["id"]]->getName() << std::endl;
     } 
     return mapItems;
 } 
@@ -307,9 +315,15 @@ void CGame::callFight(string sIdentifier) {
 
 void CGame::take(string sIdentifier) {
     CItem* item = m_curPlayer->getRoom()->getItem(sIdentifier);
-    if(item == NULL)
+    if(item == NULL){
+        m_curPlayer->appendPrint("Item not found.\n");
         return;
+    }
     m_curPlayer->addItem(item);
+}
+
+void CGame::use(string sIdentifier) {
+    m_curPlayer->useItem(sIdentifier);
 }
 
 void CGame::error(string sIdentifier) {

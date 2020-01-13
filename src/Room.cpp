@@ -78,21 +78,30 @@ string CRoom::showItems()
 
 string CRoom::look(string sWhere, string sWhat)
 {
-    string sOutput = "You found ";
+    string sOutput;
     for(auto item : m_items)
     {
         if(item.second->getLook() == sWhere && fuzzy::fuzzy_cmp(item.second->getName(), sWhat) <= 0.2)
         {
             size_t counter = 1;
             size_t numItems = item.second->getItems().size();
+            if(numItems == 0) {
+                sOutput += item.second->getName() + " is empty. \n";
+                continue;
+            }
+
+            sOutput += "You found ";
             for(auto it : item.second->getItems()) {
                 sOutput += "a " + it.second + " (" + m_items[it.first]->getDescription() + ")";
-                if(counter == numItems) sOutput+= ".\n";
-                else if(counter == numItems-1) sOutput+= " and ";
-                else sOutput += ", ";
+                if(counter == numItems-1) 
+                    sOutput+= " and ";
+                else if( counter < numItems-1)
+                    sOutput += ", ";
                 counter++;
                 m_items[it.first]->setHidden(false);
             }
+            sOutput += " in a" + item.second->getName() + ".\n";
+            item.second->getItems().clear();
         }
     }
     return sOutput;
@@ -109,3 +118,4 @@ CItem* CRoom::getItem(std::string sPlayerChoice)
     }
     return NULL;
 }
+
