@@ -3,12 +3,18 @@
 
 #include <iostream>
 #include <map>
+#include <stdlib.h>
+#include <time.h>
 #include "CPerson.hpp"
 #include "CRoom.hpp"
 #include "CDialog.hpp"
 #include "CAttack.hpp"
 #include "CFight.hpp"
+#include "func.hpp"
 
+#include "JanGeschenk/Webconsole.hpp"
+#include "JanGeschenk/Webgame.hpp"
+ 
 using std::string;
 using std::map;
 
@@ -36,6 +42,7 @@ public:
     string getPrint();
     string getStatus();
     CFight* getFight();
+    size_t getHighness();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
@@ -43,6 +50,7 @@ public:
     void appendPrint(string);
     void setStatus(string);
     void setFight(CFight* fight);
+    void setHighness(size_t highness);
 
     //*** FUNCTIONS *** // 
     typedef std::pair<string, string> event;
@@ -54,6 +62,8 @@ public:
     void addItem(CItem* item);
     void useItem(string sPlayerChoice);
     string showStats();
+
+    void checkHighness();
 };
 
 #endif

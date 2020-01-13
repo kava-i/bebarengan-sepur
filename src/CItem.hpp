@@ -4,6 +4,8 @@
 #include <iostream>
 #include <map>
 
+class CPlayer;
+
 using std::string;
 
 class CItem
@@ -18,11 +20,10 @@ protected:
     string m_sFunction;
 
     //Static map f all state-functions
-    static std::map<string, string (CItem::*)(size_t& )> m_functions;
+    static std::map<string, string (CItem::*)(CPlayer*)> m_functions;
 
-    virtual string equipeWeapon(size_t&) { return ""; }
-    virtual string consumeDrug(size_t&) { return ""; }
-
+    virtual string equipeWeapon(CPlayer* p) { return ""; }
+    virtual string consumeDrug(CPlayer* p) { return ""; }
 
 public:
 
@@ -39,14 +40,14 @@ public:
     void setHidden(bool hidden);
 
     static void initializeFunctions();
-    string callFunction(size_t& state);
+    string callFunction(CPlayer* p);
 };
 
 
 class CEquippableItem : public CItem
 {
 private:
-    string equipeWeapon(size_t& state);
+    string equipeWeapon(CPlayer* p);
 public:
     CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value, bool hidden, string sFunction);
 };
@@ -55,7 +56,7 @@ class CConsumeableItem : public CItem
 {
 private:
     size_t m_effekt;
-    string consumeDrug(size_t& state);
+    string consumeDrug(CPlayer* p);
 public: 
     CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t effekt, size_t value, bool hidden, string sFunction);
 };

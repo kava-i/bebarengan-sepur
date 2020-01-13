@@ -1,4 +1,5 @@
 #include "CItem.hpp"
+#include "CPlayer.hpp"
 
 // *** GETTER *** //
 string CItem::getName()  { return m_sName; }
@@ -12,15 +13,15 @@ bool CItem::getHidden()  { return m_hidden; }
 // *** SETTER *** //
 void CItem::setHidden(bool hidden) { m_hidden = hidden; }
 
-std::map<string, string (CItem::*)(size_t& )> CItem::m_functions = {};
+std::map<string, string (CItem::*)(CPlayer* p)> CItem::m_functions = {};
 void CItem::initializeFunctions()
 {
     m_functions["equipe_weapon"] = &CItem::equipeWeapon;
     m_functions["consume_drug"] = &CItem::consumeDrug;
 }
 
-string CItem::callFunction(size_t& state) {
-    return (this->*m_functions[m_sFunction])(state);
+string CItem::callFunction(CPlayer* p) {
+    return (this->*m_functions[m_sFunction])(p);
 }
 
 
@@ -37,7 +38,7 @@ CEquippableItem::CEquippableItem(string sName, string sID, string sDescription, 
     m_sFunction = sFunction;
 }
 
-string CEquippableItem::equipeWeapon(size_t& state)
+string CEquippableItem::equipeWeapon(CPlayer* p)
 {
     return "You equiped weapon: " + m_sName + ".\n";
 }
@@ -54,9 +55,9 @@ CConsumeableItem::CConsumeableItem(string sName, string sID, string sDescription
     m_sFunction = sFunction;
 }
 
-string CConsumeableItem::consumeDrug(size_t& state)
+string CConsumeableItem::consumeDrug(CPlayer* p)
 {
-    state += m_effekt;
+    p->setHighness(p->getHighness() + m_effekt);
     return "You consume drug: " + m_sName + ". Highness inceased by " +std::to_string(m_effekt) + ".\n";
 }
 
