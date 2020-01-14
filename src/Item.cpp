@@ -58,6 +58,7 @@ CConsumeableItem::CConsumeableItem(string sName, string sID, string sDescription
 string CConsumeableItem::consumeDrug(CPlayer* p)
 {
     p->setHighness(p->getHighness() + m_effekt);
+    p->removeItem(m_sName);
     return "You consume drug: " + m_sName + ". Highness inceased by " +std::to_string(m_effekt) + ".\n";
 }
 

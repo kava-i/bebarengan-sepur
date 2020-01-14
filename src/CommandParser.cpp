@@ -34,10 +34,11 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     std::regex showInventory("(S|s)how.*(I|i)nventory.*");
     std::regex showStats("(S|s)how.*(S|s)tats.*");
     std::regex lookIn("(L|l)(ook in )(.*)");
-    std::regex take("(take )(.*)");
+    std::regex take("(pick up )(.*)");
     std::regex use("(use )(.*)");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
+    std::regex help("help");
     //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
     //std::regex showSolved("(((Z|z)eig(e?) )?.*(G|g)elöste(n?) (Q|q)uests)");
     std::regex end("((Q|q)uit|(E|e)xit).*(game)");
@@ -96,6 +97,10 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     //Talk to 
     else if(std::regex_search(sInput, m, talkTo))
         newEvent = std::make_pair("talkTo", m[3]);
+
+    //Help 
+    else if(std::regex_match(sInput, help))
+        newEvent = std::make_pair("help", "");
 
     else
         newEvent = std::make_pair("error", "");

@@ -109,7 +109,7 @@ string CRoom::look(string sWhere, string sWhat)
                 counter++;
                 m_items[it.first]->setHidden(false);
             }
-            sOutput += " in a" + detail.second->getName() + ".\n";
+            sOutput += " in a " + detail.second->getName() + ".\n";
             detail.second->getItems().clear();
         }
     }

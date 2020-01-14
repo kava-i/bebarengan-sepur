@@ -20,6 +20,18 @@
       effekt: 2
       value: 20
       hidden: true
+    - name: Wine
+      id: hospital_wine2
+      description: "A good dusty bottle of grandmas red wine"
+      type: consume_drug
+      effekt: 2
+      value: 20
+      hidden: true
+    - name: Book 
+      id: hegel
+      description: Hegel, Phänemenologie des Geistes
+      effekt: 0
+      value: 10
     - name: Pack of cigaretts
       id: hospital_cigarettes
       description: "A pack of malboro gold, dusty and old, but they'll do when you're craving."
@@ -35,6 +47,7 @@
       items:
         hospital_stick: Stick
         hospital_wine: Wine
+        hospital_wine2: Wine
         hospital_cigarettes: A pack of Cigarettes
 
 - name: Stairs

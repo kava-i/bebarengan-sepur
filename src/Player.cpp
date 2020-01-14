@@ -81,7 +81,7 @@ void CPlayer::printInventory() {
     m_sPrint += m_sName + "'s Inventory: \n";
 
     string m_sEquipment = "Equipment: ";
-    string m_sConsume = "Consume: ";
+    string m_sConsume = "Food and Drinks: ";
     for(auto it : m_inventory) {
         if(it.second[0]->getType().find("equipe") != string::npos)
             m_sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getName() +", ";
@@ -92,7 +92,7 @@ void CPlayer::printInventory() {
 }
 
 void CPlayer::addItem(CItem* item) {
-    m_inventory[item->getID()].push_back(item);
+    m_inventory[item->getName()].push_back(item);
     m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
     m_room->getItems().erase(item->getID());
 }
@@ -108,35 +108,58 @@ void CPlayer::useItem(string sPlayerChoice) {
     m_sPrint += "Item not in inventory.\n";
 }       
 
+void CPlayer::removeItem(string sItemName) {
+    m_inventory[sItemName].pop_back();
+    if(m_inventory[sItemName].size() == 0)
+        m_inventory.erase(sItemName);
+}
+
 string CPlayer::showStats() {
-    string stats = "Name: " + m_sName + "\nHP: " + std::to_string(m_hp) + "\nStrength: " + std::to_string(m_strength)+ "\nHighness: " + std::to_string(m_highness) + "\n";
-    stats += printAttacks();
+    string stats = "Name: " + m_sName 
+        + "\nHP: " + std::to_string(m_hp) 
+        + "\nStrength: " + std::to_string(m_strength)
+        + "\nHighness: " + std::to_string(m_highness) 
+        + "\n" 
+        + printAttacks();
 
     return stats;
 }
 
 void CPlayer::checkHighness()
 {
+    if(m_highness==0)
+        return; 
+
     srand(time(NULL));
-    size_t num;
     std::vector<string> words = func::split(m_sPrint, " ");
 
+    size_t limit = (11-m_highness)/2;
+
+    size_t counter = 0;
     for(auto& word : words)
     {
-        size_t inc = word.size()-m_highness;
-        for(size_t i=0; i<word.size(); i+=inc)
-        {
-            _cout << word << ", " << i << std::endl;
-            if(!isalpha(word[i]))
-                continue;
+        if(counter%(limit)!= 0) {
+            counter++;
+            continue;
+        }
 
-            num = rand() % word.size();
+        for(size_t i=0; i<word.size(); i++) {
+
+            if(i%(limit) != 0 || isalpha(word[i]) == false)
+                continue;
+            size_t num = rand() % word.size()-1;
             if(!isalpha(word[num]))
                 continue;
+
             char x = word[i];
             word[i] = word[num];
             word[num] = x;
         }
+        counter++;
     }
+
+    m_sPrint="";
+    for(auto word : words)
+        m_sPrint+=word + " ";
 }
 

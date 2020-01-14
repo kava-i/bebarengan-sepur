@@ -32,6 +32,7 @@ void CGame::worldFactory()
     m_eventmanager["fight"]     = {&CGame::callFight};
     m_eventmanager["take"]      = {&CGame::take};
     m_eventmanager["use"]       = {&CGame::use};
+    m_eventmanager["help"]       = {&CGame::help};
     m_eventmanager["error"]     = {&CGame::error};
 
     //Dialogs
@@ -108,8 +109,10 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
         if(sType.find("equipe") != string::npos) 
             mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
 
-        else
+        else {
+            std::cout << "Added " << j_item["id"] << std::endl;
             mapItems[j_item["id"]] = new CConsumeableItem(sName, sID, sDescription, sType, j_item["effekt"], j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
+        }
         
         std::cout << "Created " << mapItems[j_item["id"]]->getName() << std::endl;
     } 
@@ -339,6 +342,15 @@ void CGame::take(string sIdentifier) {
 
 void CGame::use(string sIdentifier) {
     m_curPlayer->useItem(sIdentifier);
+}
+
+void CGame::help(string sIdentifier) {
+    std::ifstream read("factory/help/help.txt");
+
+    string str((std::istreambuf_iterator<char>(read)),
+                 std::istreambuf_iterator<char>());
+
+    m_curPlayer->appendPrint(str);
 }
 
 void CGame::error(string sIdentifier) {

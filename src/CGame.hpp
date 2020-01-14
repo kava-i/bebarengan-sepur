@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdio.h>
 #include <filesystem>
+#include <streambuf>
 #include "CRoom.hpp"
 #include "CDetail.hpp"
 #include "CPerson.hpp"
@@ -72,6 +73,7 @@ public:
     void startDialog(string sIdentifier);
     void callDialog (string sIdentifier);
     void callFight  (string sIdentifier);
+    void help       (string sIdentifier);
     void error      (string sIdentifier);
     void deleteCharacter (string sIdentifier);
     
