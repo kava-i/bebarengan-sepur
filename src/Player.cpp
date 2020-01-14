@@ -126,7 +126,7 @@ void CPlayer::checkHighness()
         size_t inc = word.size()-m_highness;
         for(size_t i=0; i<word.size(); i+=inc)
         {
-            _cout << word << ", " << i << std::endl;
+	    std::cout << word << ", " << i << std::endl;
             if(!isalpha(word[i]))
                 continue;
 
