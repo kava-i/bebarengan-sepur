@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <filesystem>
 #include <streambuf>
+#include "CWorld.hpp"
 #include "CRoom.hpp"
 #include "CDetail.hpp"
 #include "CPerson.hpp"
@@ -27,36 +28,21 @@ using std::vector;
 class CGame
 {
 private:
-    map<string, CPlayer*>    m_players;
-    map<string, CRoom*>      m_rooms;
-    map<string, CCharacter*> m_characters;
-    map<string, CAttack*>    m_attacks;
 
+    map<string, CPlayer*> m_players;
     CPlayer* m_curPlayer;
-
-    bool m_endGame;
+    CWorld* m_world;
 
     typedef map<string, vector<void(CGame::*)(string)>>eventmanager; 
     eventmanager m_eventmanager;
 
-public: 
+    bool m_endGame;
 
+public: 
     CGame();
    
     // *** FACTORYS *** // 
-    typedef map<string, string> objectmap;
-    void worldFactory();
-    void roomFactory();
-    void roomFactory(string sPath);
     void playerFactory();
-    void attackFactory();
-    void attackFactory(std::string sPath);
-    map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
-    map<string, CItem*>   itemFactory(nlohmann::json j_room);
-    map<string, CDetail*>  detailFactory(nlohmann::json j_room);
-    objectmap characterFactory(nlohmann::json j_characters);
-    SDialog* dialogFactory(string sPath); 
-
 
     string play(string sInput, string sPlayerID);
 
@@ -84,7 +70,9 @@ public:
     void firstZombieAttack(string sIdentifier);
 
     // *** various functions *** //
+    typedef map<string, string> objectmap;
     string getObject(objectmap& mapObjects, string sIdentifierr);
+
 
     /*
     //Convert yaml to json
