@@ -16,16 +16,21 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
 CRoom* CPlayer::getRoom()   { 
     return m_room; 
 }
+
 string CPlayer::getPrint()  { 
     checkHighness();
+    m_sPrint+="\n\n";
     return m_sPrint; 
 }
+
 string CPlayer::getStatus() { 
     return m_status; 
 };
+
 CFight* CPlayer::getFight() { 
     return m_curFight;
 };
+
 size_t CPlayer::getHighness() { 
     return m_highness; 
 };
@@ -83,23 +88,25 @@ void CPlayer::printInventory() {
     string m_sEquipment = "Equipment: ";
     string m_sConsume = "Food and Drinks: ";
     for(auto it : m_inventory) {
-        if(it.second[0]->getType().find("equipe") != string::npos)
-            m_sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getName() +", ";
-        else if(it.second[0]->getType().find("consume") != string::npos)
-            m_sConsume += std::to_string(it.second.size()) + "x " + it.second[0]->getName() +", ";
+        if(it.second[0]->getAttribute<string>("type").find("equipe") != string::npos)
+            m_sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getAttribute<string>("name") +", ";
+            
+        else if(it.second[0]->getAttribute<string>("type").find("consume") != string::npos)
+            m_sConsume += std::to_string(it.second.size()) + "x " + it.second[0]->getAttribute<string>("name") +", ";
+
     }
     m_sPrint += m_sEquipment +"\n"+ m_sConsume +"\n";
 }
 
 void CPlayer::addItem(CItem* item) {
-    m_inventory[item->getName()].push_back(item);
-    m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
-    m_room->getItems().erase(item->getID());
+    m_inventory[item->getAttribute<string>("name")].push_back(item);
+    m_sPrint += item->getAttribute<string>("name") + " added to " + m_sName + "'s inventory.\n";
+    m_room->getItems().erase(item->getAttribute<string>("id"));
 }
 
 void CPlayer::useItem(string sPlayerChoice) {
     for(auto it : m_inventory) {
-        if(fuzzy::fuzzy_cmp(it.second[0]->getName(), sPlayerChoice) <= 0.2) {
+        if(fuzzy::fuzzy_cmp(it.second[0]->getAttribute<string>("name"), sPlayerChoice) <= 0.2) {
             m_sPrint += it.second[0]->callFunction(this);
             return;
          }

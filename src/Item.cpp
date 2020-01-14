@@ -1,17 +1,11 @@
 #include "CItem.hpp"
 #include "CPlayer.hpp"
 
-// *** GETTER *** //
-string CItem::getName()  { return m_sName; }
-string CItem::getID()    { return m_sID; }
-string CItem::getDescription() { return m_sDescription; }
-string CItem::getType()  { return m_sType; }
-size_t CItem::getValue() { return m_value; }
-bool CItem::getHidden()  { return m_hidden; }
 
-
-// *** SETTER *** //
-void CItem::setHidden(bool hidden) { m_hidden = hidden; }
+CItem::CItem(nlohmann::json jAttributes)
+{
+    m_jAtts = jAttributes;
+}
 
 std::map<string, string (CItem::*)(CPlayer* p)> CItem::m_functions = {};
 void CItem::initializeFunctions()
@@ -21,44 +15,19 @@ void CItem::initializeFunctions()
 }
 
 string CItem::callFunction(CPlayer* p) {
-    return (this->*m_functions[m_sFunction])(p);
+    string function = m_jAtts.value("function", m_jAtts["type"]);
+    return (this->*m_functions[function])(p);
 }
 
-
-// ********** EQUIPPABLEITEMS ********** //
-
-CEquippableItem::CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value,bool hidden, string sFunction)
+string CItem::equipeWeapon(CPlayer* p)
 {
-    m_sName = sName;
-    m_sID = sID;
-    m_sDescription = sDescription;
-    m_sType = sType;
-    m_value = value;
-    m_hidden = hidden;
-    m_sFunction = sFunction;
+    return "You equiped weapon: " + m_jAtts["name"].get<string>() + ".\n";
 }
 
-string CEquippableItem::equipeWeapon(CPlayer* p)
+string CItem::consumeDrug(CPlayer* p)
 {
-    return "You equiped weapon: " + m_sName + ".\n";
-}
-
-CConsumeableItem::CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t effekt, size_t value, bool hidden, string sFunction)
-{
-    m_sName = sName;
-    m_sID = sID;
-    m_sDescription = sDescription;
-    m_sType = sType;
-    m_effekt = effekt;
-    m_value = value;
-    m_hidden = hidden;
-    m_sFunction = sFunction;
-}
-
-string CConsumeableItem::consumeDrug(CPlayer* p)
-{
-    p->setHighness(p->getHighness() + m_effekt);
-    p->removeItem(m_sName);
-    return "You consume drug: " + m_sName + ". Highness inceased by " +std::to_string(m_effekt) + ".\n";
+    p->setHighness(p->getHighness() + m_jAtts["effekt"].get<size_t>());
+    p->removeItem(m_jAtts["name"]);
+    return "You consume drug: " + getAttribute<string>("name") + ". Highness inceased by " + std::to_string(m_jAtts["effekt"].get<size_t>()) + ".\n";
 }
 

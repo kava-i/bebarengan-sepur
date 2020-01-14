@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include "json.hpp"
 
 class CPlayer;
 
@@ -11,55 +12,38 @@ using std::string;
 class CItem
 {
 protected:
-    string m_sName;
-    string m_sID;
-    string m_sDescription;
-    string m_sType;
-    size_t m_value;
-    bool m_hidden;
-    string m_sFunction;
+
+    nlohmann::json m_jAtts;
 
     //Static map f all state-functions
     static std::map<string, string (CItem::*)(CPlayer*)> m_functions;
 
-    virtual string equipeWeapon(CPlayer* p) { return ""; }
-    virtual string consumeDrug(CPlayer* p) { return ""; }
-
 public:
 
+    CItem(nlohmann::json jAtts);
+
     // *** GETTER *** // 
-    string getName();
-    string getID();
-    string getDescription();
-    string getType();
-    size_t getValue();
-    bool getHidden();
-
-
+    template <typename T> T getAttribute(std::string sName)
+    {
+        if(m_jAtts.count(sName) == 0)
+            return T();
+        return m_jAtts[sName].get<T>();
+    }
+    
     // *** SETTER *** //
-    void setHidden(bool hidden);
+    template <typename T> void setAttribute(std::string sName, T t1)
+    {
+        m_jAtts[sName] = t1;
+    }
 
     static void initializeFunctions();
     string callFunction(CPlayer* p);
+
+    // *** FUNCTIONS *** //
+    string equipeWeapon(CPlayer*);
+    string consumeDrug(CPlayer*);
 };
 
-
-class CEquippableItem : public CItem
-{
-private:
-    string equipeWeapon(CPlayer* p);
-public:
-    CEquippableItem(string sName, string sID, string sDescription, string sType, size_t value, bool hidden, string sFunction);
-};
-
-class CConsumeableItem : public CItem
-{
-private:
-    size_t m_effekt;
-    string consumeDrug(CPlayer* p);
-public: 
-    CConsumeableItem(string sName, string sID, string sDescription, string sType, size_t effekt, size_t value, bool hidden, string sFunction);
-};
 #endif
 
  

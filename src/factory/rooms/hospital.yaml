@@ -7,6 +7,9 @@
     hospital_stairs: Stairs
   characters:
   items:
+    - id: wine2
+      name: Wine
+      hidden: true
     - name: Stick
       id: hospital_stick
       description: "A wooden stick hard enough to course some pain."

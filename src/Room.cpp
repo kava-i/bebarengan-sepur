@@ -70,8 +70,8 @@ string CRoom::showItems()
     string items = "Items: \n";
     size_t counter=1;
     for(auto it : m_items) {
-        if(it.second->getHidden() == true) continue;
-        items += std::to_string(counter) + ": "+ it.second->getName()+" - "+it.second->getDescription() + "\n";
+        if(it.second->getAttribute<bool>("hidden") == true) continue;
+        items += std::to_string(counter) + ": " + it.second->getAttribute<string>("name")+" - "+it.second->getAttribute<string>("description") + "\n";
         counter++;
     }
     return items;
@@ -101,13 +101,13 @@ string CRoom::look(string sWhere, string sWhat)
 
             sOutput += "You found ";
             for(auto it : detail.second->getItems()) {
-                sOutput += "a " + it.second + " (" + m_items[it.first]->getDescription() + ")";
+                sOutput += "a " + it.second + " (" + m_items[it.first]->getAttribute<string>("description") + ")";
                 if(counter == numItems-1) 
                     sOutput+= " and ";
                 else if( counter < numItems-1)
                     sOutput += ", ";
                 counter++;
-                m_items[it.first]->setHidden(false);
+                m_items[it.first]->setAttribute<bool>("hidden", false);
             }
             sOutput += " in a " + detail.second->getName() + ".\n";
             detail.second->getItems().clear();
@@ -120,9 +120,9 @@ CItem* CRoom::getItem(std::string sPlayerChoice)
 {
     for(auto it : m_items)
     {
-        if(it.second->getHidden() == true) 
+        if(it.second->getAttribute<bool>("hidden") == true) 
             continue;
-        if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2)
+        if(fuzzy::fuzzy_cmp(it.second->getAttribute<string>("name"), sPlayerChoice) <= 0.2)
             return it.second;
     }
     return NULL;

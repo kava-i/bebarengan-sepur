@@ -101,20 +101,8 @@ map<string, CItem*> CGame::itemFactory(nlohmann::json j_room)
 
     for(auto j_item : j_room["items"])
     {
-        string sName = j_item["name"];
-        string sID   = j_item["id"];
-        string sDescription = j_item["description"];
-        string sType = j_item.value("type", "");
-         
-        if(sType.find("equipe") != string::npos) 
-            mapItems[j_item["id"]] = new CEquippableItem(sName, sID, sDescription, sType, j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
-
-        else {
-            std::cout << "Added " << j_item["id"] << std::endl;
-            mapItems[j_item["id"]] = new CConsumeableItem(sName, sID, sDescription, sType, j_item["effekt"], j_item["value"], j_item.value("hidden", false), j_item.value("function", sType));
-        }
-        
-        std::cout << "Created " << mapItems[j_item["id"]]->getName() << std::endl;
+        mapItems[j_item["id"]] = new CItem(j_item);
+        std::cout << "Created " << mapItems[j_item["id"]]->getAttribute<string>("name") << std::endl;
     } 
     return mapItems;
 } 
@@ -354,7 +342,7 @@ void CGame::help(string sIdentifier) {
 }
 
 void CGame::error(string sIdentifier) {
-    m_curPlayer->appendPrint("This command is unkown.\n");
+    m_curPlayer->appendPrint("This command is unkown. Type \"help\" to see possible command.\n");
 }
 
 
@@ -403,3 +391,5 @@ void CGame::toJson(string filename)
 	Py_Finalize();
 }
 */ 
+
+
