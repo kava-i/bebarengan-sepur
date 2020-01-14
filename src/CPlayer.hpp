@@ -5,6 +5,7 @@
 #include <map>
 #include <stdlib.h>
 #include <time.h>
+#include "CWorld.hpp"
 #include "CPerson.hpp"
 #include "CRoom.hpp"
 #include "CDialog.hpp"
@@ -22,6 +23,7 @@ class CPlayer : public CPerson
 {
 private:
     CRoom* m_room;
+    CWorld* m_world;
 
     size_t m_highness;
 
@@ -32,6 +34,9 @@ private:
 
     typedef map<string, vector<CItem*>> inventory;
     inventory m_inventory;
+
+    typedef map<string, vector<void(CPlayer::*)(string)>>eventmanager; 
+    eventmanager m_eventmanager;
 
 public:
     CPlayer() {};
@@ -65,6 +70,31 @@ public:
     string showStats();
 
     void checkHighness();
+
+    typedef std::map<string, string> objectmap;
+    string getObject(objectmap& mapObjects, string sIdentifier);
+
+    // *** Event Manager function *** // 
+    void throw_event(event newEvent);
+
+    // *** EVENTHANDLERS *** // 
+    void h_show             (string sIdentifier);
+    void h_lookIn           (string sIdentifier);
+    void h_take             (string sIdentifier);
+    void h_use              (string sIdentifier);
+    void h_goTo             (string sIdentifier);
+    void h_startDialog      (string sIdentifier);
+    void h_callDialog       (string sIdentifier);
+    void h_callFight        (string sIdentifier);
+    void h_help             (string sIdentifier);
+    void h_error            (string sIdentifier);
+    void h_deleteCharacter  (string sIdentifier);
+    
+    //Dialogs
+    void h_pissingman_fuckoff (string sIdentifier);
+
+    //Rooms
+    void h_firstZombieAttack (string sIdentifier);
 };
 
 #endif

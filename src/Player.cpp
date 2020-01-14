@@ -10,6 +10,28 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
     m_room = room;
     m_status = "standard";
     m_attacks = newAttacks;
+
+    //Initiazize world
+    m_world = new CWorld();
+
+    //Add eventhandler to eventmanager
+    m_eventmanager["show"]      = {&CPlayer::h_show};
+    m_eventmanager["lookIn"]    = {&CPlayer::h_lookIn};
+    m_eventmanager["goTo"]      = {&CPlayer::h_goTo};
+    m_eventmanager["talkTo"]    = {&CPlayer::h_startDialog};
+    m_eventmanager["dialog"]    = {&CPlayer::h_callDialog};
+    m_eventmanager["fight"]     = {&CPlayer::h_callFight};
+    m_eventmanager["take"]      = {&CPlayer::h_take};
+    m_eventmanager["use"]       = {&CPlayer::h_use};
+    m_eventmanager["help"]      = {&CPlayer::h_help};
+    m_eventmanager["error"]     = {&CPlayer::h_error};
+
+    //Dialogs
+    m_eventmanager["pissingManDialog/fuckoff"]   = {&CPlayer::h_pissingman_fuckoff};
+
+    //Rooms
+    m_eventmanager["goTo"].push_back(&CPlayer::h_firstZombieAttack);
+
 }
 
 // *** GETTER *** // 
@@ -169,4 +191,136 @@ void CPlayer::checkHighness()
     for(auto word : words)
         m_sPrint+=word + " ";
 }
+
+string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
+{
+    for(auto it : mapObjects) {
+        if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2) 
+            return it.first;
+    }
+    return "";
+}
+
+
+// ***** ***** EVENTMANAGER FUNCTIONS ***** *****
+
+void CPlayer::throw_event(event newEvent)
+{
+    if(m_eventmanager.count(newEvent.first) == 0) return;
+        
+    for(auto it : m_eventmanager[newEvent.first])
+        (this->*it)(newEvent.second);
+}
+
+
+// ****************** EVENTHANDLER ********************** //
+
+void CPlayer::h_show(string sIdentifier) {
+    if(sIdentifier == "exits")
+        m_sPrint += m_room->showExits();
+    else if(sIdentifier == "chars")
+        m_sPrint += m_room->showCharacters();
+    else if(sIdentifier == "room")
+        m_sPrint += m_room->showDescription(m_world->getCharacters());
+    else if(sIdentifier == "items")
+        m_sPrint += m_room->showItems();
+    else if(sIdentifier == "details")
+        m_sPrint += m_room->showDetails();
+    else if(sIdentifier == "inventory")
+        printInventory();
+    else if(sIdentifier == "stats")
+        m_sPrint += showStats();
+}
+
+void CPlayer::h_lookIn(string sIdentifier) {
+    m_sPrint += m_room->look("in", sIdentifier);
+}
+
+void CPlayer::h_goTo(std::string sIdentifier) {
+
+    //Get selected room
+    string room = getObject(m_room->getExtits(), sIdentifier);
+
+    //Check if room was found
+    if(room == "") {
+        m_sPrint += "Room/ exit not found";
+        return;
+    }
+
+    //Print description and change players current room
+    m_sPrint += m_world->getRooms()[room]->showEntryDescription(m_world->getCharacters());
+    m_room = m_world->getRooms()[room];
+}
+
+void CPlayer::h_startDialog(string sIdentifier)
+{
+    //Get selected character
+    string character = getObject(m_room->getCharacters(), sIdentifier);
+
+    //Check if character was found
+    if(character == "") {
+        m_sPrint += "Characters not found";
+        return;
+    }
+
+    //Update player status and call dialog state
+    setDialog(m_world->getCharacters()[character]->getDialog());
+    callDialogState("START");
+}
+
+void CPlayer::h_callDialog(string sIdentifier) {
+    throw_event(callDialog(sIdentifier));
+}
+
+void CPlayer::h_callFight(string sIdentifier) {
+    throw_event(callFight(sIdentifier));
+}
+
+void CPlayer::h_take(string sIdentifier) {
+    if(m_room->getItem(sIdentifier) == NULL)
+        m_sPrint += "Item not found.\n";
+    else
+        addItem(m_room->getItem(sIdentifier));
+}
+
+void CPlayer::h_use(string sIdentifier) {
+    useItem(sIdentifier);
+}
+
+void CPlayer::h_help(string sIdentifier) {
+    std::ifstream read("factory/help/help.txt");
+
+    string str((std::istreambuf_iterator<char>(read)),
+                 std::istreambuf_iterator<char>());
+    m_sPrint += str;
+}
+
+void CPlayer::h_error(string sIdentifier) {
+    m_sPrint += "This command is unkown. Type \"help\" to see possible command.\n";
+}
+
+
+// *** DIALOG HANDLER *** //
+void CPlayer::h_pissingman_fuckoff(string sIdentifier) {
+    m_world->getCharacters()["pissing_man"]->setDialog(m_world->dialogFactory("defaultDialog"));
+}
+
+// *** ROOM HANDLER *** //
+void CPlayer::h_firstZombieAttack(string sIdentifier)
+{
+    //Get selected room
+    if(m_room->getID() != "hospital_stairs")
+        return;
+
+    m_sPrint += "\n$";
+
+    //Create fight
+    CFight* fight = new CFight("First Fight", "A zombie comes running down the stairs and attacks you!", this, m_world->getCharacters()["hospital_zombie1"]);
+    setFight(fight);
+    setStatus("fight");
+    fight->initializeFight();
+
+    m_eventmanager["goTo"].erase(m_eventmanager["goTo"].begin()+1);
+}
+
 
