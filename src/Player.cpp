@@ -11,6 +11,9 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
     m_status = "standard";
     m_attacks = newAttacks;
 
+    m_equipment["weapon"] = NULL;
+    m_equipment["armor"]  = NULL;
+    
     //Initiazize world
     m_world = new CWorld();
 
@@ -22,7 +25,8 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
     m_eventmanager["dialog"]    = {&CPlayer::h_callDialog};
     m_eventmanager["fight"]     = {&CPlayer::h_callFight};
     m_eventmanager["take"]      = {&CPlayer::h_take};
-    m_eventmanager["use"]       = {&CPlayer::h_use};
+    m_eventmanager["consume"]   = {&CPlayer::h_consume};
+    m_eventmanager["equipe"]    = {&CPlayer::h_equipe};
     m_eventmanager["help"]      = {&CPlayer::h_help};
     m_eventmanager["error"]     = {&CPlayer::h_error};
 
@@ -32,12 +36,13 @@ CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room,
     //Rooms
     m_eventmanager["goTo"].push_back(&CPlayer::h_firstZombieAttack);
 
+    //From fights
+    m_eventmanager["deleteCharacter"] = {&CPlayer::h_deleteCharacter};
+
 }
 
 // *** GETTER *** // 
-CRoom* CPlayer::getRoom()   { 
-    return m_room; 
-}
+CRoom* CPlayer::getRoom()   { return m_room; }
 
 string CPlayer::getPrint()  { 
     checkHighness();
@@ -45,17 +50,11 @@ string CPlayer::getPrint()  {
     return m_sPrint; 
 }
 
-string CPlayer::getStatus() { 
-    return m_status; 
-};
-
-CFight* CPlayer::getFight() { 
-    return m_curFight;
-};
-
-size_t CPlayer::getHighness() { 
-    return m_highness; 
-};
+string CPlayer::getStatus() { return m_status; };
+CFight* CPlayer::getFight() { return m_curFight; };
+size_t CPlayer::getHighness() { return m_highness; };
+CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
+CWorld* CPlayer::getWorld()  { return m_world; }
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room)          { m_room = room; }
@@ -99,25 +98,33 @@ void CPlayer::callDialogState(string sDialogStateID)
         m_status = "dialog/" + sDialogStateID;
 }
 
-CPlayer::event CPlayer::callFight(string sPlayerChoice) 
-{
-    return m_curFight->fightRound(sPlayerChoice);
-}
 
 void CPlayer::printInventory() {
     m_sPrint += m_sName + "'s Inventory: \n";
 
-    string m_sEquipment = "Equipment: ";
-    string m_sConsume = "Food and Drinks: ";
+    string sEquipment = "Equipment: ";
+    string sConsume = "Food and Drinks: ";
+    string sOthers = "Others: ";
     for(auto it : m_inventory) {
         if(it.second[0]->getAttribute<string>("type").find("equipe") != string::npos)
-            m_sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getAttribute<string>("name") +", ";
-            
-        else if(it.second[0]->getAttribute<string>("type").find("consume") != string::npos)
-            m_sConsume += std::to_string(it.second.size()) + "x " + it.second[0]->getAttribute<string>("name") +", ";
+            sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getName() + ", ";
 
+        else if(it.second[0]->getAttribute<string>("type").find("consume") != string::npos)
+            sConsume += std::to_string(it.second.size()) + "x " + it.second[0]->getName() + ", ";
+
+        else 
+            sOthers += std::to_string(it.second.size()) + "x " + it.second[0]->getName() + ", ";
     }
-    m_sPrint += m_sEquipment +"\n"+ m_sConsume +"\n";
+    m_sPrint += sEquipment +"\n"+ sConsume +"\n" + sOthers + "\n";
+}
+
+void CPlayer::printEquiped() {
+    for(auto it : m_equipment) {
+        if(it.second != NULL)
+            m_sPrint += it.first + ": " + it.second->getName() + "\n"; 
+        else
+            m_sPrint += it.first + ": empty handed as it seems.\n";
+    }
 }
 
 void CPlayer::addItem(CItem* item) {
@@ -126,21 +133,20 @@ void CPlayer::addItem(CItem* item) {
     m_room->getItems().erase(item->getAttribute<string>("id"));
 }
 
-void CPlayer::useItem(string sPlayerChoice) {
-    for(auto it : m_inventory) {
-        if(fuzzy::fuzzy_cmp(it.second[0]->getAttribute<string>("name"), sPlayerChoice) <= 0.2) {
-            m_sPrint += it.second[0]->callFunction(this);
-            return;
-         }
-    }
-
-    m_sPrint += "Item not in inventory.\n";
-}       
-
 void CPlayer::removeItem(string sItemName) {
     m_inventory[sItemName].pop_back();
     if(m_inventory[sItemName].size() == 0)
         m_inventory.erase(sItemName);
+}
+
+CItem* CPlayer::getItem(string sName)
+{
+    for(auto it : m_inventory) {
+        if(fuzzy::fuzzy_cmp(it.second[0]->getName(), sName) <= 0.2) 
+            return it.second[0];
+    }
+    m_sPrint += "Item not in inventory! (use \"show inventory\" to see your items.)\n";
+    return NULL;
 }
 
 string CPlayer::showStats() {
@@ -202,10 +208,12 @@ string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 }
 
 
+
 // ***** ***** EVENTMANAGER FUNCTIONS ***** *****
 
 void CPlayer::throw_event(event newEvent)
 {
+    std::cout << newEvent.first << ", " << newEvent.second << "\n";
     if(m_eventmanager.count(newEvent.first) == 0) return;
         
     for(auto it : m_eventmanager[newEvent.first])
@@ -218,7 +226,7 @@ void CPlayer::throw_event(event newEvent)
 void CPlayer::h_show(string sIdentifier) {
     if(sIdentifier == "exits")
         m_sPrint += m_room->showExits();
-    else if(sIdentifier == "chars")
+    else if(sIdentifier == "people")
         m_sPrint += m_room->showCharacters();
     else if(sIdentifier == "room")
         m_sPrint += m_room->showDescription(m_world->getCharacters());
@@ -228,6 +236,8 @@ void CPlayer::h_show(string sIdentifier) {
         m_sPrint += m_room->showDetails();
     else if(sIdentifier == "inventory")
         printInventory();
+    else if(sIdentifier == "equiped")
+        printEquiped();
     else if(sIdentifier == "stats")
         m_sPrint += showStats();
 }
@@ -273,7 +283,7 @@ void CPlayer::h_callDialog(string sIdentifier) {
 }
 
 void CPlayer::h_callFight(string sIdentifier) {
-    throw_event(callFight(sIdentifier));
+    throw_event( m_curFight->fightRound((sIdentifier)) ); 
 }
 
 void CPlayer::h_take(string sIdentifier) {
@@ -283,12 +293,20 @@ void CPlayer::h_take(string sIdentifier) {
         addItem(m_room->getItem(sIdentifier));
 }
 
-void CPlayer::h_use(string sIdentifier) {
-    useItem(sIdentifier);
+void CPlayer::h_consume(string sIdentifier) {
+    if(getItem(sIdentifier) != NULL)
+        getItem(sIdentifier)->callConsumeFunction(this); 
 }
 
+void CPlayer::h_equipe(string sIdentifier) {
+    if(getItem(sIdentifier) != NULL)
+        getItem(sIdentifier)->callEquipeFunction(this);
+}
+
+
+
 void CPlayer::h_help(string sIdentifier) {
-    std::ifstream read("factory/help/help.txt");
+    std::ifstream read("factory/help/"+sIdentifier);
 
     string str((std::istreambuf_iterator<char>(read)),
                  std::istreambuf_iterator<char>());
@@ -323,4 +341,9 @@ void CPlayer::h_firstZombieAttack(string sIdentifier)
     m_eventmanager["goTo"].erase(m_eventmanager["goTo"].begin()+1);
 }
 
-
+// *** FROM FIGHTS *** //
+void CPlayer::h_deleteCharacter(string sIdentifier) {
+    m_room->getCharacters().erase(sIdentifier);
+    delete m_world->getCharacters()[sIdentifier];
+    m_world->getCharacters().erase(sIdentifier); 
+}

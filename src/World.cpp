@@ -10,10 +10,14 @@ void CWorld::worldFactory()
 {
     //Initialize functions
     CDState::initializeFunctions();
-    CItem::initializeFunctions();
+    CItem::initializeConsumeFunctions();
+    CItem::initializeEquipeFunctions();
 
     //Create attacks
     attackFactory();
+
+    //Create items
+    itemFactory();
 
     //Create rooms
     roomFactory();
@@ -24,6 +28,7 @@ void CWorld::roomFactory()
     for(auto& p : fs::directory_iterator("factory/jsons/rooms"))
         roomFactory(p.path());
 }
+
 
 void CWorld::roomFactory(string sPath)
 {
@@ -39,7 +44,7 @@ void CWorld::roomFactory(string sPath)
         objectmap mapChars = characterFactory(j_room["characters"]);
 
         //Parse items
-        map<string, CItem*> mapItems = itemFactory(j_room);
+        map<string, CItem*> mapItems = parseRoomItems(j_room);
 
         //Parse details
         map<string, CDetail*> mapDetails = detailFactory(j_room);
@@ -70,7 +75,25 @@ map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room)
     return mapDetails;
 }
 
-map<string, CItem*> CWorld::itemFactory(nlohmann::json j_room)
+void CWorld::itemFactory()
+{
+    for(auto& p : fs::directory_iterator("factory/jsons/items"))
+        itemFactory(p.path());
+}
+
+void CWorld::itemFactory(std::string sPath) {
+    //Read json creating all rooms
+    std::ifstream read(sPath);
+    nlohmann::json j_items;
+    read >> j_items;
+    read.close();
+
+    for(auto j_item: j_items) 
+        m_items[j_item["id"]] = j_item;
+}
+
+
+map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room)
 {
     map<string, CItem*> mapItems;
     if(j_room.count("items") == 0)
@@ -78,7 +101,7 @@ map<string, CItem*> CWorld::itemFactory(nlohmann::json j_room)
 
     for(auto j_item : j_room["items"])
     {
-        mapItems[j_item["id"]] = new CItem(j_item);
+        mapItems[j_item["id"]] = new CItem(m_items[j_item["from"]], j_item);
         std::cout << "Created " << mapItems[j_item["id"]]->getAttribute<string>("name") << std::endl;
     } 
     return mapItems;

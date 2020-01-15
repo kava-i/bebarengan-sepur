@@ -4,10 +4,18 @@
 CCommandParser::event CCommandParser::parse(std::string sInput, std::string status)
 {
     event newEvent;
-    if(status=="standard")
+
+    //Parse status independat...
+    if(sInput == "help" && status.find("dialog") != std::string::npos)
+        newEvent = std::make_pair("help", "dialog.txt");
+    else if(sInput == "help")
+        newEvent = std::make_pair("help", status +".txt");
+
+
+    else if(status=="standard")
         newEvent = parseCommand(sInput);
     else if(status.find("dialog") != std::string::npos)
-        newEvent = parseDialogCommand(sInput, status);
+        newEvent = std::make_pair("dialog", sInput);
     else if(status == "fight")
         newEvent = std::make_pair("fight", sInput);
     
@@ -26,21 +34,14 @@ CCommandParser::event CCommandParser::parse(std::string sInput, std::string stat
 CCommandParser::event CCommandParser::parseCommand(std::string sInput)
 {
     //Create regular expressions for different command the player might have choosen
-    std::regex showExits("((S|s)how).*exits");
-    std::regex showCharacters("(S|s)how.*(P|p)eople.*");
-    std::regex showDescription("(S|s)how.*(R|r)oom.*");
-    std::regex showItems("(S|s)how.*(I|i)tems.*");
-    std::regex showDetails("(S|s)how.*(D|d)etails.*");
-    std::regex showInventory("(S|s)how.*(I|i)nventory.*");
-    std::regex showStats("(S|s)how.*(S|s)tats.*");
+    std::regex show("((S|s)how) (.*)");
     std::regex lookIn("(L|l)(ook in )(.*)");
-    std::regex take("(pick up )(.*)");
-    std::regex use("(use )(.*)");
+    std::regex pickUp("(pick up )(.*)");
+    std::regex consume("(drink|eat|smoke) (.*)");
+    std::regex equipe("(E|e)(quipe) (.*)");
     std::regex goTo("(G|g)(o to) (.*)");
     std::regex talkTo("(T|t)(alk to) (.*)");
     std::regex help("help");
-    //std::regex showActive("(((Z|z)eig(e?) )?.*((A|a)ktive(n?))? (Q|q)uests)");
-    //std::regex showSolved("(((Z|z)eig(e?) )?.*(G|g)elöste(n?) (Q|q)uests)");
     std::regex end("((Q|q)uit|(E|e)xit).*(game)");
     std::regex end_direct(":q");
 
@@ -50,45 +51,25 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
     //Check which regular expression the players input matches. Create and return event if match
     event newEvent;
 
-    //Show exits:
-    if(std::regex_match(sInput, showExits))
-        newEvent = std::make_pair("show", "exits");
-
-    //Show characters:
-    else if(std::regex_match(sInput, showCharacters))
-        newEvent = std::make_pair("show", "chars");
-
-    //Show description:
-    else if(std::regex_match(sInput, showDescription))
-        newEvent = std::make_pair("show", "room");
+    //Show 
+    if(std::regex_search(sInput, m, show))
+        newEvent = std::make_pair("show", m[3]);
     
-    //Show items
-    else if(std::regex_match(sInput, showItems))
-        newEvent = std::make_pair("show", "items");
-
-    //Show details
-    else if(std::regex_match(sInput, showDetails))
-        newEvent = std::make_pair("show", "details");
-
-    //Show inventory
-    else if(std::regex_match(sInput, showInventory))
-        newEvent = std::make_pair("show", "inventory");
-
-    //Show stats:
-    else if(std::regex_match(sInput, showStats))
-        newEvent = std::make_pair("show", "stats");
-
     //Look in
     else if(std::regex_search(sInput, m, lookIn))
         newEvent = std::make_pair("lookIn", m[3]); 
 
     //Take
-    else if(std::regex_search(sInput, m, take))
+    else if(std::regex_search(sInput, m, pickUp))
         newEvent = std::make_pair("take", m[2]); 
 
-    //Use
-    else if(std::regex_search(sInput, m, use))
-        newEvent = std::make_pair("use", m[2]); 
+    //Consume
+    else if(std::regex_search(sInput, m, consume))
+        newEvent = std::make_pair("consume", m[2]); 
+
+    //Equipe
+    else if(std::regex_search(sInput, m, equipe))
+        newEvent = std::make_pair("equipe", m[3]);
 
     //Change room
     else if(std::regex_search(sInput, m, goTo))
@@ -107,13 +88,4 @@ CCommandParser::event CCommandParser::parseCommand(std::string sInput)
 
     return newEvent;
 }
-
-CCommandParser::event CCommandParser::parseDialogCommand(std::string sInput, std::string status)
-{
-    event newEvent;
-    newEvent.first = "dialog";
-    newEvent.second = sInput;
-    return newEvent;
-}
-
 

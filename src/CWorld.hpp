@@ -31,7 +31,7 @@ private:
     map<string, CRoom*>      m_rooms;
     map<string, CCharacter*> m_characters;
     map<string, CAttack*>    m_attacks;
-
+    map<string, nlohmann::json> m_items;
 public:
 
     CWorld();
@@ -39,16 +39,27 @@ public:
     // *** GETTER *** //
     map<string, CRoom*>& getRooms() { return m_rooms; }
     map<string, CCharacter*>& getCharacters() { return m_characters; }
+    map<string, CAttack*>& getAttacks() {return m_attacks; }
 
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;
     void worldFactory();
+
+    //Room
     void roomFactory();
     void roomFactory(string sPath);
+
+    //Attacks
     void attackFactory();
     void attackFactory(std::string sPath);
     map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
-    map<string, CItem*>   itemFactory(nlohmann::json j_room);
+
+    //Items
+    void itemFactory();
+    void itemFactory(std::string sPath);
+    map<string, CItem*> parseRoomItems(nlohmann::json j_room);
+
+    //Character, Dialog, Details
     map<string, CDetail*>  detailFactory(nlohmann::json j_room);
     objectmap characterFactory(nlohmann::json j_characters);
     SDialog* dialogFactory(string sPath); 

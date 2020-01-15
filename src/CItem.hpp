@@ -16,11 +16,12 @@ protected:
     nlohmann::json m_jAtts;
 
     //Static map f all state-functions
-    static std::map<string, string (CItem::*)(CPlayer*)> m_functions;
+    static std::map<string, void (CItem::*)(CPlayer*)> m_consumeFunctions;
+    static std::map<string, void (CItem::*)(CPlayer*)> m_equipeFunctions;
 
 public:
 
-    CItem(nlohmann::json jAtts);
+    CItem(nlohmann::json jBasic, nlohmann::json jItem);
 
     // *** GETTER *** // 
     template <typename T> T getAttribute(std::string sName)
@@ -29,6 +30,11 @@ public:
             return T();
         return m_jAtts[sName].get<T>();
     }
+
+    string getID();
+    string getName();
+    string getFunction();
+    size_t getEffekt();
     
     // *** SETTER *** //
     template <typename T> void setAttribute(std::string sName, T t1)
@@ -36,12 +42,14 @@ public:
         m_jAtts[sName] = t1;
     }
 
-    static void initializeFunctions();
-    string callFunction(CPlayer* p);
+    static void initializeConsumeFunctions();
+    void callConsumeFunction(CPlayer* p);
+    static void initializeEquipeFunctions();
+    void callEquipeFunction(CPlayer* p);
 
     // *** FUNCTIONS *** //
-    string equipeWeapon(CPlayer*);
-    string consumeDrug(CPlayer*);
+    void equipeWeapon(CPlayer*);
+    void consumeDrug(CPlayer*);
 };
 
 #endif
