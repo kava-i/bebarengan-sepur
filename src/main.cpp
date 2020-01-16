@@ -57,12 +57,11 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		sInput = "show rooms";
+		sInput = "show room";
 	    } 
 
 	    
 
-	    std::string sName = "anna-bronec";
 	    if(sInput == ":q")
 	    {
 		_cout->write("Thanks for playing\n");
@@ -75,7 +74,7 @@ class WebserverGame
 	    }
 
 
-	    std::string sOutput = game.play(sInput, sName);
+	    std::string sOutput = game.play(sInput, _id);
 	    _cout->write(sOutput);
 	    _cout->flush();
 	}
