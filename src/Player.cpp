@@ -251,7 +251,11 @@ void CPlayer::h_show(string sIdentifier) {
 }
 
 void CPlayer::h_lookIn(string sIdentifier) {
-    m_sPrint += m_room->look("in", sIdentifier);
+    string sOutput = m_room->look("in", sIdentifier);
+    if(sOutput == "")
+        m_sPrint = "Nothing found. \n";
+    else
+        m_sPrint = sOutput;
 }
 
 void CPlayer::h_goTo(std::string sIdentifier) {
@@ -302,15 +306,18 @@ void CPlayer::h_take(string sIdentifier) {
 }
 
 void CPlayer::h_consume(string sIdentifier) {
-    if(getItem(sIdentifier) != NULL)
-        getItem(sIdentifier)->callConsumeFunction(this); 
+    if(getItem(sIdentifier) != NULL) {
+        if(getItem(sIdentifier)->callFunction(this) == false)
+            m_sPrint += "This item is not consumeable.\n";
+    }
 }
 
 void CPlayer::h_equipe(string sIdentifier) {
-    if(getItem(sIdentifier) != NULL)
-        getItem(sIdentifier)->callEquipeFunction(this);
+    if(getItem(sIdentifier) != NULL) {
+        if(getItem(sIdentifier)->callFunction(this) == false)
+            m_sPrint += "This item is not equipable.\n";
+    }
 }
-
 
 
 void CPlayer::h_help(string sIdentifier) {

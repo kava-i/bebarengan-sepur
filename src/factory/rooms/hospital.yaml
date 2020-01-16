@@ -26,7 +26,6 @@
       description: A small wooden box stands in the left corner of the room.
       look: in
       items:
-        hospital_stick: Stick
         hospital_wine: Wine
         hospital_wine2: Wine
         hospital_cigaretts: A pack of Cigaretts

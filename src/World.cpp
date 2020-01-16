@@ -10,8 +10,7 @@ void CWorld::worldFactory()
 {
     //Initialize functions
     CDState::initializeFunctions();
-    CItem::initializeConsumeFunctions();
-    CItem::initializeEquipeFunctions();
+    CItem::initializeFunctions();
 
     //Create attacks
     attackFactory();
@@ -100,10 +99,8 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room)
         return mapItems;
 
     for(auto j_item : j_room["items"])
-    {
         mapItems[j_item["id"]] = new CItem(m_items[j_item["from"]], j_item);
-        std::cout << "Created " << mapItems[j_item["id"]]->getAttribute<string>("name") << std::endl;
-    } 
+
     return mapItems;
 } 
 
@@ -112,7 +109,6 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters)
     objectmap mapChars;
     for(auto j_char : j_characters)
     {
-        std::cout << "Parsing " << j_char["name"] << "\n";
 
         //Create dialog 
         SDialog* newDialog = new SDialog;
