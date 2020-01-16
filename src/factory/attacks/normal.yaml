@@ -24,4 +24,9 @@
   output: "The bite was successfull!"
   power: 12
 
+- name: "Smack"
+  id: stick_smack
+  description: "The good old smack with a stick."
+  output: "You draw your stick and smack it on your apponents head!"
+  power: 14
 

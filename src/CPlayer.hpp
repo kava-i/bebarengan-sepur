@@ -31,10 +31,13 @@ private:
     string m_status;
     string m_sPassword;
 
+
     CFight* m_curFight;
 
     typedef map<string, vector<CItem*>> inventory;
     inventory m_inventory;
+    typedef map<string, CItem*> equipment;
+    equipment m_equipment;
 
     typedef map<string, vector<void(CPlayer::*)(string)>>eventmanager; 
     eventmanager m_eventmanager;
@@ -50,6 +53,8 @@ public:
     string getStatus();
     CFight* getFight();
     size_t getHighness();
+    equipment& getEquipment();
+    CWorld* getWorld();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
@@ -60,22 +65,28 @@ public:
     void setHighness(size_t highness);
 
     //*** FUNCTIONS *** // 
+
+
     typedef std::pair<string, string> event;
     event callDialog(string sPlayerChoice);
     void callDialogState(string sDialogStateID); 
-    event callFight(string sPlayerChoice);
     
     string doLogin(string sName, string sPassword);
+    //Item and inventory
     void printInventory();
+    void printEquiped();
     void addItem(CItem* item);
-    void useItem(string sPlayerChoice);
     void removeItem(string sItemName);
+    CItem* getItem(string sName); 
+
+    //Stats
     string showStats();
 
+    //Others
     void checkHighness();
-
     typedef std::map<string, string> objectmap;
     string getObject(objectmap& mapObjects, string sIdentifier);
+
 
     // *** Event Manager function *** // 
     void throw_event(event newEvent);
@@ -84,20 +95,23 @@ public:
     void h_show             (string sIdentifier);
     void h_lookIn           (string sIdentifier);
     void h_take             (string sIdentifier);
-    void h_use              (string sIdentifier);
+    void h_consume          (string sIdentifier);
+    void h_equipe           (string sIdentifier);
     void h_goTo             (string sIdentifier);
     void h_startDialog      (string sIdentifier);
     void h_callDialog       (string sIdentifier);
     void h_callFight        (string sIdentifier);
     void h_help             (string sIdentifier);
     void h_error            (string sIdentifier);
-    void h_deleteCharacter  (string sIdentifier);
     
     //Dialogs
     void h_pissingman_fuckoff (string sIdentifier);
 
     //Rooms
     void h_firstZombieAttack (string sIdentifier);
+
+    //From fights
+    void h_deleteCharacter  (string sIdentifier);
 };
 
 #endif

@@ -17,7 +17,7 @@ string CPerson::printAttacks()
 {
     string sOutput = "Attacks: \n";
     for(auto attack : m_attacks)
-        sOutput += "-> " + attack.second->getName() + ": " + attack.second->getDescription() + "\n";
+        sOutput += "-> \"" + attack.second->getName() + "\": " + attack.second->getDescription() + "\n";
 
     return sOutput;
 }
