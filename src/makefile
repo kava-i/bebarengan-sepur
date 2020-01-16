@@ -1,5 +1,7 @@
 all:
-	g++ *.cpp -std=c++17 -lboost_system -lpthread
+	make --no-print-directory spec
+spec:
+	mkdir -p build && cd build && cmake .. && cmake --build . --parallel 4
 install:
 	rm -rf JanGeschenk
 	git clone https://github.com/ShadowItaly/JanGeschenk

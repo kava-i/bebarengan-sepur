@@ -29,6 +29,7 @@ private:
 
     string m_sPrint;
     string m_status;
+    string m_sPassword;
 
     CFight* m_curFight;
 
@@ -40,7 +41,8 @@ private:
 
 public:
     CPlayer() {};
-    CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room, attacks newAttacks);
+    CPlayer(string sName,string password, string sID, int hp, size_t strength, CRoom* room, attacks newAttacks);
+
 
     // *** GETTER *** // 
     CRoom* getRoom();
@@ -63,6 +65,7 @@ public:
     void callDialogState(string sDialogStateID); 
     event callFight(string sPlayerChoice);
     
+    string doLogin(string sName, string sPassword);
     void printInventory();
     void addItem(CItem* item);
     void useItem(string sPlayerChoice);
