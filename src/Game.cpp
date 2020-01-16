@@ -25,11 +25,22 @@ void CGame::playerFactory()
         map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player);
 
         //Create player
-        m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["id"], j_player.value("hp", 40), j_player.value("strength", 8), m_world->getRooms()[j_player["room"]], attacks);
+        m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["password"],j_player["id"], j_player.value("hp", 40), j_player.value("strength", 8), m_world->getRooms()[j_player["room"]], attacks);
     }
 }
 
 
+
+string CGame::checkLogin(string sName, string sPassword)
+{
+    for(auto &it : m_players)
+    {
+	string tmp = it.second->doLogin(sName,sPassword);
+	if(tmp != "")
+	    return tmp;
+    }
+    return "";
+}
 
 // ****************** FUNCTIONS CALLER ********************** //
 

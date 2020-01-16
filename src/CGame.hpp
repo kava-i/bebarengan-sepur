@@ -43,6 +43,8 @@ public:
 
     string play(string sInput, string sPlayerID);
 
+    string checkLogin(string sName, string sPassword);
+
     /*
     //Convert yaml to json
     void toJson(string filename);

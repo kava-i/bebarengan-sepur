@@ -11,11 +11,13 @@ class WebserverGame
         Webconsole *_cout;
 	std::string _name;
 	std::string _password;
+	std::string _id;
     public:
 	WebserverGame(Webconsole *cout)
 	{
 	    _name = "";
 	    _password = "";
+	    _id = "";
 	    _cout = cout;
 	    _cout->write("Name: ");
 	    _cout->flush();
@@ -44,8 +46,18 @@ class WebserverGame
 		{
 		    _cout->write("\nPassword: ");
 		    _cout->flush();
+		    return;
 		}
-		return;
+		_id = game.checkLogin(_name,_password);
+		if(_id=="")
+		{
+		    _name = "";
+		    _password = "";
+		    _cout->write(color::red, "Invalid Login please try again!",color::white, "\n\nName: ");
+		    _cout->flush();
+		    return;
+		}
+		sInput = "show rooms";
 	    } 
 
 	    

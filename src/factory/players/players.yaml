@@ -1,6 +1,7 @@
 ---
 
-- name: "Anna"
+- name: "anna"
+  password: password
   id: anna-bronec
   room: compartment-a
   hp: 50
@@ -11,7 +12,8 @@
 
 
 
-- name: "Jan"
+- name: "jan"
+  password: password
   id: jan-van-dick
   room: trainCorridor
   hp: 55

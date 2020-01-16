@@ -1,8 +1,9 @@
 #include "CPlayer.hpp"
 
-CPlayer::CPlayer(string sName, string sID, int hp, size_t strength, CRoom* room, attacks newAttacks)
+CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t strength, CRoom* room, attacks newAttacks)
 {
     m_sName = sName;
+    m_sPassword = sPassword;
     m_sID = sID;
     m_hp = hp;
     m_strength = strength;
@@ -196,6 +197,13 @@ void CPlayer::checkHighness()
     m_sPrint="";
     for(auto word : words)
         m_sPrint+=word + " ";
+}
+
+
+string CPlayer::doLogin(string sName, string sPassword)
+{
+    if(sName == m_sName && sPassword == m_sPassword) return m_sID;
+    else return "";
 }
 
 string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
