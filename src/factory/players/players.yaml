@@ -2,7 +2,7 @@
 
 - name: "Anna"
   id: anna-bronec
-  room: hospital_foyer
+  room: compartment-a
   hp: 50
   strength: 10
   attacks: 

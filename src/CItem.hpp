@@ -16,8 +16,7 @@ protected:
     nlohmann::json m_jAtts;
 
     //Static map f all state-functions
-    static std::map<string, void (CItem::*)(CPlayer*)> m_consumeFunctions;
-    static std::map<string, void (CItem::*)(CPlayer*)> m_equipeFunctions;
+    static std::map<string, void (CItem::*)(CPlayer*)> m_functions;
 
 public:
 
@@ -42,10 +41,8 @@ public:
         m_jAtts[sName] = t1;
     }
 
-    static void initializeConsumeFunctions();
-    void callConsumeFunction(CPlayer* p);
-    static void initializeEquipeFunctions();
-    void callEquipeFunction(CPlayer* p);
+    static void initializeFunctions();
+    bool callFunction(CPlayer* p);
 
     // *** FUNCTIONS *** //
     void equipeWeapon(CPlayer*);

@@ -20,39 +20,26 @@ string CItem::getFunction(){ return m_jAtts.value("function", m_jAtts["type"]); 
 size_t CItem::getEffekt()  { return getAttribute<size_t>("effekt"); }
 
 
-// ****** Initialize Functions ***** //
-
-//Consume Fucntion
-std::map<string, void (CItem::*)(CPlayer* p)> CItem::m_consumeFunctions= {};
-void CItem::initializeConsumeFunctions()
+// Initialize Functions 
+std::map<string, void (CItem::*)(CPlayer* p)> CItem::m_functions= {};
+void CItem::initializeFunctions()
 {
-    m_consumeFunctions["consume_drug"] = &CItem::consumeDrug;
-}
+    //Consume-functions
+    m_functions["consume_drug"] = &CItem::consumeDrug;
 
-//Equipe function
-std::map<string, void (CItem::*)(CPlayer* p)> CItem::m_equipeFunctions= {};
-void CItem::initializeEquipeFunctions()
-{ 
-    m_equipeFunctions["equipe_weapon"] = &CItem::equipeWeapon;
+    //Equipe-functions
+    m_functions["equipe_weapon"] = &CItem::equipeWeapon;
 }
 
 // ***** FUNCTION-CALLER ***** // 
 
 //Consume function
-void CItem::callConsumeFunction(CPlayer* p) {
-    if(m_consumeFunctions.count(getFunction()) == 0) 
-        p->appendPrint("Item not consumeable.\n");
+bool CItem::callFunction(CPlayer* p) {
+    if(m_functions.count(getFunction()) == 0) 
+        return false;
     else
-        (this->*m_consumeFunctions[getFunction()])(p);
-}
-
-
-//Equipe function
-void CItem::callEquipeFunction(CPlayer* p) {
-    if(m_equipeFunctions.count(getFunction()) == 0) 
-        p->appendPrint("Item not equipable.\n");
-    else
-        (this->*m_equipeFunctions[getFunction()])(p);
+        (this->*m_functions[getFunction()])(p);
+    return true;
 }
 
 
