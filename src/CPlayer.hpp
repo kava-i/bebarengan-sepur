@@ -4,7 +4,9 @@
 #include <iostream>
 #include <map>
 #include <stdlib.h>
+#include <chrono> 
 #include <time.h>
+#include <ctime>
 #include "CWorld.hpp"
 #include "CPerson.hpp"
 #include "CRoom.hpp"
@@ -18,6 +20,7 @@
  
 using std::string;
 using std::map;
+using std::vector;
 
 class CPlayer : public CPerson
 {
@@ -38,6 +41,9 @@ private:
     inventory m_inventory;
     typedef map<string, CItem*> equipment;
     equipment m_equipment;
+
+    typedef map<string, vector<std::pair<std::chrono::system_clock::time_point, size_t>>> timeEvents;
+    timeEvents m_timeEventes;
 
     typedef map<string, vector<void(CPlayer::*)(string)>>eventmanager; 
     eventmanager m_eventmanager;
@@ -66,12 +72,16 @@ public:
 
     //*** FUNCTIONS *** // 
 
-
     typedef std::pair<string, string> event;
     event callDialog(string sPlayerChoice);
     void callDialogState(string sDialogStateID); 
-    
+
     string doLogin(string sName, string sPassword);
+
+    //Time events
+    void addTimeEvent(string sType, size_t duration);
+    void checkTimeEvents();
+
     //Item and inventory
     void printInventory();
     void printEquiped();

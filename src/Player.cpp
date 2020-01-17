@@ -99,7 +99,28 @@ void CPlayer::callDialogState(string sDialogStateID)
         m_status = "dialog/" + sDialogStateID;
 }
 
+void CPlayer::addTimeEvent(string sType, size_t duration)
+{
+    auto start = std::chrono::system_clock::now();
+    m_timeEventes[sType].push_back(std::make_pair(start, duration*60));
+}
 
+void CPlayer::checkTimeEvents()
+{
+    auto end = std::chrono::system_clock::now();
+    for(auto it : m_timeEventes)
+    {
+        for(auto event : it.second)
+        {
+            std::chrono::duration<double> diff = end - event.first;
+            std::cout << diff.count() << ", " << event.second<< std::endl;
+            if(diff.count() >= event.second)
+                m_sPrint += "Event " + it.first + " triggered.\n";
+        }
+    }
+}
+
+// Item and inventory
 void CPlayer::printInventory() {
     m_sPrint += m_sName + "'s Inventory: \n";
 
@@ -118,6 +139,7 @@ void CPlayer::printInventory() {
     }
     m_sPrint += sEquipment +"\n"+ sConsume +"\n" + sOthers + "\n";
 }
+
 
 void CPlayer::printEquiped() {
     for(auto it : m_equipment) {
@@ -221,6 +243,7 @@ string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 
 void CPlayer::throw_event(event newEvent)
 {
+    checkTimeEvents();
     std::cout << newEvent.first << ", " << newEvent.second << "\n";
     if(m_eventmanager.count(newEvent.first) == 0) return;
         
