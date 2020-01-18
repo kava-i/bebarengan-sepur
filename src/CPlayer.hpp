@@ -42,7 +42,7 @@ private:
     typedef map<string, CItem*> equipment;
     equipment m_equipment;
 
-    typedef map<string, vector<std::pair<std::chrono::system_clock::time_point, size_t>>> timeEvents;
+    typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
     timeEvents m_timeEventes;
 
     typedef map<string, vector<void(CPlayer::*)(string)>>eventmanager; 
@@ -77,10 +77,6 @@ public:
     void callDialogState(string sDialogStateID); 
 
     string doLogin(string sName, string sPassword);
-
-    //Time events
-    void addTimeEvent(string sType, size_t duration);
-    void checkTimeEvents();
 
     //Item and inventory
     void printInventory();
@@ -122,6 +118,14 @@ public:
 
     //From fights
     void h_deleteCharacter  (string sIdentifier);
+
+    // *** Time events *** //
+
+    void addTimeEvent(string sType, double duration, void(CPlayer::*func)());
+    void checkTimeEvents();
+
+    // Time handler
+    void t_highness();
 };
 
 #endif

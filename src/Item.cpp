@@ -47,7 +47,7 @@ bool CItem::callFunction(CPlayer* p) {
 void CItem::consumeDrug(CPlayer* p)
 {
     p->setHighness(p->getHighness() + getEffekt());
-    p->addTimeEvent("highness", 2);
+    p->addTimeEvent("highness", 0.25, &CPlayer::t_highness);
     p->removeItem(m_jAtts["name"]);
     p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
 }
@@ -56,22 +56,16 @@ void CItem::consumeDrug(CPlayer* p)
 // ***** EQUIPE-FUNCTIONS ***** //
 void CItem::equipeWeapon(CPlayer* p)
 {
-    std::cout << "CItem::equipeWeapon\n";
     if(p->getEquipment()["weapon"] == NULL)
     {
-        std::cout << "Adsding attack... \n";
         p->appendPrint("You equiped weapon: " + getName() + ".\n");
         string sAttack = m_jAtts.value("attack", "");
         if(sAttack != "") {
-            std::cout << "1. " << std::endl;
             p->getAttacks()[sAttack] = p->getWorld()->getAttacks()[sAttack];
-            std::cout << "2. " << std::endl;
             p->appendPrint("New attack \"" + p->getAttacks()[sAttack]->getName() + "\" added to attack.\n");
         }
 
-        std::cout << "Adding item... \n";
         p->getEquipment()["weapon"] = this;
-        std::cout << "It worked ;) \n";
     }
 
     else if(p->getEquipment()["weapon"]->getID() == getID())

@@ -99,26 +99,7 @@ void CPlayer::callDialogState(string sDialogStateID)
         m_status = "dialog/" + sDialogStateID;
 }
 
-void CPlayer::addTimeEvent(string sType, size_t duration)
-{
-    auto start = std::chrono::system_clock::now();
-    m_timeEventes[sType].push_back(std::make_pair(start, duration*60));
-}
 
-void CPlayer::checkTimeEvents()
-{
-    auto end = std::chrono::system_clock::now();
-    for(auto it : m_timeEventes)
-    {
-        for(auto event : it.second)
-        {
-            std::chrono::duration<double> diff = end - event.first;
-            std::cout << diff.count() << ", " << event.second<< std::endl;
-            if(diff.count() >= event.second)
-                m_sPrint += "Event " + it.first + " triggered.\n";
-        }
-    }
-}
 
 // Item and inventory
 void CPlayer::printInventory() {
@@ -385,3 +366,55 @@ void CPlayer::h_deleteCharacter(string sIdentifier) {
     delete m_world->getCharacters()[sIdentifier];
     m_world->getCharacters().erase(sIdentifier); 
 }
+
+
+
+// ***** ***** TIME EVENTS ****** *****
+void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)())
+{
+    auto start = std::chrono::system_clock::now();
+    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func));
+}
+
+void CPlayer::checkTimeEvents()
+{
+    std::list<std::pair<std::string, size_t>> lExecute;
+
+    //Collect element to be executed
+    auto end = std::chrono::system_clock::now();
+    for(auto it : m_timeEventes)
+    {
+        std::cout << "ititializing... \n";
+        size_t counter=0;
+        for(auto jt : m_timeEventes[it.first]) {
+            std::chrono::duration<double> diff = end - std::get<0>(jt);
+            if(diff.count() >= std::get<1>(jt))
+                lExecute.push_back(std::make_pair(it.first, counter));
+        }
+    }
+
+    std::cout << "initializes execute. \n";
+
+    //Execute events and delete afterwards
+    for(auto it : lExecute) {
+        std::cout << "Calling and deleting: " << it.first << "/" << it.second << std::endl;
+        (this->*std::get<2>(m_timeEventes[it.first][it.second]))();
+        m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
+        if(m_timeEventes[it.first].size() == 0)
+            m_timeEventes.erase(it.first);
+    }
+
+}
+
+// Time handler
+void CPlayer::t_highness()
+{
+    if(m_highness==0)
+        return;
+    m_sPrint += "Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n";
+    m_highness--;
+
+    if(m_highness>0)
+        addTimeEvent("highness", 0.25, &CPlayer::t_highness);
+}
+
