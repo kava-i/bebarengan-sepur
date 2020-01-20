@@ -46,18 +46,12 @@ string CGame::checkLogin(string sName, string sPassword)
 
 string CGame::play(string sInput, string sPlayerID)
 {
-    //Create parser
-    CCommandParser parser;
-
     //Create player
     m_curPlayer = m_players[sPlayerID];
     m_curPlayer->setPrint("");
 
-    //Parse command and create event
-    event newEvent = parser.parse(sInput, m_curPlayer->getStatus());
-
-    //Throw event and delete afterwards
-    m_curPlayer->throw_event(newEvent);
+    //Throw event 
+    m_curPlayer->throw_event(sInput);
 
     return m_curPlayer->getPrint(); 
 }

@@ -15,7 +15,6 @@
 #include "CAttack.hpp"
 #include "CFight.hpp"
 #include "CDialog.hpp"
-#include "CCommandParser.hpp"
 #include "json.hpp"
 #include "fuzzy.hpp"
 

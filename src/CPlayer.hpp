@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <map>
+#include <queue>
 #include <stdlib.h>
 #include <chrono> 
 #include <time.h>
 #include <ctime>
+#include "CContext.hpp"
 #include "CWorld.hpp"
 #include "CPerson.hpp"
 #include "CRoom.hpp"
@@ -42,11 +44,11 @@ private:
     typedef map<string, CItem*> equipment;
     equipment m_equipment;
 
+
+    std::deque<CContext*> m_contextStack;
+
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
     timeEvents m_timeEventes;
-
-    typedef map<string, vector<void(CPlayer::*)(string)>>eventmanager; 
-    eventmanager m_eventmanager;
 
 public:
     CPlayer() {};
@@ -61,6 +63,7 @@ public:
     size_t getHighness();
     equipment& getEquipment();
     CWorld* getWorld();
+    std::deque<CContext*>& getContexts();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
@@ -94,31 +97,8 @@ public:
     string getObject(objectmap& mapObjects, string sIdentifier);
 
 
-    // *** Event Manager function *** // 
-    void throw_event(event newEvent);
-
-    // *** EVENTHANDLERS *** // 
-    void h_show             (string sIdentifier);
-    void h_lookIn           (string sIdentifier);
-    void h_take             (string sIdentifier);
-    void h_consume          (string sIdentifier);
-    void h_equipe           (string sIdentifier);
-    void h_goTo             (string sIdentifier);
-    void h_startDialog      (string sIdentifier);
-    void h_callDialog       (string sIdentifier);
-    void h_callFight        (string sIdentifier);
-    void h_help             (string sIdentifier);
-    void h_error            (string sIdentifier);
+    void throw_event(string sInput);
     
-    //Dialogs
-    void h_pissingman_fuckoff (string sIdentifier);
-
-    //Rooms
-    void h_firstZombieAttack (string sIdentifier);
-
-    //From fights
-    void h_deleteCharacter  (string sIdentifier);
-
     // *** Time events *** //
 
     void addTimeEvent(string sType, double duration, void(CPlayer::*func)());
