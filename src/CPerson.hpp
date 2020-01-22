@@ -2,6 +2,7 @@
 #define CPERSON_H
 
 #include <iostream>
+#include <queue> 
 #include <map>
 #include "CDialog.hpp"
 #include "CAttack.hpp"

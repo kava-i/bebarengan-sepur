@@ -11,6 +11,7 @@ using std::map;
 using std::vector;
 
 class CDState;
+class CPlayer;
 
 struct SDialog {
     string sName;
@@ -36,7 +37,7 @@ private:
     SDialog* m_dialog;
 
     //Static map f all state-functions
-    static std::map<string, string (CDState::*)()> m_functions;
+    static std::map<string, string (CDState::*)(CPlayer*)> m_functions;
 
 public:
     CDState(string sText, string function, vector<string> altTexts, dialogoptions states, SDialog* dia);
@@ -49,15 +50,17 @@ public:
     void setText(size_t text);
 
     static void initializeFunctions();
-    string callState();
+    string callState(CPlayer*);
 
     // *** functions *** //
-    string standard();
-    string parsen1();
+    string standard(CPlayer*);
+    string parsen1(CPlayer*);
+    string pissingman1(CPlayer*);
 
     void changeStateText(string sStateID, size_t text);
     void addDialogOption(string sStateID, size_t optID);
     void deleteDialogOption(string sStateID, size_t optID);
+    void changeDialog(string sOld, string sNew, CPlayer* p);
 
 
     size_t numOptions();

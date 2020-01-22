@@ -41,6 +41,7 @@ public:
     // *** various functions *** //
     string showEntryDescription(std::map<string, CCharacter*>& mapChars);
     string showDescription(std::map<string, CCharacter*>& mapChars); 
+    string showAll();
     string showExits();
     string showCharacters();
     string showItems();

@@ -5,6 +5,7 @@
 #include <map>
 #include "CPerson.hpp"
 #include "CAttack.hpp"
+#include "CContext.hpp"
 
 using std::string;
 
@@ -21,10 +22,13 @@ public:
 
     CFight(string sName, string sDescription, CPerson* player, CPerson* opponent);
 
-    typedef std::pair<string, string> event;
+    CPerson* getOpponent();
+
     void initializeFight();
-    event fightRound(string sPlayerChoice);
+    string fightRound(string sPlayerChoice);
     string turn(string selectedAttack, CPerson* attacker, CPerson* defender);
+
+    string printStats(CPerson* person);
     string createFightingAgainst();
 };
 

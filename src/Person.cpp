@@ -24,10 +24,24 @@ string CPerson::printAttacks()
 
 string CPerson::getAttack(string sPlayerChoice)
 {
-    for(auto it : m_attacks) {
-        if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2) 
-            return it.first;
+    if(std::isdigit(sPlayerChoice[0]) == true)
+    {
+        size_t counter=1;
+        for(auto it : m_attacks) {
+            if(counter == stoi(sPlayerChoice))
+                return it.first;
+             counter++;
+        }
     }
+
+    else if(sPlayerChoice.size() > 2)
+    {
+        for(auto it : m_attacks) {
+            if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2) 
+                return it.first;
+         }
+    }
+
     return "";
 }
     

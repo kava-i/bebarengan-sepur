@@ -1,4 +1,5 @@
 #include "CDialog.hpp"
+#include "CPlayer.hpp"
 
 CDState::CDState(string sText, string func, vector<string> alternativeTexts, dialogoptions opts, SDialog* dia)
 {
@@ -18,19 +19,20 @@ void CDState::setText(size_t text) { m_sText = m_alternativeTexts[text]; }
 
 // *** FUNCTIONS *** // 
 
-std::map<string, string (CDState::*)()> CDState::m_functions = {};
+std::map<string, string (CDState::*)(CPlayer* p)> CDState::m_functions = {};
 void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
     m_functions["parsen1"]      = &CDState::parsen1;
+    m_functions["pissingman1"]   = &CDState::pissingman1;
 }
 
-string CDState::callState() {
-    return (this->*m_functions[m_sFunction])();
+string CDState::callState(CPlayer* p) {
+    return (this->*m_functions[m_sFunction])(p);
 }
 
 // *** FUNCTION POINTER *** //
-string CDState::standard()
+string CDState::standard(CPlayer* p)
 {
     string sOutput = m_sText + "\n";
 
@@ -44,15 +46,22 @@ string CDState::standard()
     return sOutput;
 }
 
-string CDState::parsen1()
+string CDState::parsen1(CPlayer* p)
 {
-    string sOutput = standard();
+    string sOutput = standard(p);
     addDialogOption("START", -1);       //Add new option (4)
     deleteDialogOption("START", 1);     //Delete old option (1)
     changeStateText("START", 0);        //Change text (0)
     m_sFunction = "standard";           
     return sOutput;
 }
+
+string CDState::pissingman1(CPlayer* p)
+{
+    string sOutput = standard(p);
+    changeDialog("pissing_man", "defaultDialog", p);
+    return sOutput;
+} 
 
 // *** VARIOUS FUNCTIONS *** // 
 void CDState::changeStateText(string sStateID, size_t text) {
@@ -72,6 +81,11 @@ void CDState::deleteDialogOption(string sStateID, size_t optID) {
         m_dialog->states["START"]->getOptions().insert(std::move(nodeHandler));
     }
 } 
+
+void CDState::changeDialog(string sCharacter, string sDialog, CPlayer* p)
+{
+    p->getWorld()->getCharacters()["sCharacter"]->setDialog(p->getWorld()->dialogFactory(sDialog));
+}
 
 size_t CDState::numOptions()
 {

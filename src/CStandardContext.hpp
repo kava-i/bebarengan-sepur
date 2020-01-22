@@ -1,0 +1,44 @@
+#ifndef CSTANDARDCONTEXT_H
+#define CSTANDARDCONTEXT_H
+
+#include "CContext.hpp"
+#include "CDialogContext.hpp"
+
+
+class CStandardContext : public CContext
+{
+public:
+    CStandardContext(bool permeable, parser newParser) : CContext(permeable, newParser)
+    {
+        add_listener("show", &CContext::h_show);
+        add_listener("examine", &CContext::h_examine);
+        add_listener("lookIn", &CContext::h_lookIn);
+        add_listener("goTo", &CContext::h_goTo);
+        add_listener("talkTo", &CContext::h_startDialog);
+        add_listener("take", &CContext::h_take);
+        add_listener("consume", &CContext::h_consume);
+        add_listener("equipe", &CContext::h_equipe);
+        add_listener("help", &CContext::h_help);
+        add_listener("error", &CContext::h_error);
+
+        //Rooms
+        add_listener("goTo", &CContext::h_firstZombieAttack);
+        add_listener("goTo", &CContext::h_moveToHospital, 0);
+    }
+
+    void h_show             (string& sIdentiier, CPlayer* p);
+    void h_examine          (string& sIdentiier, CPlayer* p);
+    void h_lookIn           (string& sIdentiier, CPlayer* p);
+    void h_take             (string& sIdentiier, CPlayer* p);
+    void h_consume          (string& sIdentiier, CPlayer* p);
+    void h_equipe           (string& sIdentiier, CPlayer* p);
+    void h_goTo             (string& sIdentiier, CPlayer* p);
+    void h_startDialog      (string& sIdentiier, CPlayer* p);
+    void h_error            (string& sIdentiier, CPlayer* p);
+
+    //Rooms
+    void h_firstZombieAttack (string& sIdentiier, CPlayer* p);
+    void h_moveToHospital    (string& sIdentiier, CPlayer* p);
+};
+
+#endif

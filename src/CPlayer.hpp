@@ -8,12 +8,14 @@
 #include <chrono> 
 #include <time.h>
 #include <ctime>
-#include "CContext.hpp"
 #include "CWorld.hpp"
 #include "CPerson.hpp"
+#include "CContext.hpp"
+#include "CWorldContext.hpp"
+#include "CStandardContext.hpp"
+#include "CFightContext.hpp"
+#include "CDialogContext.hpp"
 #include "CRoom.hpp"
-#include "CDialog.hpp"
-#include "CAttack.hpp"
 #include "CFight.hpp"
 #include "func.hpp"
 
@@ -70,15 +72,22 @@ public:
     void setPrint(string);
     void appendPrint(string);
     void setStatus(string);
-    void setFight(CFight* fight);
     void setHighness(size_t highness);
 
     //*** FUNCTIONS *** // 
 
-    typedef std::pair<string, string> event;
-    event callDialog(string sPlayerChoice);
+    // Context-Stack
+    void newContext(CContext* context, size_t pos);
+    void deleteContext(size_t pos);
+
+    //Fight
+    void setFight(CFight* fight);
+    void endFight();
+
+    //Dialog
     void callDialogState(string sDialogStateID); 
 
+    //Login
     string doLogin(string sName, string sPassword);
 
     //Item and inventory

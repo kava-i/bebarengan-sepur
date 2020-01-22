@@ -1,18 +1,25 @@
 #include "CContext.hpp"
 #include "CPlayer.hpp"
 
-CContext::CContext(bool permeable, event(CContext::*parser)(string))
+CContext::CContext(bool permeable, parser newParser) 
 {
     m_permeable = permeable;
-    m_parser = parser;
+    m_parser = newParser;
 }
 
 // ***** GETTER ***** // 
 bool CContext::getPermeable() { return m_permeable; }
 
-void CContext::add_listener(string sEventType, void(CContext::*handler)(string, CPlayer*))
+
+// **** FUNCTIONS ***** //
+void CContext::add_listener(string sEventType, void(CContext::*handler)(string&, CPlayer*))
 {
     m_eventmanager[sEventType].push_back(handler);
+}
+
+void CContext::add_listener(string sEventType, void(CContext::*handler)(string&, CPlayer*), size_t pos)
+{
+    m_eventmanager[sEventType].insert(m_eventmanager[sEventType].begin()+pos, handler);
 }
 
 void CContext::delete_listener(string sEventType, int index)
@@ -22,31 +29,32 @@ void CContext::delete_listener(string sEventType, int index)
 
 void CContext::throw_event(std::string sInput, CPlayer* p)
 {
-    event newEvent = (this->*m_parser)(sInput);
-    std::cout << newEvent.first << ", " << newEvent.second << "\n";
+    if(sInput == "")
+        return; 
+    vector<event> events = (this->*m_parser)(sInput, p);
 
-    if(m_eventmanager.count(newEvent.first) == 0) 
-        return;
-        
-    for(auto it : m_eventmanager[newEvent.first])
-        (this->*it)(newEvent.second, p);
+    for(auto e : events)
+    {
+        std::cout << e.first << ", " << e.second << "\n";
+
+        if(m_eventmanager.count(e.first) == 0) 
+            return;
+            
+        for(auto it : m_eventmanager[e.first])
+            (this->*it)(e.second, p);
+    }
 }
 
-void CContext::throw_event(event newEvent, CPlayer* p)
-{
-    if(m_eventmanager.count(newEvent.first) == 0) 
-        return;
-        
-    for(auto it : m_eventmanager[newEvent.first])
-        (this->*it)(newEvent.second, p);
-}
 
 
 // *** PARSER *** //
-CContext::event CContext::standardParser(std::string sInput)
+
+vector<CContext::event> CContext::standardParser(std::string sInput, CPlayer* p)
 {
+    std::cout << "standardParser: " << sInput << std::endl;
     //Create regular expressions for different command the player might have choosen
     std::regex show("((S|s)how) (.*)");
+    std::regex examine("examine");
     std::regex lookIn("(L|l)(ook in )(.*)");
     std::regex pickUp("(pick up )(.*)");
     std::regex consume("(drink|eat|smoke) (.*)");
@@ -62,134 +70,94 @@ CContext::event CContext::standardParser(std::string sInput)
 
     //Show 
     if(std::regex_search(sInput, m, show))
-        return std::make_pair("show", m[3]);
+        return {std::make_pair("show", m[3])};
+    else if(std::regex_match(sInput, examine))
+        return {std::make_pair("examine", "")};
     //Look in
     else if(std::regex_search(sInput, m, lookIn))
-        return std::make_pair("lookIn", m[3]); 
+        return {std::make_pair("lookIn", m[3])};
     //Take
     else if(std::regex_search(sInput, m, pickUp))
-        return std::make_pair("take", m[2]); 
+        return {std::make_pair("take", m[2])}; 
     //Consume
     else if(std::regex_search(sInput, m, consume))
-        return std::make_pair("consume", m[2]); 
+        return {std::make_pair("consume", m[2])};
     //Equipe
     else if(std::regex_search(sInput, m, equipe))
-        return std::make_pair("equipe", m[3]);
+        return {std::make_pair("equipe", m[3])};
     //Change room
     else if(std::regex_search(sInput, m, goTo))
-        return std::make_pair("goTo", m[3]);
+        return {std::make_pair("goTo", m[3])};
     //Talk to 
     else if(std::regex_search(sInput, m, talkTo))
-        return std::make_pair("talkTo", m[3]);
+        return {std::make_pair("talkTo", m[3])};
     //Help 
     else if(std::regex_match(sInput, help))
-        return std::make_pair("help", "");
+        return {std::make_pair("help", "")};
     else
-        return std::make_pair("error", "");
+        return {std::make_pair("error", "")};
 }
 
-CContext::event CContext::fightParser(string sInput)
+vector<CContext::event> CContext::dialogParser(string sInput, CPlayer* p)
 {
+    std::cout << "dialogParser: " << sInput << std::endl;
     std::regex help("help");
     std::smatch m;
     if(std::regex_match(sInput, help))
-        return std::make_pair("help", "fight.txt");
+        return {std::make_pair("help", "dialog.txt")};
+
+    if(std::isdigit(sInput[0]) == false) 
+        return {std::make_pair("error", "")};
     else
-        return std::make_pair("choose", sInput);
+        return {std::make_pair("choose", sInput)};
 }
 
-// ****************** EVENTHANDLER ********************** //
-
-void CContext::h_show(string sIdentifier, CPlayer* p) {
-    if(sIdentifier == "exits")
-        p->appendPrint(p->getRoom()->showExits());
-    else if(sIdentifier == "people")
-        p->appendPrint(p->getRoom()->showCharacters());
-    else if(sIdentifier == "room")
-        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
-    else if(sIdentifier == "items")
-        p->appendPrint(p->getRoom()->showItems());
-    else if(sIdentifier == "details")
-        p->appendPrint(p->getRoom()->showDetails());
-    else if(sIdentifier == "inventory")
-        p->printInventory();
-    else if(sIdentifier == "equiped")
-        p->printEquiped();
-    else if(sIdentifier == "stats")
-        p->appendPrint(p->showStats());
-}
-
-void CContext::h_lookIn(string sIdentifier, CPlayer* p) {
-    string sOutput = p->getRoom()->look("in", sIdentifier);
-    if(sOutput == "")
-        p->appendPrint("Nothing found. \n");
-    else
-        p->appendPrint(sOutput);
-}
-
-void CContext::h_goTo(std::string sIdentifier, CPlayer* p) {
-
-    //Get selected room
-    string room = p->getObject(p->getRoom()->getExtits(), sIdentifier);
-
-    //Check if room was found
-    if(room == "") {
-        p->appendPrint("Room/ exit not found");
-        return;
-    }
-
-    //Print description and change players current room
-    p->appendPrint(p->getWorld()->getRooms()[room]->showEntryDescription(p->getWorld()->getCharacters()));
-    p->setRoom((p->getWorld()->getRooms()[room]));
-}
-
-void CContext::h_startDialog(string sIdentifier, CPlayer* p)
+vector<CContext::event> CContext::fightParser(string sInput, CPlayer* p)
 {
-    //Get selected character
-    string character = p->getObject(p->getRoom()->getCharacters(), sIdentifier);
+    std::cout << "fightParser: " << sInput << std::endl;
 
-    //Check if character was found
-    if(character == "") {
-        p->appendPrint("Characters not found");
-        return;
-    }
-
-    //Update player status and call dialog state
-    p->setDialog(p->getWorld()->getCharacters()[character]->getDialog());
-    p->callDialogState("START");
-}
-
-void CContext::h_callDialog(string sIdentifier, CPlayer* p) {
-    throw_event(p->callDialog(sIdentifier), p);
-}
-
-void CContext::h_choose(string sIdentifier, CPlayer* p) {
-    throw_event(p->getFight()->fightRound((sIdentifier)), p); 
-}
-
-void CContext::h_take(string sIdentifier, CPlayer* p) {
-    if(p->getRoom()->getItem(sIdentifier) == NULL)
-        p->appendPrint("Item not found.\n");
+    std::regex help("help");
+    std::regex show("(show) (.*)");
+    std::smatch m;
+    if(std::regex_match(sInput, help))
+        return {std::make_pair("help", "fight.txt")};
+    else if(std::regex_search(sInput, m, show))
+        return {std::make_pair("show", m[2])};
+    
+    string selectedAttack = p->getAttack(sInput);
+    if(selectedAttack == "")
+        return {std::make_pair("attackNotFound", "")};
     else
-        p->addItem(p->getRoom()->getItem(sIdentifier));
+        return {std::make_pair("choose", sInput)};
 }
 
-void CContext::h_consume(string sIdentifier, CPlayer* p) {
-    if(p->getItem(sIdentifier) != NULL) {
-        if(p->getItem(sIdentifier)->callFunction(p) == false)
-            p->appendPrint("This item is not consumeable.\n");
+vector<CContext::event> CContext::worldParser(string sInput, CPlayer* p)
+{
+    std::cout << "worldParser: " << sInput << std::endl;
+    std::regex deleteChar("(deleteCharacter)_(.*)");
+    std::regex endFight("endFight");
+    std::smatch m;
+
+    vector<string> commands = func::split(sInput, "/");
+    vector<event> events;
+
+    for(size_t i=0; i<commands.size(); i++)
+    { 
+        if(std::regex_search(commands[i], m, deleteChar))
+            events.push_back(std::make_pair("deleteCharacter", m[2]));
+        else if(std::regex_match(commands[i], endFight))
+            events.push_back(std::make_pair("endFight", ""));
     }
+
+    if(events.size()==0)
+        return {std::make_pair("empty", "")};
+
+    return events;
 }
 
-void CContext::h_equipe(string sIdentifier, CPlayer* p) {
-    if(p->getItem(sIdentifier) != NULL) {
-        if(p->getItem(sIdentifier)->callFunction(p) == false)
-            p->appendPrint("This item is not equipable.\n");
-    }
-}
 
-
-void CContext::h_help(string sIdentifier, CPlayer* p) {
+// ***** EVENTHANDLER ***** //
+void CContext::h_help(string& sIdentifier, CPlayer* p) {
     std::ifstream read("factory/help/"+sIdentifier);
 
     string str((std::istreambuf_iterator<char>(read)),
@@ -197,38 +165,3 @@ void CContext::h_help(string sIdentifier, CPlayer* p) {
     p->appendPrint(str);
 }
 
-void CContext::h_error(string sIdentifier, CPlayer* p) {
-    p->appendPrint("This command is unkown. Type \"help\" to see possible command.\n");
-}
-
-
-// *** DIALOG HANDLER *** //
-void CContext::h_pissingman_fuckoff(string sIdentifier, CPlayer* p) {
-    p->getWorld()->getCharacters()["pissing_man"]->setDialog(p->getWorld()->dialogFactory("defaultDialog"));
-}
-
-// *** ROOM HANDLER *** //
-void CContext::h_firstZombieAttack(string sIdentifier, CPlayer* p)
-{
-    //Get selected room
-    if(p->getRoom()->getID() != "hospital_stairs")
-        return;
-
-    p->appendPrint("\n$");
-
-    //Create fight
-    CFight* fight = new CFight("First Fight", "A zombie comes running down the stairs and attacks you!", p, p->getWorld()->getCharacters()["hospital_zombie1"]);
-    p->setFight(fight);
-    p->setStatus("fight");
-    fight->initializeFight();
-    p->getContexts().push_front(new CFightContext(false, &CContext::fightParser));
-
-    delete_listener("goTo", 1);
-}
-
-// *** FROM FIGHTS *** //
-void CContext::h_deleteCharacter(string sIdentifier, CPlayer* p) {
-    p->getRoom()->getCharacters().erase(sIdentifier);
-    delete p->getWorld()->getCharacters()[sIdentifier];
-    p->getWorld()->getCharacters().erase(sIdentifier); 
-}

@@ -2,10 +2,10 @@
 
  - name: "Compartment A"
    id: compartment-a
-   description: "The compartment is empty. Empty, but one mysterious passenger: Parsen"  
+   description: "The compartment is empty. Empty, but one mysterious passenger: Parsen."  
    entry: "You enter your appartment.\n"
    exits:
-     hospital_foyer: Corridor
+     trainCorridor: Corridor
    characters:
      - name: "Parsen"
        id: parsen

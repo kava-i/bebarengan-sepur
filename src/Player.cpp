@@ -19,7 +19,8 @@ CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t stren
     m_world = new CWorld();
 
     //Add eventhandler to eventmanager
-    m_contextStack.push_back( new CStandardContext(true, &CContext::standardParser));
+    m_contextStack.push_back( new CWorldContext(true, &CContext::worldParser));
+    m_contextStack.push_back( new CStandardContext(false, &CContext::standardParser));
 }
 
 // *** GETTER *** // 
@@ -43,46 +44,55 @@ void CPlayer::setRoom(CRoom* room)          { m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
-void CPlayer::setFight(CFight* newFight)    { m_curFight = newFight; }
 void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 
-//*** FUNCTIONS *** // 
 
-CPlayer::event CPlayer::callDialog(string sPlayerChoice)
-{
-    if(isdigit(sPlayerChoice[0]) == false) {
-        appendPrint("Please choose an number\n");
-        return std::make_pair("", "");
-    }
 
-    //Parse input
-    size_t pos = m_status.find("/");
-    string cur_id = m_status.substr(pos+1, m_status.length()-pos);
-    string next_id = m_dialog->states[cur_id]->getOptions()[stoi(sPlayerChoice)].sTarget;
+// *** *** FUNCTIONS *** *** // 
 
-    //Call state
-    callDialogState(next_id);
 
-    //Return event
-    event newEvent = std::make_pair(m_dialog->sName+"/"+next_id, "");
-    return newEvent;
+// *** Context-Stack ***
+void CPlayer::newContext(CContext* context, size_t pos) {
+    std::cout << "Added new context at: " << pos << std::endl;
+    m_contextStack.insert(m_contextStack.begin()+pos, context);
 }
+
+void CPlayer::deleteContext(size_t pos)
+{
+    std::cout << "deleted context at: " << pos << std::endl;
+    delete m_contextStack[pos];
+    m_contextStack.erase(m_contextStack.begin()+pos);
+}
+
+// *** Fight *** //
+void CPlayer::setFight(CFight* newFight) { 
+    m_curFight = newFight;
+    newContext(new CFightContext(false, &CContext::fightParser), 1);
+    m_curFight->initializeFight();
+}
+
+void CPlayer::endFight() {
+    delete m_curFight;
+    deleteContext(1);
+    m_sPrint += "Fight ended.\n";
+}
+
+
+// *** Dialog *** //
 
 void CPlayer::callDialogState(string sDialogStateID)
 {
     //Call state
-    appendPrint(m_dialog->states[sDialogStateID]->callState());
+    appendPrint(m_dialog->states[sDialogStateID]->callState(this));
 
     //Update status
     if(m_sPrint.find("Dialog ended") != string::npos)
-        m_status = "standard";
-    else
-        m_status = "dialog/" + sDialogStateID;
+        deleteContext(1);
 }
 
 
 
-// Item and inventory
+// *** Item and inventory *** //
 void CPlayer::printInventory() {
     m_sPrint += m_sName + "'s Inventory: \n";
 
@@ -134,6 +144,8 @@ CItem* CPlayer::getItem(string sName)
     return NULL;
 }
 
+
+// *** Stats *** //
 string CPlayer::showStats() {
     string stats = "Name: " + m_sName 
         + "\nHP: " + std::to_string(m_hp) 
@@ -145,6 +157,8 @@ string CPlayer::showStats() {
     return stats;
 }
 
+
+// *** Others *** // 
 void CPlayer::checkHighness()
 {
     if(m_highness==0)
@@ -198,7 +212,6 @@ string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
     }
     return "";
 }
-
 
 
 // ***** ***** EVENTMANAGER FUNCTIONS ***** *****

@@ -40,7 +40,16 @@ string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
     string sDesc = m_sDescription;
     for(auto it : m_characters) 
         sDesc.append("\n" + mapChars[it.first]->getDescription());
+    return sDesc;
+}
 
+string CRoom::showAll()
+{
+    string sDesc = m_sDescription + "\n";
+    sDesc+=showDetails();
+    sDesc+=showExits();
+    sDesc+=showCharacters();
+    sDesc+=showItems();
     return sDesc;
 }
 
