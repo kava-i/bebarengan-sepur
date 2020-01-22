@@ -53,47 +53,53 @@ vector<CContext::event> CContext::standardParser(std::string sInput, CPlayer* p)
 {
     std::cout << "standardParser: " << sInput << std::endl;
     //Create regular expressions for different command the player might have choosen
-    std::regex show("((S|s)how) (.*)");
+    std::regex show("(show) (.*)");
     std::regex examine("examine");
-    std::regex lookIn("(L|l)(ook in )(.*)");
+    std::regex lookIn("(look in )(.*)");
     std::regex pickUp("(pick up )(.*)");
     std::regex consume("(drink|eat|smoke) (.*)");
-    std::regex equipe("(E|e)(quipe) (.*)");
-    std::regex goTo("(G|g)(o to) (.*)");
-    std::regex talkTo("(T|t)(alk to) (.*)");
+    std::regex equipe("(equipe) (.*)");
+    std::regex dequipe("(dequipe) (.*)");
+    std::regex goTo("(go to) (.*)");
+    std::regex talkTo("(talk to) (.*)");
     std::regex help("help");
-    std::regex end("((Q|q)uit|(E|e)xit).*(game)");
     std::regex end_direct(":q");
-
     //Create an instans of smatch
     std::smatch m;
 
     //Show 
     if(std::regex_search(sInput, m, show))
-        return {std::make_pair("show", m[3])};
+        return {std::make_pair("show", m[2])};
+    //Examine
     else if(std::regex_match(sInput, examine))
         return {std::make_pair("examine", "")};
     //Look in
-    else if(std::regex_search(sInput, m, lookIn))
-        return {std::make_pair("lookIn", m[3])};
+    else if(std::regex_match(sInput, m, lookIn))
+        return {std::make_pair("lookIn", m[2])};
     //Take
-    else if(std::regex_search(sInput, m, pickUp))
+    else if(std::regex_match(sInput, m, pickUp))
         return {std::make_pair("take", m[2])}; 
     //Consume
-    else if(std::regex_search(sInput, m, consume))
+    else if(std::regex_match(sInput, m, consume))
         return {std::make_pair("consume", m[2])};
     //Equipe
-    else if(std::regex_search(sInput, m, equipe))
-        return {std::make_pair("equipe", m[3])};
+    else if(std::regex_match(sInput, m, equipe))
+        return {std::make_pair("equipe", m[2])};
+    //Dequipe
+    else if(std::regex_match(sInput, m, dequipe))
+        return {std::make_pair("dequipe", m[2])};
     //Change room
-    else if(std::regex_search(sInput, m, goTo))
-        return {std::make_pair("goTo", m[3])};
+    else if(std::regex_match(sInput, m, goTo))
+        return {std::make_pair("goTo", m[2])};
     //Talk to 
-    else if(std::regex_search(sInput, m, talkTo))
-        return {std::make_pair("talkTo", m[3])};
+    else if(std::regex_match(sInput, m, talkTo))
+        return {std::make_pair("talkTo", m[2])};
     //Help 
     else if(std::regex_match(sInput, help))
-        return {std::make_pair("help", "")};
+        return {std::make_pair("help", "standard.txt")};
+    //Developer option
+    else if(sInput == "try")
+        return {std::make_pair("try", "")};
     else
         return {std::make_pair("error", "")};
 }
@@ -153,6 +159,11 @@ vector<CContext::event> CContext::worldParser(string sInput, CPlayer* p)
         return {std::make_pair("empty", "")};
 
     return events;
+}
+
+vector<CContext::event> CContext::choiceParser(string sInput, CPlayer* p)
+{
+    return {std::make_pair("choose", sInput)};
 }
 
 

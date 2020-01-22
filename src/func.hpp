@@ -16,5 +16,10 @@ namespace func
     * @return vector
     */
     std::vector<std::string> split(std::string str, std::string delimiter);
+
+    /**
+    * @param[in, out] str string to be modified
+    */
+    void convertToLower(std::string &str);
 }
 

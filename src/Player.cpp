@@ -144,6 +144,53 @@ CItem* CPlayer::getItem(string sName)
     return NULL;
 }
 
+CItem* CPlayer::getItem_byID(string id)
+{
+    for(auto it : m_inventory) {
+        if(it.second[0]->getID() == id)
+            return it.second[0];
+    }
+    return NULL;
+}
+
+void CPlayer::equipeItem(CItem* item, string sType)
+{
+    if(m_equipment[sType] == NULL)
+    {
+        m_sPrint += "You equiped " + sType + ": " + item->getName() + ".\n";
+        string sAttack = item->getAttribute<string>("attack");
+        if(sAttack != "") {
+            m_attacks[sAttack] = m_world->getAttacks()[sAttack];
+            m_sPrint += "New attack: \"" + m_attacks[sAttack]->getName() + "\" added to arracks.\n";
+        }
+        m_equipment[sType] = item;
+    }
+
+    else if(m_equipment[sType]->getID() == item->getID())
+        m_sPrint+=sType + " already equiped.\n";
+    else
+    {
+        m_sPrint+="Already a " + sType + " equipt. Want to change? (yes/no)\n";
+        CChoiceContext* context = new CChoiceContext(false, &CContext::choiceParser, item->getID());
+        context->add_listener("choose", &CContext::h_choose_equipe);
+        newContext(context, 1);
+    }
+}
+
+void CPlayer::dequipeItem(string sType) {
+    if(m_equipment.count(sType) == 0)
+        m_sPrint += "Nothing to dequipe.\n";
+    else if(m_equipment[sType] == NULL)
+        m_sPrint += "Nothing to dequipe.\n";
+    else {
+        m_sPrint += "Dequiped " + sType + " " + m_equipment[sType]->getName() + ".\n";
+        string sAttack = m_equipment[sType]->getAttribute<string>("attack");
+        if(sAttack != "")
+            m_attacks.erase(sAttack);
+        m_equipment[sType] = NULL;
+    }
+}
+
 
 // *** Stats *** //
 string CPlayer::showStats() {

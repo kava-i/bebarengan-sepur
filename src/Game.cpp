@@ -46,6 +46,8 @@ string CGame::checkLogin(string sName, string sPassword)
 
 string CGame::play(string sInput, string sPlayerID)
 {
+    //func::convertToLower(sInput);    
+
     //Create player
     m_curPlayer = m_players[sPlayerID];
     m_curPlayer->setPrint("");

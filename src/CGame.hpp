@@ -17,6 +17,7 @@
 #include "CDialog.hpp"
 #include "json.hpp"
 #include "fuzzy.hpp"
+#include "func.hpp"
 
 //#include <Python.h>
 

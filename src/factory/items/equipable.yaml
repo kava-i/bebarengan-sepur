@@ -8,6 +8,8 @@
   value: 5
 
 - name: Basic Sword
-  id: basic_basick-sword
+  id: basic_sword
   description: "A basic sword, just what you would expect."
+  type: equipe_weapon
   value: 30
+

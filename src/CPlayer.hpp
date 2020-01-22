@@ -15,6 +15,7 @@
 #include "CStandardContext.hpp"
 #include "CFightContext.hpp"
 #include "CDialogContext.hpp"
+#include "CChoiceContext.hpp"
 #include "CRoom.hpp"
 #include "CFight.hpp"
 #include "func.hpp"
@@ -96,6 +97,9 @@ public:
     void addItem(CItem* item);
     void removeItem(string sItemName);
     CItem* getItem(string sName); 
+    CItem* getItem_byID(string sID);
+    void equipeItem(CItem*, string sType);
+    void dequipeItem(string sType);
 
     //Stats
     string showStats();

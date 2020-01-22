@@ -87,6 +87,10 @@ void CStandardContext::h_equipe(string& sIdentifier, CPlayer* p) {
     }
 }
 
+void CStandardContext::h_dequipe(string& sIdentifier, CPlayer* p) {
+    p->dequipeItem(sIdentifier);
+}
+
 void CStandardContext::h_error(string& sIdentifier, CPlayer* p) {
     p->appendPrint("This command is unkown. Type \"help\" to see possible command.\n");
 }
@@ -116,4 +120,12 @@ void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
 
     sIdentifier = "Foyer";
     p->setRoom(p->getWorld()->getRooms()["hospital_stairs"]);
+}
+
+void CStandardContext::h_try(string&, CPlayer* p)
+{
+    throw_event("go to cor", p);
+    throw_event("pick up stick", p);
+    throw_event("pick up sword", p);
+    throw_event("equipe sword", p);
 }

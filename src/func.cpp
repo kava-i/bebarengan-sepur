@@ -19,3 +19,13 @@ std::vector<std::string> func::split(std::string str, std::string delimiter)
 
     return vStr;
 }
+
+/**
+* @param[in, out] str string to be modified
+*/
+void func::convertToLower(std::string &str)
+{
+    std::locale loc1("de_DE.UTF8");
+    for(unsigned int i=0; i<str.length(); i++)
+        str[i] = tolower(str[i], loc1);
+}

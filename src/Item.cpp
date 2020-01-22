@@ -56,23 +56,8 @@ void CItem::consumeDrug(CPlayer* p)
 // ***** EQUIPE-FUNCTIONS ***** //
 void CItem::equipeWeapon(CPlayer* p)
 {
-    if(p->getEquipment()["weapon"] == NULL)
-    {
-        p->appendPrint("You equiped weapon: " + getName() + ".\n");
-        string sAttack = m_jAtts.value("attack", "");
-        if(sAttack != "") {
-            p->getAttacks()[sAttack] = p->getWorld()->getAttacks()[sAttack];
-            p->appendPrint("New attack \"" + p->getAttacks()[sAttack]->getName() + "\" added to attack.\n");
-        }
-
-        p->getEquipment()["weapon"] = this;
-    }
-
-    else if(p->getEquipment()["weapon"]->getID() == getID())
-        p->appendPrint("Weapon already equipt.\n");
-
-    else
-        p->appendPrint("Already a Weapon equipt, want to change?\n");
+    string sType = func::split(m_jAtts["type"], "_")[1];
+    p->equipeItem(this, sType);
 }
 
 

@@ -43,6 +43,7 @@ public:
     vector<event> dialogParser(std::string sInput, CPlayer* p);
     vector<event> fightParser(std::string sInput, CPlayer* p);
     vector<event> worldParser(std::string sInput, CPlayer* p);
+    vector<event> choiceParser(std::string sInput, CPlayer* p);
 
     // *** EVENTHANDLERS *** // 
     void h_help(string&, CPlayer*);
@@ -54,6 +55,7 @@ public:
     virtual void h_take             (string&, CPlayer*) {}
     virtual void h_consume          (string&, CPlayer*) {}
     virtual void h_equipe           (string&, CPlayer*) {}
+    virtual void h_dequipe          (string&, CPlayer*) {}
     virtual void h_goTo             (string&, CPlayer*) {}
     virtual void h_startDialog      (string&, CPlayer*) {}
     virtual void h_error            (string&, CPlayer*) {}
@@ -72,6 +74,13 @@ public:
 
     // *** DIALOG CONTEXT *** //
     virtual void h_call(string&, CPlayer*) {}
+
+    // *** CHOICE CONTEXT *** //
+    virtual void h_choose_equipe(string&, CPlayer*) {}
+
+
+    // *** PROGRAMMER *** //
+    virtual void h_try(string&, CPlayer*) {}
 
 };
 

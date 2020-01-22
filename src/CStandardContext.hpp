@@ -18,12 +18,15 @@ public:
         add_listener("take", &CContext::h_take);
         add_listener("consume", &CContext::h_consume);
         add_listener("equipe", &CContext::h_equipe);
+        add_listener("dequipe", &CContext::h_dequipe);
         add_listener("help", &CContext::h_help);
         add_listener("error", &CContext::h_error);
 
         //Rooms
         add_listener("goTo", &CContext::h_firstZombieAttack);
         add_listener("goTo", &CContext::h_moveToHospital, 0);
+
+        add_listener("try", &CContext::h_try, 0);
     }
 
     void h_show             (string& sIdentiier, CPlayer* p);
@@ -32,6 +35,7 @@ public:
     void h_take             (string& sIdentiier, CPlayer* p);
     void h_consume          (string& sIdentiier, CPlayer* p);
     void h_equipe           (string& sIdentiier, CPlayer* p);
+    void h_dequipe          (string& sIdentiier, CPlayer* p);
     void h_goTo             (string& sIdentiier, CPlayer* p);
     void h_startDialog      (string& sIdentiier, CPlayer* p);
     void h_error            (string& sIdentiier, CPlayer* p);
@@ -39,6 +43,9 @@ public:
     //Rooms
     void h_firstZombieAttack (string& sIdentiier, CPlayer* p);
     void h_moveToHospital    (string& sIdentiier, CPlayer* p);
+
+    //Programmer
+    void h_try(string& sIdentiier, CPlayer* p);
 };
 
 #endif

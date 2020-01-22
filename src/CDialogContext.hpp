@@ -14,6 +14,7 @@ public:
         add_listener("call", &CContext::h_call); 
         add_listener("error", &CContext::h_error);
         add_listener("choose", &CContext::h_call);
+        add_listener("help", &CContext::h_help);
     }
 
     void h_call(string&, CPlayer*);

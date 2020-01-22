@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include "json.hpp"
+#include "func.hpp"
 
 class CPlayer;
 
