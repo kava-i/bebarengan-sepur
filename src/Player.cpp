@@ -78,19 +78,6 @@ void CPlayer::endFight() {
 }
 
 
-// *** Dialog *** //
-
-void CPlayer::callDialogState(string sDialogStateID)
-{
-    //Call state
-    appendPrint(m_dialog->states[sDialogStateID]->callState(this));
-
-    //Update status
-    if(m_sPrint.find("Dialog ended") != string::npos)
-        deleteContext(1);
-}
-
-
 
 // *** Item and inventory *** //
 void CPlayer::printInventory() {

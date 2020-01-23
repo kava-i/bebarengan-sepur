@@ -9,6 +9,11 @@
    characters:
      - name: "Parsen"
        id: parsen
+       hp: 50
+       strength: 14
+       attacks:
+         kick: Normal Kick
+         punsch: Punsch
        dialog: parsenDialog
      - name: Lukas
        id: lukas

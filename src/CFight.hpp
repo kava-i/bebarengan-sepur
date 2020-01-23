@@ -30,6 +30,7 @@ public:
 
     string printStats(CPerson* person);
     string createFightingAgainst();
+    string pickOpponentAttack();
 };
 
 #endif

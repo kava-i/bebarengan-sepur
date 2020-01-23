@@ -177,8 +177,13 @@ SDialog* CWorld::dialogFactory(string sPath)
         map<int, SDOption> options;
         if(j_state.count("options") != 0)
         {
-            for(auto j_opt : j_state["options"])
-                options[j_opt["id"]] = {j_opt["text"], j_opt["targetstate"]};
+            std::map<string, string> mapOptions = j_state["options"].get<std::map<string, string>>(); 
+            for(auto it : mapOptions)
+            {
+                std::vector<string> vAtts = func::split(it.second, ";");
+                nlohmann::json jDeps = nlohmann::json::parse(vAtts[1]);
+                options[stoi(it.first)] = {vAtts[0], jDeps, vAtts[2]};
+            }
         }
 
         // *** parse state *** //

@@ -30,7 +30,8 @@ std::string CFight::fightRound(string sPlayerChoice)
     }
 
     //Execute opponents turn
-    sOutput += turn("bite", m_opponent, m_player) + "$";
+    string sAttack = pickOpponentAttack();
+    sOutput += turn(sAttack, m_opponent, m_player) + "$";
 
     //Check wether player is dead
     if(m_player->getHp() <= 0) {
@@ -88,5 +89,13 @@ string CFight::createFightingAgainst()
     sOutput += m_player->printAttacks();
 
     return sOutput;
+}
+
+string CFight::pickOpponentAttack()
+{
+   srand(time(NULL));
+   size_t attack = rand() % m_opponent->getAttacks().size() + 1;
+   std::cout << "Attack: " << attack << "-> " << m_opponent->getAttack(std::to_string(attack)) << "\n";
+   return m_opponent->getAttack(std::to_string(attack));
 }
 

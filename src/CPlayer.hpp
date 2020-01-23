@@ -85,9 +85,6 @@ public:
     void setFight(CFight* fight);
     void endFight();
 
-    //Dialog
-    void callDialogState(string sDialogStateID); 
-
     //Login
     string doLogin(string sName, string sPassword);
 

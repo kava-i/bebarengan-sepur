@@ -24,11 +24,23 @@ void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
     m_functions["parsen1"]      = &CDState::parsen1;
+    m_functions["parsen2"]      = &CDState::parsen2;
     m_functions["pissingman1"]   = &CDState::pissingman1;
 }
 
+
 string CDState::callState(CPlayer* p) {
     return (this->*m_functions[m_sFunction])(p);
+}
+
+string CDState::getNextState(string sPlayerChoice, CPlayer* p)
+{
+    if(numOptions() < stoi(sPlayerChoice))
+        return "";
+    else if(checkDependencys(m_options[stoi(sPlayerChoice)], p) == false)
+        return "";
+    else
+        return m_options[stoi(sPlayerChoice)].sTarget;
 }
 
 // *** FUNCTION POINTER *** //
@@ -36,14 +48,29 @@ string CDState::standard(CPlayer* p)
 {
     string sOutput = m_sText + "\n";
 
-    if(numOptions() == 0)
-        return sOutput + "Dialog ended. \n";
+    if(numOptions() == 0) {
+        p->appendPrint(sOutput + "Dialog ended. \n");
+        return "endDialog";
+    }
 
     size_t numOpts = numOptions();
+    bool options = false;
     for(size_t i=1; i<numOpts+1; i++)
-        sOutput += std::to_string(i) + ": " + m_options[i].sText + "\n";
+    {
+        if(checkDependencys(m_options[i], p) == true)
+        {
+            options = true;
+            sOutput += std::to_string(i) + ": " + m_options[i].sText + "\n";
+        }
+    }
 
-    return sOutput;
+    if(options == false){
+        p->appendPrint(sOutput + "Dialog ended.\n");
+        return "endDialog";
+     }
+
+    p->appendPrint(sOutput);
+    return "";
 }
 
 string CDState::parsen1(CPlayer* p)
@@ -53,6 +80,14 @@ string CDState::parsen1(CPlayer* p)
     deleteDialogOption("START", 1);     //Delete old option (1)
     changeStateText("START", 0);        //Change text (0)
     m_sFunction = "standard";           
+    return sOutput;
+}
+
+string CDState::parsen2(CPlayer* p)
+{
+    string sOutput = standard(p);
+    p->appendPrint("$");
+    sOutput+="/fightParsen";
     return sOutput;
 }
 
@@ -95,4 +130,17 @@ size_t CDState::numOptions()
             counter++;
     }
     return counter;
+}
+
+bool CDState::checkDependencys(SDOption& option, CPlayer* p)
+{
+    if(option.jDependencys.size() == 0)
+        return true;
+    for(auto it=option.jDependencys.begin(); it!=option.jDependencys.end(); ++it)
+    {
+        if(it.key() == "highness" && p->getHighness() < it.value())
+            return false;
+    }
+
+    return true;
 }

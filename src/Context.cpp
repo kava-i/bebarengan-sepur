@@ -142,6 +142,8 @@ vector<CContext::event> CContext::worldParser(string sInput, CPlayer* p)
     std::cout << "worldParser: " << sInput << std::endl;
     std::regex deleteChar("(deleteCharacter)_(.*)");
     std::regex endFight("endFight");
+    std::regex endDialog("endDialog");
+    std::regex fightParsen("fightParsen");
     std::smatch m;
 
     vector<string> commands = func::split(sInput, "/");
@@ -153,6 +155,10 @@ vector<CContext::event> CContext::worldParser(string sInput, CPlayer* p)
             events.push_back(std::make_pair("deleteCharacter", m[2]));
         else if(std::regex_match(commands[i], endFight))
             events.push_back(std::make_pair("endFight", ""));
+        else if(std::regex_match(commands[i], endDialog))
+            events.push_back(std::make_pair("endDialog", ""));
+        else if(std::regex_match(commands[i], fightParsen))
+            events.push_back(std::make_pair("fightParsen", ""));
     }
 
     if(events.size()==0)

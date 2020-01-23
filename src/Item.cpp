@@ -47,7 +47,7 @@ bool CItem::callFunction(CPlayer* p) {
 void CItem::consumeDrug(CPlayer* p)
 {
     p->setHighness(p->getHighness() + getEffekt());
-    p->addTimeEvent("highness", 0.25, &CPlayer::t_highness);
+    p->addTimeEvent("highness", 1, &CPlayer::t_highness);
     p->removeItem(m_jAtts["name"]);
     p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
 }

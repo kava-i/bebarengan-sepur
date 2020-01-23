@@ -63,7 +63,8 @@ void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
     //Update player status and call dialog state
     p->newContext(new CDialogContext(false, &CContext::dialogParser), 1);
     p->setDialog(p->getWorld()->getCharacters()[character]->getDialog());
-    p->callDialogState("START");
+
+    p->throw_event(p->getDialog()->states["START"]->callState(p));
 }
 
 void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
@@ -125,7 +126,11 @@ void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
 void CStandardContext::h_try(string&, CPlayer* p)
 {
     throw_event("go to cor", p);
-    throw_event("pick up stick", p);
-    throw_event("pick up sword", p);
-    throw_event("equipe sword", p);
+    throw_event("look in box", p);
+    throw_event("pick up wine", p);
+    throw_event("pick up wine", p);
+    throw_event("drink wine", p);
+    throw_event("drink wine", p);
+    throw_event("go to ent", p);
+    throw_event("talk to parsen", p);
 }

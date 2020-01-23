@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "json.hpp"
 
 using std::string;
 using std::map;
@@ -20,6 +21,7 @@ struct SDialog {
 
 struct SDOption {
     string sText;
+    nlohmann::json jDependencys;
     string sTarget;
 };
 
@@ -51,10 +53,12 @@ public:
 
     static void initializeFunctions();
     string callState(CPlayer*);
+    string getNextState(string sPlayerChoice, CPlayer* p);
 
     // *** functions *** //
     string standard(CPlayer*);
     string parsen1(CPlayer*);
+    string parsen2(CPlayer*);
     string pissingman1(CPlayer*);
 
     void changeStateText(string sStateID, size_t text);
@@ -64,5 +68,6 @@ public:
 
 
     size_t numOptions();
+    bool checkDependencys(SDOption& option, CPlayer* p);
 };
 #endif 
