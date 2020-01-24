@@ -46,7 +46,7 @@ string CGame::checkLogin(string sName, string sPassword)
 
 string CGame::startGame(string sInput, string sPasswordID)
 {
-    if(m_players[sPasswordID].getFirstLogin() == true)
+    if(m_players[sPasswordID]->getFirstLogin() == true)
         m_curPlayer->throw_event("startTutorial");
     else
         m_curPlayer->throw_event("show room");
@@ -65,7 +65,6 @@ string CGame::play(string sInput, string sPlayerID)
 
     return m_curPlayer->getPrint(); 
 }
-
 
 
 /*

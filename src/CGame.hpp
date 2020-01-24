@@ -41,7 +41,7 @@ public:
     // *** FACTORYS *** // 
     void playerFactory();
 
-    string 
+    string startGame(string sInput, string sPasswordID);
     string play(string sInput, string sPlayerID);
 
     string checkLogin(string sName, string sPassword);
