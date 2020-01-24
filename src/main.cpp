@@ -57,7 +57,10 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		sInput = "show room";
+		sInput = game.startGame(sInput,_id);
+		_cout->write(sInput);
+		_cout->flush();
+		return;
 	    } 
 
 	    
