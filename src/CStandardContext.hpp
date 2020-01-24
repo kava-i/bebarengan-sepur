@@ -51,6 +51,7 @@ public:
     void h_try1(string& sIdentiier, CPlayer* p);
     void h_try2(string& sIdentiier, CPlayer* p);
     void h_try3(string& sIdentiier, CPlayer* p);
+    void h_try4(string& sIdentiier, CPlayer* p);
 };
 
 #endif

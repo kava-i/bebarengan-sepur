@@ -38,7 +38,7 @@ private:
     string m_sPrint;
     string m_status;
     string m_sPassword;
-
+    bool m_firstLogin;
 
     CFight* m_curFight;
 
@@ -62,6 +62,7 @@ public:
     CRoom* getRoom();
     string getPrint();
     string getStatus();
+    bool getFirstLogin();
     CFight* getFight();
     size_t getHighness();
     equipment& getEquipment();
@@ -112,6 +113,7 @@ public:
     // *** Time events *** //
 
     void addTimeEvent(string sType, double duration, void(CPlayer::*func)());
+    bool checkEventExists(string sType);
     void checkTimeEvents();
 
     // Time handler

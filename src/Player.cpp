@@ -4,6 +4,7 @@ CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t stren
 {
     m_sName = sName;
     m_sPassword = sPassword;
+    m_firstLogin = false;
     m_sID = sID;
     m_hp = hp;
     m_gold = gold;
@@ -34,6 +35,7 @@ string CPlayer::getPrint()  {
 }
 
 string CPlayer::getStatus() { return m_status; };
+bool CPlayer::getFight() { return m_firstLogin; };
 CFight* CPlayer::getFight() { return m_curFight; };
 size_t CPlayer::getHighness() { return m_highness; };
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
@@ -264,6 +266,10 @@ void CPlayer::throw_event(string sInput)
 
 
 // ***** ***** TIME EVENTS ****** *****
+bool CPlayer::checkEventExists(string sType)
+{
+    return m_timeEventes.count(sType) > 0;
+}
 void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)())
 {
     auto start = std::chrono::system_clock::now();

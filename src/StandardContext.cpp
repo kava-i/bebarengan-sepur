@@ -142,27 +142,33 @@ void CStandardContext::h_endTutorial(string& sIdentifier, CPlayer* p)
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier == "1") h_try1(sIdentifier, p);
-    if(sIdentifier == "2") h_try2(sIdentifier, p);
-    if(sIdentifier == "3") h_try3(sIdentifier, p);
-}
-void CStandardContext::h_try1(string&, CPlayer* p)
-{
-    throw_event("go to neben", p);
-    throw_event("go to toil", p);
-    throw_event("go to mä", p);
-    throw_event("talk to tick", p);
-}
-void CStandardContext::h_try2(string&, CPlayer* p)
-{
-    throw_event("go to vor", p);
-    throw_event("go to neben", p);
-    throw_event("go to eing", p);
-    throw_event("go to gleise", p);
-}
-void CStandardContext::h_try3(string&, CPlayer* p)
-{
-    throw_event("go to neben", p);
-    throw_event("go to toil", p);
-    throw_event("go to frau", p);
+    if(sIdentifier == "1") 
+    {
+        throw_event("go to neben", p);
+        throw_event("go to toil", p);
+        throw_event("go to mä", p);
+        throw_event("talk to tick", p);
+    }
+    if(sIdentifier == "2")
+    {
+        throw_event("go to vor", p);
+        throw_event("go to neben", p);
+        throw_event("go to eing", p);
+        throw_event("go to gleise", p);
+    }
+    if(sIdentifier == "3") 
+    {
+        throw_event("go to neben", p);
+        throw_event("go to toil", p);
+        throw_event("go to frau", p);
+    }
+    if(sIdentifier == "4")
+    {
+        throw_event("go to cor", p);
+        throw_event("look in box", p);
+        throw_event("pick up wine", p);
+        throw_event("pick up wine", p);
+        throw_event("drink wine", p);
+        throw_event("drink wine", p);
+    }
 }
