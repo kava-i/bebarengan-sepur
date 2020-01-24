@@ -1,0 +1,6 @@
+[submodule "src/JanGeschenk"]
+	path = src/JanGeschenk
+	url = https://github.com/ShadowItaly/JanGeschenk
+[submodule "src/websocketpp"]
+	path = src/websocketpp
+	url = https://github.com/zaphoyd/websocketpp
