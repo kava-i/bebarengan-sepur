@@ -74,6 +74,7 @@ public:
     void setPrint(string);
     void appendPrint(string);
     void setStatus(string);
+    void setFirstLogin(bool val);
     void setHighness(size_t highness);
 
     //*** FUNCTIONS *** // 

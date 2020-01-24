@@ -101,6 +101,9 @@ vector<CContext::event> CContext::standardParser(std::string sInput, CPlayer* p)
     //Developer option
     else if(std::regex_match(sInput, m, tryMe))
         return {std::make_pair("try", m[2])}; 
+    //Tutorial
+    else if(sInput == "startTutorial")
+        return {std::make_pair("startTutorial", "")};
     else
         return {std::make_pair("error", "")};
 }
