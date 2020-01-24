@@ -66,6 +66,9 @@ public:
     virtual void h_moveToHospital    (string&, CPlayer*) {}
     virtual void h_endTutorial       (string&, CPlayer*) {}
 
+    //Tuturial
+    virtual void h_startTutorial     (string&, CPlayer*) {}
+
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}
     virtual void h_addItem(string&, CPlayer*) {}

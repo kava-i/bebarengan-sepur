@@ -4,7 +4,7 @@ CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t stren
 {
     m_sName = sName;
     m_sPassword = sPassword;
-    m_firstLogin = false;
+    m_firstLogin = true;
     m_sID = sID;
     m_hp = hp;
     m_gold = gold;
@@ -47,6 +47,7 @@ void CPlayer::setRoom(CRoom* room)          { m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
+void CPlayer::setFirstLogin(bool val)       { m_firstLogin = val; }
 void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 
 
