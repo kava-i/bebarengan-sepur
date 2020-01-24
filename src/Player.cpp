@@ -1,11 +1,12 @@
 #include "CPlayer.hpp"
 
-CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t strength, CRoom* room, attacks newAttacks)
+CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t strength, size_t gold, CRoom* room, attacks newAttacks)
 {
     m_sName = sName;
     m_sPassword = sPassword;
     m_sID = sID;
     m_hp = hp;
+    m_gold = gold;
     m_strength = strength;
     m_highness = 0;
     m_room = room;

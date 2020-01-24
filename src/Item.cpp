@@ -1,6 +1,10 @@
 #include "CItem.hpp"
 #include "CPlayer.hpp"
 
+CItem::CItem(nlohmann::json jBasic)
+{
+    m_jAtts = jBasic;
+}
 
 CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem)
 {

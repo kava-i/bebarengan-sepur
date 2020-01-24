@@ -40,6 +40,7 @@ public:
     map<string, CRoom*>& getRooms() { return m_rooms; }
     map<string, CCharacter*>& getCharacters() { return m_characters; }
     map<string, CAttack*>& getAttacks() {return m_attacks; }
+    CItem* getItem(string sID) { return new CItem(m_items[sID]); }
 
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;

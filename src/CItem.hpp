@@ -21,6 +21,7 @@ protected:
 
 public:
 
+    CItem(nlohmann::json jBasic);
     CItem(nlohmann::json jBasic, nlohmann::json jItem);
 
     // *** GETTER *** // 

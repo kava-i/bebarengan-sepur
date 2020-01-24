@@ -25,7 +25,9 @@ void CDState::initializeFunctions()
     m_functions["standard"]     = &CDState::standard;
     m_functions["parsen1"]      = &CDState::parsen1;
     m_functions["parsen2"]      = &CDState::parsen2;
-    m_functions["pissingman1"]   = &CDState::pissingman1;
+    m_functions["pissingman1"]  = &CDState::pissingman1;
+    m_functions["ticket"]       = &CDState::ticket;
+    m_functions["betrunkene"]   = &CDState::betrunkene;
 }
 
 
@@ -87,7 +89,7 @@ string CDState::parsen2(CPlayer* p)
 {
     string sOutput = standard(p);
     p->appendPrint("$");
-    sOutput+="/fightParsen";
+    sOutput+="/fight_parsen";
     return sOutput;
 }
 
@@ -97,6 +99,20 @@ string CDState::pissingman1(CPlayer* p)
     changeDialog("pissing_man", "defaultDialog", p);
     return sOutput;
 } 
+
+string CDState::ticket(CPlayer* p)
+{
+    string sOutput = standard(p); 
+    return sOutput+"/addItem_ticket";
+}
+
+string CDState::betrunkene(CPlayer* p)
+{
+    string sOutput = standard(p);
+    p->appendPrint("$");
+    sOutput+="/fight_besoffene_frau";
+    return sOutput;
+}
 
 // *** VARIOUS FUNCTIONS *** // 
 void CDState::changeStateText(string sStateID, size_t text) {
@@ -140,6 +156,18 @@ bool CDState::checkDependencys(SDOption& option, CPlayer* p)
     {
         if(it.key() == "highness" && p->getHighness() < it.value())
             return false;
+        if(it.key() == "gold")
+        {
+            int gold = it.value();
+            std::cout << "GOLD: " << gold << std::endl;
+            if(gold < 0 && gold*(-1) < p->getGold())
+            {
+                std::cout << "GOLD: " << gold*(-1) << " - "  << p->getGold() << std::endl;
+                return false;
+            }
+            else if(gold > 0 && gold > p->getGold())
+                return false;
+       }
     }
 
     return true;

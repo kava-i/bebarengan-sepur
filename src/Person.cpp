@@ -6,6 +6,7 @@ string CPerson::getName()       { return m_sName; }
 string CPerson::getID()         { return m_sID; }
 int CPerson::getHp()            { return m_hp; }
 size_t CPerson::getStrength()   { return m_strength; }
+size_t CPerson::getGold()       { return m_gold; }
 SDialog* CPerson::getDialog()   { return m_dialog; }
 CPerson::attacks& CPerson::getAttacks() { return m_attacks; }
 

@@ -20,3 +20,13 @@
   strength: 8
   attacks:
     punsch: "Punsch"
+
+- name: "jonny"
+  password: password
+  id: jonny-maria_murdo-gonzales
+  room: bahnhof_eingangshalle
+  strength: 8
+  gold: 11
+  attacks:
+    kick: "Kick"
+    punsch: "Punsch"

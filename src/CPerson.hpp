@@ -20,6 +20,7 @@ protected:
     //Stats
     int m_hp;
     size_t m_strength;
+    size_t m_gold;
 
     typedef std::map<string, CAttack*> attacks;
     attacks m_attacks;
@@ -34,6 +35,7 @@ public:
     string getID();
     int getHp();
     size_t getStrength();
+    size_t getGold();
     SDialog* getDialog();
     attacks& getAttacks();
 

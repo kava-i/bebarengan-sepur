@@ -63,12 +63,14 @@ public:
     //Rooms
     virtual void h_firstZombieAttack (string&, CPlayer*) {}
     virtual void h_moveToHospital    (string&, CPlayer*) {}
+    virtual void h_endTutorial       (string&, CPlayer*) {}
 
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}
+    virtual void h_addItem(string&, CPlayer*) {}
+    virtual void h_newFight(string&, CPlayer*) {}
     virtual void h_endFight(string&, CPlayer*) {}
     virtual void h_endDialog(string&, CPlayer*) {}
-    virtual void h_fightParsen(string&, CPlayer*) {}
     virtual void h_empty(string&, CPlayer*) {}
 
     // *** FIGHT CONTEXT *** //

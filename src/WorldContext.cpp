@@ -10,6 +10,11 @@ void CWorldContext::h_deleteCharacter(string& sIdentifier, CPlayer* p) {
     m_permeable=false;
 }
 
+void CWorldContext::h_addItem(string& sIdentifier, CPlayer* p) {
+    p->addItem(p->getWorld()->getItem(sIdentifier));
+    m_permeable=false;
+}
+
 void CWorldContext::h_endFight(string& sIdentifier, CPlayer* p) {
     p->endFight();
     m_permeable=false;
@@ -20,9 +25,8 @@ void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
     m_permeable=false;
 }
 
-void CWorldContext::h_fightParsen(string&, CPlayer* p) {
-    //Create fight
-    CFight* fight = new CFight("Fight Parsen", "Parsen krempelt seine Arme hoch und macht sicht bereit. Er sieht ein klein wneig lächerlich aus. Gewalt scheint ihm nicht sonderlich zu stehen.", p, p->getWorld()->getCharacters()["parsen"]);
+void CWorldContext::h_newFight(string& sIdentifier, CPlayer* p) {
+    CFight* fight = new CFight(p, p->getWorld()->getCharacters()[sIdentifier]);
     p->setFight(fight);
 }
 

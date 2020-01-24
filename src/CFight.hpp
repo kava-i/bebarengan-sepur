@@ -20,6 +20,7 @@ protected:
 
 public:
 
+    CFight(CPerson* player, CPerson* opponent);
     CFight(string sName, string sDescription, CPerson* player, CPerson* opponent);
 
     CPerson* getOpponent();

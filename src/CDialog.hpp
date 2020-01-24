@@ -60,6 +60,8 @@ public:
     string parsen1(CPlayer*);
     string parsen2(CPlayer*);
     string pissingman1(CPlayer*);
+    string ticket(CPlayer*);
+    string betrunkene(CPlayer*);
 
     void changeStateText(string sStateID, size_t text);
     void addDialogOption(string sStateID, size_t optID);

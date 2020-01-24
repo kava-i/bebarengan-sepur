@@ -64,6 +64,7 @@ vector<CContext::event> CContext::standardParser(std::string sInput, CPlayer* p)
     std::regex talkTo("(talk to) (.*)");
     std::regex help("help");
     std::regex end_direct(":q");
+    std::regex tryMe("(try) (.*)");
     //Create an instans of smatch
     std::smatch m;
 
@@ -98,8 +99,8 @@ vector<CContext::event> CContext::standardParser(std::string sInput, CPlayer* p)
     else if(std::regex_match(sInput, help))
         return {std::make_pair("help", "standard.txt")};
     //Developer option
-    else if(sInput == "try")
-        return {std::make_pair("try", "")};
+    else if(std::regex_match(sInput, m, tryMe))
+        return {std::make_pair("try", m[2])}; 
     else
         return {std::make_pair("error", "")};
 }
@@ -141,9 +142,10 @@ vector<CContext::event> CContext::worldParser(string sInput, CPlayer* p)
 {
     std::cout << "worldParser: " << sInput << std::endl;
     std::regex deleteChar("(deleteCharacter)_(.*)");
+    std::regex addItem("(addItem)_(.*)");
+    std::regex newFight("(fight)_(.*)");
     std::regex endFight("endFight");
     std::regex endDialog("endDialog");
-    std::regex fightParsen("fightParsen");
     std::smatch m;
 
     vector<string> commands = func::split(sInput, "/");
@@ -153,12 +155,15 @@ vector<CContext::event> CContext::worldParser(string sInput, CPlayer* p)
     { 
         if(std::regex_search(commands[i], m, deleteChar))
             events.push_back(std::make_pair("deleteCharacter", m[2]));
+        else if(std::regex_search(commands[i], m, addItem))
+            events.push_back(std::make_pair("addItem", m[2]));
+        else if(std::regex_match(commands[i], m, newFight))
+            events.push_back(std::make_pair("newFight", m[2]));
         else if(std::regex_match(commands[i], endFight))
             events.push_back(std::make_pair("endFight", ""));
         else if(std::regex_match(commands[i], endDialog))
             events.push_back(std::make_pair("endDialog", ""));
-        else if(std::regex_match(commands[i], fightParsen))
-            events.push_back(std::make_pair("fightParsen", ""));
+       
     }
 
     if(events.size()==0)

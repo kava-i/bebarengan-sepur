@@ -1,6 +1,12 @@
 #include "CFight.hpp"
 
-
+CFight::CFight(CPerson* player, CPerson* opponent)
+{
+    m_sName = "Fight";
+    m_sDescription = "Fighting against " + opponent->getName();
+    m_player = player;
+    m_opponent = opponent;
+}
 CFight::CFight(string sName, string sDescription, CPerson* player, CPerson* opponent)
 {
     m_sName = sName;

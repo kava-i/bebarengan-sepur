@@ -123,14 +123,46 @@ void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
     p->setRoom(p->getWorld()->getRooms()["hospital_stairs"]);
 }
 
-void CStandardContext::h_try(string&, CPlayer* p)
+void CStandardContext::h_endTutorial(string& sIdentifier, CPlayer* p)
 {
-    throw_event("go to cor", p);
-    throw_event("look in box", p);
-    throw_event("pick up wine", p);
-    throw_event("pick up wine", p);
-    throw_event("drink wine", p);
-    throw_event("drink wine", p);
-    throw_event("go to ent", p);
-    throw_event("talk to parsen", p);
+    std::cout << "h_endTutorial: " << sIdentifier << std::endl;
+    if(p->getRoom()->getID().find("gleis3") == std::string::npos)
+        return;
+    if(p->getItem_byID("ticket") == NULL)
+    {
+        std::cout << "Couldn't find ticket.\n";
+        return;
+    }
+
+    p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.");
+
+    p->setRoom(p->getWorld()->getRooms()["compartment-a"]);
+
+}
+
+void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
+{
+    if(sIdentifier == "1") h_try1(sIdentifier, p);
+    if(sIdentifier == "2") h_try2(sIdentifier, p);
+    if(sIdentifier == "3") h_try3(sIdentifier, p);
+}
+void CStandardContext::h_try1(string&, CPlayer* p)
+{
+    throw_event("go to neben", p);
+    throw_event("go to toil", p);
+    throw_event("go to mä", p);
+    throw_event("talk to tick", p);
+}
+void CStandardContext::h_try2(string&, CPlayer* p)
+{
+    throw_event("go to vor", p);
+    throw_event("go to neben", p);
+    throw_event("go to eing", p);
+    throw_event("go to gleise", p);
+}
+void CStandardContext::h_try3(string&, CPlayer* p)
+{
+    throw_event("go to neben", p);
+    throw_event("go to toil", p);
+    throw_event("go to frau", p);
 }

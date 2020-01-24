@@ -25,6 +25,7 @@ public:
         //Rooms
         add_listener("goTo", &CContext::h_firstZombieAttack);
         add_listener("goTo", &CContext::h_moveToHospital, 0);
+        add_listener("goTo", &CContext::h_endTutorial);
 
         add_listener("try", &CContext::h_try, 0);
     }
@@ -43,9 +44,13 @@ public:
     //Rooms
     void h_firstZombieAttack (string& sIdentiier, CPlayer* p);
     void h_moveToHospital    (string& sIdentiier, CPlayer* p);
+    void h_endTutorial       (string& sIdentiier, CPlayer* p);
 
     //Programmer
     void h_try(string& sIdentiier, CPlayer* p);
+    void h_try1(string& sIdentiier, CPlayer* p);
+    void h_try2(string& sIdentiier, CPlayer* p);
+    void h_try3(string& sIdentiier, CPlayer* p);
 };
 
 #endif
