@@ -69,7 +69,7 @@ public:
     void changeDialog(string sOld, string sNew, CPlayer* p);
 
 
-    size_t numOptions();
+    int numOptions();
     bool checkDependencys(SDOption& option, CPlayer* p);
 };
 #endif 

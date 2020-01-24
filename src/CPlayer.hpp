@@ -55,7 +55,7 @@ private:
 
 public:
     CPlayer() {};
-    CPlayer(string sName,string password, string sID, int hp, size_t strength, size_t gold, CRoom* room, attacks newAttacks);
+    CPlayer(string sName,string password, string sID, int hp, size_t strength, int gold, CRoom* room, attacks newAttacks);
 
 
     // *** GETTER *** // 

@@ -6,7 +6,7 @@ string CPerson::getName()       { return m_sName; }
 string CPerson::getID()         { return m_sID; }
 int CPerson::getHp()            { return m_hp; }
 size_t CPerson::getStrength()   { return m_strength; }
-size_t CPerson::getGold()       { return m_gold; }
+int CPerson::getGold()       { return m_gold; }
 SDialog* CPerson::getDialog()   { return m_dialog; }
 CPerson::attacks& CPerson::getAttacks() { return m_attacks; }
 
@@ -27,7 +27,7 @@ string CPerson::getAttack(string sPlayerChoice)
 {
     if(std::isdigit(sPlayerChoice[0]) == true)
     {
-        size_t counter=1;
+        int counter=1;
         for(auto it : m_attacks) {
             if(counter == stoi(sPlayerChoice))
                 return it.first;
