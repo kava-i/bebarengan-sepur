@@ -28,7 +28,7 @@ protected:
 public: 
     
     CContext(bool permeable, parser newParser);
-    virtual ~CContext();
+    virtual ~CContext() {}
 
     // *** GETTER *** //
     bool getPermeable();

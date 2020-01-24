@@ -30,7 +30,7 @@ protected:
 
 public:
     
-    virtual ~CPerson();
+    virtual ~CPerson() {}
 
     // *** GETTER *** // 
     string getName();
