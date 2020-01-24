@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 # set the project name and version
 project(bebarengan-sepur VERSION 1.0)
+find_package(Boost)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -14,9 +15,10 @@ endif()
 if(MAKE_DEBUG)
     add_definitions( -D_COMPILE_DEBUG_=1)
 endif()
+INCLUDE_DIRECTORIES(websocketpp ${Boost_INCLUDE_DIRS})
 
 add_executable(txtadventure Attack.cpp Character.cpp Detail.cpp Dialog.cpp Fight.cpp Game.cpp Item.cpp Person.cpp Player.cpp Room.cpp World.cpp func.cpp fuzzy.cpp Context.cpp WorldContext.cpp StandardContext.cpp FightContext.cpp DialogContext.cpp ChoiceContext.cpp main.cpp)
-target_link_libraries(txtadventure PRIVATE boost_system)
+target_link_libraries(txtadventure ${Boost_LIBRARIES})
 target_link_libraries(txtadventure
 	PRIVATE pthread ssl crypto stdc++fs
 )
