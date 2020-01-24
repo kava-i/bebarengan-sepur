@@ -35,7 +35,7 @@ string CPlayer::getPrint()  {
 }
 
 string CPlayer::getStatus() { return m_status; };
-bool CPlayer::getFight() { return m_firstLogin; };
+bool CPlayer::getFirstLogin() { return m_firstLogin; };
 CFight* CPlayer::getFight() { return m_curFight; };
 size_t CPlayer::getHighness() { return m_highness; };
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
