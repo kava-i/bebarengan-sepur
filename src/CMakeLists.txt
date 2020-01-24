@@ -16,9 +16,9 @@ if(MAKE_DEBUG)
     add_definitions( -D_COMPILE_DEBUG_=1)
 endif()
 INCLUDE_DIRECTORIES(websocketpp ${Boost_INCLUDE_DIRS})
-
+link_directories(${Boost_LIBRARY_DIRS})
 add_executable(txtadventure Attack.cpp Character.cpp Detail.cpp Dialog.cpp Fight.cpp Game.cpp Item.cpp Person.cpp Player.cpp Room.cpp World.cpp func.cpp fuzzy.cpp Context.cpp WorldContext.cpp StandardContext.cpp FightContext.cpp DialogContext.cpp ChoiceContext.cpp main.cpp)
-target_link_libraries(txtadventure ${Boost_LIBRARIES})
+target_link_libraries(txtadventure PRIVATE boost_system)
 target_link_libraries(txtadventure
 	PRIVATE pthread ssl crypto stdc++fs
 )
