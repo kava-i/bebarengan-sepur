@@ -125,7 +125,7 @@ void CDState::addDialogOption(string sStateID, size_t optID) {
 void CDState::deleteDialogOption(string sStateID, size_t optID) {
     m_dialog->states["START"]->getOptions().erase(optID);
 
-    for(size_t i=optID+1; i<m_dialog->states["START"]->numOptions()+2; i++)
+    for(int i=optID+1; i<m_dialog->states["START"]->numOptions()+2; i++)
     {
         auto nodeHandler = m_dialog->states["START"]->getOptions().extract(i);
         nodeHandler.key() = i-1;

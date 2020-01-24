@@ -29,6 +29,8 @@ protected:
     SDialog* m_dialog;
 
 public:
+    
+    virtual ~CPerson() {}
 
     // *** GETTER *** // 
     string getName();
