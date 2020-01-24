@@ -6,6 +6,7 @@ project(bebarengan-sepur VERSION 1.0)
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+SET(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
 set(EXECUTABLE_OUTPUT_PATH ..)
 if(MAKE_SERVER)
     add_definitions( -D_COMPILE_FOR_SERVER_=1)

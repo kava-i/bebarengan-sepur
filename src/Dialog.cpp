@@ -138,9 +138,9 @@ void CDState::changeDialog(string sCharacter, string sDialog, CPlayer* p)
     p->getWorld()->getCharacters()["sCharacter"]->setDialog(p->getWorld()->dialogFactory(sDialog));
 }
 
-size_t CDState::numOptions()
+int CDState::numOptions()
 {
-    size_t counter = 0;
+    int counter = 0;
     for(auto it : m_options) {
         if(it.first > 0)
             counter++;

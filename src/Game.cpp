@@ -30,7 +30,6 @@ void CGame::playerFactory()
 }
 
 
-
 string CGame::checkLogin(string sName, string sPassword)
 {
     for(auto &it : m_players)
@@ -50,6 +49,8 @@ string CGame::startGame(string sInput, string sPasswordID)
         m_curPlayer->throw_event("startTutorial");
     else
         m_curPlayer->throw_event("show room");
+
+    return m_curPlayer->getPrint();
 }
 
 string CGame::play(string sInput, string sPlayerID)
