@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include <map>
 #include <vector>
 #include <stdio.h>
@@ -34,6 +35,7 @@ private:
     CWorld* m_world;
 
     typedef std::pair<string, string> event;
+    typedef std::map<string, string> objectmap;
 
 public: 
     CGame();
@@ -42,7 +44,7 @@ public:
     void playerFactory();
 
     string startGame(string sInput, string sPasswordID);
-    string play(string sInput, string sPlayerID);
+    string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
     string checkLogin(string sName, string sPassword);
 

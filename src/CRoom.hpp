@@ -22,6 +22,7 @@ private:
     typedef std::map<string, std::string> objectmap;
     objectmap m_exists;
     objectmap m_characters;
+    objectmap m_players;
 
     std::map<string, CItem*> m_items;
     std::map<string, CDetail*> m_details;
@@ -37,6 +38,9 @@ public:
     objectmap& getExtits();
     objectmap& getCharacters();
     std::map<string, CItem*>& getItems();
+
+    // *** setter *** //
+    void setPlayers(objectmap& m_players);
 
     // *** various functions *** //
     string showEntryDescription(std::map<string, CCharacter*>& mapChars);
