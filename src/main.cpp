@@ -86,10 +86,10 @@ class WebserverGame
 		return;
 	    }
 
-	    std::map<std::string,std::string> lk;
+	    std::list<std::string> lk;
 	    for(const auto &it : *ptr)
 	    {
-		lk[it.second->GetID()] = it.second->GetName();
+		lk.push_back(it.second->GetID());
 	    }
 
 	    std::cout<<"Got input: "<<sInput<<"; With player id: "<<_id<<std::endl;
