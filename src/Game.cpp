@@ -55,13 +55,14 @@ string CGame::startGame(string sInput, string sPasswordID)
     return m_players[sPasswordID]->getPrint();
 }
 
-string CGame::play(string sInput, string sPlayerID)
+string CGame::play(string sInput, string sPlayerID, objectmap& onlinePlayers)
 {
     func::convertToLower(sInput);    
 
     //Create player
     m_curPlayer = m_players[sPlayerID];
     m_curPlayer->setPrint("");
+    m_curPlayer->getRoom()->setPlayers(onlinePlayers);
 
     //Throw event 
     m_curPlayer->throw_event(sInput);

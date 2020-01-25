@@ -142,40 +142,12 @@ void CStandardContext::h_endTutorial(string& sIdentifier, CPlayer* p)
 
 void CStandardContext::h_startTutorial(string&, CPlayer* p)
 {
-    p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst. $");
+    p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.\n $\n");
 
     p->appendPrint(p->getRoom()->getDescription());
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier == "1") 
-    {
-        throw_event("go to neben", p);
-        throw_event("go to toil", p);
-        throw_event("go to mä", p);
-        throw_event("talk to tick", p);
-    }
-    if(sIdentifier == "2")
-    {
-        throw_event("go to vor", p);
-        throw_event("go to neben", p);
-        throw_event("go to eing", p);
-        throw_event("go to gleise", p);
-    }
-    if(sIdentifier == "3") 
-    {
-        throw_event("go to neben", p);
-        throw_event("go to toil", p);
-        throw_event("go to frau", p);
-    }
-    if(sIdentifier == "4")
-    {
-        throw_event("go to cor", p);
-        throw_event("look in box", p);
-        throw_event("pick up wine", p);
-        throw_event("pick up wine", p);
-        throw_event("drink wine", p);
-        throw_event("drink wine", p);
-    }
+   
 }

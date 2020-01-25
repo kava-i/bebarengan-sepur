@@ -32,6 +32,7 @@ private:
     map<string, CCharacter*> m_characters;
     map<string, CAttack*>    m_attacks;
     map<string, nlohmann::json> m_items;
+
 public:
 
     CWorld();
