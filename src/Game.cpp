@@ -55,15 +55,15 @@ string CGame::startGame(string sInput, string sPasswordID)
     return m_players[sPasswordID]->getPrint();
 }
 
-string CGame::play(string sInput, string sPlayerID, list<string>& onlinePlayers)
+string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePlayers)
 {
     func::convertToLower(sInput);    
 
     std::map<string, string> mapOnlinePlayers;
     for(auto it : onlinePlayers)
     {
-        if(it.first != m_players[sPlayerID]->getID())
-            mapOnlinePlayers[m_players[(*it)]->getName()] = m_players[(*it)]->getRoom()->getID();
+        if(it != m_players[sPlayerID]->getID())
+            mapOnlinePlayers[m_players[it]->getName()] = m_players[it]->getRoom()->getID();
     }
             
     //Create player
