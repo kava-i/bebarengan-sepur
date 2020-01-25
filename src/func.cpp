@@ -25,7 +25,7 @@ std::vector<std::string> func::split(std::string str, std::string delimiter)
 */
 void func::convertToLower(std::string &str)
 {
-    std::locale loc1("de_DE.UTF8");
+    std::locale loc1;
     for(unsigned int i=0; i<str.length(); i++)
         str[i] = tolower(str[i], loc1);
 }
