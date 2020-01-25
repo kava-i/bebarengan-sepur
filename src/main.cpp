@@ -23,7 +23,17 @@ class WebserverGame
 	    _cout->flush();
 	}
 
-	void onmessage(std::string sInput)
+	const std::string &GetName()
+	{
+	    return _name;
+	}
+	
+	const std::string &GetID()
+	{
+	    return _id;
+	}
+
+	void onmessage(std::string sInput,std::map<decltype(websocketpp::lib::weak_ptr<void>().lock().get()),WebserverGame*> *ptr)
         {
 	    if(_name=="")
 	    {
@@ -76,9 +86,14 @@ class WebserverGame
 		return;
 	    }
 
+	    std::map<std::string,std::string> lk;
+	    for(const auto &it : *ptr)
+	    {
+		lk[it.second->GetID()] = it.second->GetName();
+	    }
 
 	    std::cout<<"Got input: "<<sInput<<"; With player id: "<<_id<<std::endl;
-	    std::string sOutput = game.play(sInput, _id);
+	    std::string sOutput = game.play(sInput, _id,lk);
 	    std::cout<<"Received Output: "<<sOutput<<std::endl;
 	    _cout->write(sOutput);
 	    _cout->flush();
