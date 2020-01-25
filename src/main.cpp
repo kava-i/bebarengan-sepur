@@ -77,7 +77,9 @@ class WebserverGame
 	    }
 
 
+	    std::cout<<"Got input: "<<sInput<<"; With player id: "<<_id<<std::endl;
 	    std::string sOutput = game.play(sInput, _id);
+	    std::cout<<"Received Output: "<<sOutput<<std::endl;
 	    _cout->write(sOutput);
 	    _cout->flush();
 	}
