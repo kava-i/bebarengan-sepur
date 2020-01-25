@@ -75,8 +75,11 @@ string CRoom::showCharacters()
         counter++;
     }
     for(auto it : m_players) {
-        characters += std::to_string(counter) + ": " + it.second + "\n";
-        counter++;
+        if(it.second == m_sID)
+        {
+            characters += std::to_string(counter) + ": " + it.first + "\n";
+            counter++;
+        }
     }
     return characters;
 }       

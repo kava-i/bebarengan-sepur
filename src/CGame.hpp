@@ -43,7 +43,7 @@ public:
     void playerFactory();
 
     string startGame(string sInput, string sPasswordID);
-    string play(string sInput, string sPlayerID, objectmap);
+    string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
     string checkLogin(string sName, string sPassword);
 
