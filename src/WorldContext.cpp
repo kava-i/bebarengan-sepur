@@ -59,7 +59,7 @@ void CWorldContext::h_endFight(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
-    p->getContexts()->erase("dialog");
+    p->getContexts().erase("dialog");
     m_permeable=false;
 }
 

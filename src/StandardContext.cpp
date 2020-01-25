@@ -100,7 +100,7 @@ void CStandardContext::h_lookIn(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
-    p->changeRoom(sIdentifier)
+    p->changeRoom(sIdentifier);
 }
 
 void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
@@ -115,7 +115,7 @@ void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
     }
 
     //Update player status and call dialog state
-    p->getContexts()->insert(new CDialogContext(), 1, "dialog");
+    p->getContexts().insert(new CDialogContext(), 1, "dialog");
     p->setDialog(p->getWorld()->getCharacters()[character]->getDialog());
 
     p->throw_event(p->getDialog()->states["START"]->callState(p));

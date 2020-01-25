@@ -5,8 +5,7 @@
 
 // ***** PARSER ***** //
 
-vector<CContext::event> CChoiceContext::parser(string sInput, CPlayer* p)
-{
+vector<CContext::event> CChoiceContext::parser(string sInput, CPlayer* p) {
     return {std::make_pair("choose", sInput)};
 }
 
@@ -20,7 +19,7 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
     {
         p->dequipeItem("weapon");
         p->equipeItem(p->getItem_byID(m_sObject), "weapon");
-        p->deleteContext(1);
+        p->getContexts().erase("choice");
     }
 
     else if(sIdentifier == "no")
@@ -28,7 +27,7 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
         std::cout << "1." << std::endl;
         p->appendPrint("You chose not to equipe " + p->getItem_byID(m_sObject)->getName() + ".\n");
         std::cout << "2." << std::endl;
-        p->deleteContext(1);
+        p->getContexts().erase("choice");
         std::cout << "3." << std::endl;
     }
 

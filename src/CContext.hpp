@@ -24,7 +24,7 @@ protected:
 
 public: 
     
-    CContext();
+    CContext() {}
     virtual ~CContext() {}
 
     // *** GETTER *** //

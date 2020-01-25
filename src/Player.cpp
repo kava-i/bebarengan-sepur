@@ -40,7 +40,7 @@ CFight* CPlayer::getFight() { return m_curFight; };
 size_t CPlayer::getHighness() { return m_highness; };
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
 CWorld* CPlayer::getWorld() { return m_world; }
-CContextStack* CPlayer::getContexts()   { return m_contextStack; }
+CContextStack& CPlayer::getContexts()   { return m_contextStack; }
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room)          { m_room = room; }
@@ -58,13 +58,13 @@ void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 // *** Fight *** //
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
-    m_contextStack->insert(new CFightContext(), 1, "fight");
+    m_contextStack.insert(new CFightContext(), 1, "fight");
     m_curFight->initializeFight();
 }
 
 void CPlayer::endFight() {
     delete m_curFight;
-    m_contextStack->erase("fight");
+    m_contextStack.erase("fight");
     m_sPrint += "Fight ended.\n";
 }
 
@@ -82,7 +82,7 @@ void CPlayer::changeRoom(string sIdentifier)
     }
 
     //Print description and change players current room
-    m_sPrint += getWorld()->getRooms()[room]->showEntryDescription(getWorld()->getCharacters())
+    m_sPrint += getWorld()->getRooms()[room]->showEntryDescription(getWorld()->getCharacters());
     setRoom((getWorld()->getRooms()[room]));
 }
 
@@ -170,7 +170,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
         //Create Choice-Context
         CChoiceContext* context = new CChoiceContext(item->getID());
         context->add_listener("choose", &CContext::h_choose_equipe);
-        m_contextStack->insert(context, 1, "choice");
+        m_contextStack.insert(context, 1, "choice");
     }
 }
 
@@ -263,7 +263,7 @@ string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 void CPlayer::throw_event(string sInput)
 {
     checkTimeEvents();
-    std::deque<CContext*> sortedCtxList= m_contextStack->getSortedCtxList();
+    std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
     for(size_t i=0; i<sortedCtxList.size(); i++)
     {
         sortedCtxList[i]->throw_event(sInput, this);

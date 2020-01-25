@@ -10,6 +10,7 @@
 #include <ctime>
 #include "CWorld.hpp"
 #include "CPerson.hpp"
+#include "SortedContext.hpp"
 #include "CContext.hpp"
 #include "CWorldContext.hpp"
 #include "CStandardContext.hpp"
@@ -48,7 +49,7 @@ private:
     equipment m_equipment;
 
 
-    CContextStack* m_contextStack;
+    CContextStack m_contextStack;
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
     timeEvents m_timeEventes;
@@ -67,7 +68,7 @@ public:
     size_t getHighness();
     equipment& getEquipment();
     CWorld* getWorld();
-    CContextStack* getContexts();
+    CContextStack& getContexts();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
