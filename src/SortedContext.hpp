@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <queue>
+#include <list>
 #include "CContext.hpp"
 
 class CContextStack

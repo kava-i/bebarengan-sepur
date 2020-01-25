@@ -20,20 +20,8 @@ void CContextStack::erase(std::string name)
     {
 	ctx = m_contextStack.at(name);
 	m_reloadQueue = true;
-	    if(m_contextStack.size()>1)
-		m_contextStack.erase(name);
-	    else
-		m_contextStack.clear();
-	    for(auto it = m_sortedContexts.begin(); it != m_sortedContexts.end(); ++it)
-	    {
-		if((*it).first == ctx)
-		{
-		    if(m_sortedContexts.size()>1)
-			m_sortedContexts.erase(it);
-		    else
-			m_sortedContexts.clear();
-		}
-	    }
+	m_contextStack.erase(name);
+	m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<CContext*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
     }
     catch(...)
     {

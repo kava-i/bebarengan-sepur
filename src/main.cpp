@@ -2,7 +2,8 @@
 #include "CGame.hpp"
 #include "JanGeschenk/Webconsole.hpp"
 #include "JanGeschenk/Webgame.hpp"
-    
+#include "SortedContext.hpp"
+
 CGame game;
 
 class WebserverGame
@@ -102,6 +103,18 @@ class WebserverGame
 
 int main()
 {
+    CContextStack st;
+    st.insert((CContext*)0,0,"a");
+    st.insert((CContext*)1,1,"b");
+    st.insert((CContext*)2,2,"c");
+    st.insert((CContext*)3,3,"d");
+    auto &k = st.getSortedCtxList();
+    for(auto it : k)
+	std::cout<<it<<std::endl;
+    st.erase("c");
+    auto &fk = st.getSortedCtxList();
+    for(auto it2 : fk)
+	std::cout<<it2<<std::endl;
     Webgame<WebserverGame> gl;
     gl.run();
 }
