@@ -52,4 +52,9 @@ TEST_CASE("Testing CContextStack","[CContextStack]")
     st.erase("dlex");
     REQUIRE( st.getSortedCtxList().size() == 3);
     REQUIRE( st.getSortedCtxList().front() == (CContext*)2);
+    st.erase("ogo");
+    REQUIRE( st.getSortedCtxList().size() == 3);
+    REQUIRE( st.getSortedCtxList().front() == (CContext*)2);
+    st.insert((CContext*)4,10,"flex");
+    REQUIRE( st.getSortedCtxList().front() == (CContext*)4);
 }
