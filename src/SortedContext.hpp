@@ -18,4 +18,5 @@ class CContextStack
 	void insert(CContext* ctx, int priority, std::string name);
 	void erase(std::string name);
 	const std::deque<CContext*> &getSortedCtxList();
+	bool nonPermeableContextInList();
 };
