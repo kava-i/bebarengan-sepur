@@ -21,8 +21,8 @@ CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t stren
     m_world = new CWorld();
 
     //Add eventhandler to eventmanager
-    m_contextStack.push_back( new CWorldContext(true, &CContext::worldParser));
-    m_contextStack.push_back( new CStandardContext(false, &CContext::standardParser));
+    m_contextStack.insert(new CWorldContext(), 2, "world");
+    m_contextStack.insert(new CStandardContext(), 0, "standard");
 }
 
 // *** GETTER *** // 
@@ -40,7 +40,7 @@ CFight* CPlayer::getFight() { return m_curFight; };
 size_t CPlayer::getHighness() { return m_highness; };
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
 CWorld* CPlayer::getWorld() { return m_world; }
-std::deque<CContext*>& CPlayer::getContexts()   { return m_contextStack; }
+CContextStack& CPlayer::getContexts()   { return m_contextStack; }
 
 // *** SETTER *** // 
 void CPlayer::setRoom(CRoom* room)          { m_room = room; }
@@ -55,32 +55,36 @@ void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 // *** *** FUNCTIONS *** *** // 
 
 
-// *** Context-Stack ***
-void CPlayer::newContext(CContext* context, size_t pos) {
-    std::cout << "Added new context at: " << pos << std::endl;
-    m_contextStack.insert(m_contextStack.begin()+pos, context);
-}
-
-void CPlayer::deleteContext(size_t pos)
-{
-    std::cout << "deleted context at: " << pos << std::endl;
-    delete m_contextStack[pos];
-    m_contextStack.erase(m_contextStack.begin()+pos);
-}
-
 // *** Fight *** //
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
-    newContext(new CFightContext(false, &CContext::fightParser), 1);
+    m_contextStack.insert(new CFightContext(), 1, "fight");
     m_curFight->initializeFight();
 }
 
 void CPlayer::endFight() {
     delete m_curFight;
-    deleteContext(1);
+    m_contextStack.erase("fight");
     m_sPrint += "Fight ended.\n";
 }
 
+
+// *** Room *** 
+void CPlayer::changeRoom(string sIdentifier)
+{
+    //Get selected room
+    string room = getObject(getRoom()->getExtits(), sIdentifier);
+
+    //Check if room was found
+    if(room == "") {
+        m_sPrint += "Room/ exit not found";
+        return;
+    }
+
+    //Print description and change players current room
+    m_sPrint += getWorld()->getRooms()[room]->showEntryDescription(getWorld()->getCharacters());
+    setRoom((getWorld()->getRooms()[room]));
+}
 
 
 // *** Item and inventory *** //
@@ -162,9 +166,11 @@ void CPlayer::equipeItem(CItem* item, string sType)
     else
     {
         m_sPrint+="Already a " + sType + " equipt. Want to change? (yes/no)\n";
-        CChoiceContext* context = new CChoiceContext(false, &CContext::choiceParser, item->getID());
+
+        //Create Choice-Context
+        CChoiceContext* context = new CChoiceContext(item->getID());
         context->add_listener("choose", &CContext::h_choose_equipe);
-        newContext(context, 1);
+        m_contextStack.insert(context, 1, "choice");
     }
 }
 
@@ -257,10 +263,11 @@ string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 void CPlayer::throw_event(string sInput)
 {
     checkTimeEvents();
-    for(size_t i=0; i<m_contextStack.size(); i++)
+    std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
+    for(size_t i=0; i<sortedCtxList.size(); i++)
     {
-        m_contextStack[i]->throw_event(sInput, this);
-        if(m_contextStack[i]->getPermeable() == false)
+        sortedCtxList[i]->throw_event(sInput, this);
+        if(sortedCtxList[i]->getPermeable() == false)
             break;
     }
 }

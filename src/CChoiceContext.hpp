@@ -8,10 +8,17 @@ class CChoiceContext : public CContext
 private:
     string m_sObject;
 public:
-    CChoiceContext(bool permeable, parser newParser, string obj) : CContext(permeable, newParser)
+    CChoiceContext(string obj)
     {
+        //Set permeability
+        m_permeable = false;
+
+        //Set object
         m_sObject=obj;
     }
+
+    //Parser
+    vector<event> parser(string, CPlayer*);
 
     void h_choose_equipe(string&, CPlayer*);
 };

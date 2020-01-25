@@ -7,13 +7,6 @@ CFight::CFight(CPerson* player, CPerson* opponent)
     m_player = player;
     m_opponent = opponent;
 }
-CFight::CFight(string sName, string sDescription, CPerson* player, CPerson* opponent)
-{
-    m_sName = sName;
-    m_sDescription = sDescription;
-    m_player = player;
-    m_opponent = opponent;
-}
 
 CPerson* CFight::getOpponent() { return m_opponent; }
 
