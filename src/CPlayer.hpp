@@ -49,6 +49,8 @@ private:
     equipment m_equipment;
 
 
+    map<string, CPlayer*> m_players;
+
     CContextStack m_contextStack;
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
@@ -77,12 +79,17 @@ public:
     void setStatus(string);
     void setFirstLogin(bool val);
     void setHighness(size_t highness);
+    void setPlayers(map<string, CPlayer*> players);
 
     //*** FUNCTIONS *** // 
 
     //Fight
     void setFight(CFight* fight);
     void endFight();
+
+    //Dialog + Chat
+    void startDialog(string sCharacter);
+    void startChat(CPlayer* sPlayer);
 
     //Login
     string doLogin(string sName, string sPassword);
@@ -106,7 +113,8 @@ public:
     //Others
     void checkHighness();
     typedef std::map<string, string> objectmap;
-    string getObject(objectmap& mapObjects, string sIdentifier);
+    string getObject(objectmap& mapObjects, string sIdentifier);    
+    CPlayer* getPlayer(string sIdentifier);
 
 
     void throw_event(string sInput);

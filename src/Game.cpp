@@ -8,6 +8,7 @@ CGame::CGame() {
     playerFactory();
     std::cout << "Finished parsing!\n";
 }
+    
 
 void CGame::playerFactory()
 {
@@ -60,16 +61,21 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     func::convertToLower(sInput);    
 
     std::map<string, string> mapOnlinePlayers;
+    std::map<string, CPlayer*> mapOnlinePlayers2;
     for(auto it : onlinePlayers)
     {
         if(it != m_players[sPlayerID]->getID())
+        {
             mapOnlinePlayers[m_players[it]->getName()] = m_players[it]->getRoom()->getID();
+            mapOnlinePlayers2[m_players[it]->getID()] = m_players[it];
+        }
     }
-            
+
     //Create player
     m_curPlayer = m_players[sPlayerID];
     m_curPlayer->setPrint("");
     m_curPlayer->getRoom()->setPlayers(mapOnlinePlayers);
+    m_curPlayer->setPlayers(mapOnlinePlayers2);
 
     //Throw event 
     m_curPlayer->throw_event(sInput);

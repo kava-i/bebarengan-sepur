@@ -66,6 +66,7 @@ string CRoom::showExits()
     }
     return exits;
 }
+
 string CRoom::showCharacters()
 {
     string characters = "Characters: \n";

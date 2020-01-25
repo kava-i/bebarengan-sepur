@@ -49,6 +49,7 @@ void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
 void CPlayer::setFirstLogin(bool val)       { m_firstLogin = val; }
 void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
+void CPlayer::setPlayers(map<string, CPlayer*> players) { m_players = players; }
 
 
 
@@ -68,6 +69,18 @@ void CPlayer::endFight() {
     m_sPrint += "Fight ended.\n";
 }
 
+// *** Dialog *** //
+void CPlayer::startDialog(string sCharacter)
+{
+    m_contextStack.insert(new CDialogContext(), 1, "dialog");
+    m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
+    throw_event(m_dialog->states["START"]->callState(this));
+}
+
+void CPlayer::startChat(CPlayer* player)
+{
+    m_sPrint += "Trying to connect to " + player->getName() + "... \n$\nfailed.\n"; 
+}
 
 // *** Room *** 
 void CPlayer::changeRoom(string sIdentifier)
@@ -255,6 +268,16 @@ string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
             return it.first;
     }
     return "";
+}
+
+CPlayer* CPlayer::getPlayer(string sIdentifier)
+{
+    for(auto it : m_players)
+    {
+        if(fuzzy::fuzzy_cmp(it.second->getName(), sIdentifier) <= 0.2 && it.second->getRoom() == m_room)
+            return it.second;
+    }
+    return NULL;
 }
 
 

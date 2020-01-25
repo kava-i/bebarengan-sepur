@@ -107,18 +107,15 @@ void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 {
     //Get selected character
     string character = p->getObject(p->getRoom()->getCharacters(), sIdentifier);
+    CPlayer* player = p->getPlayer(sIdentifier);
 
     //Check if character was found
-    if(character == "") {
-        p->appendPrint("Characters not found");
-        return;
-    }
-
-    //Update player status and call dialog state
-    p->getContexts().insert(new CDialogContext(), 1, "dialog");
-    p->setDialog(p->getWorld()->getCharacters()[character]->getDialog());
-
-    p->throw_event(p->getDialog()->states["START"]->callState(p));
+    if(character != "") 
+        p->startDialog(character);
+    else if(player != NULL) 
+        p->startChat(player);
+    else
+        p->appendPrint("Character not found");
 }
 
 void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
