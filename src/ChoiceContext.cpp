@@ -1,6 +1,18 @@
 #include "CChoiceContext.hpp"
 #include "CPlayer.hpp"
 
+
+
+// ***** PARSER ***** //
+
+vector<CContext::event> CChoiceContext::parser(string sInput, CPlayer* p)
+{
+    return {std::make_pair("choose", sInput)};
+}
+
+
+// ***** Handlers ***** //
+
 void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_choose_equipe: " << sIdentifier << " " << m_sObject << std::endl;

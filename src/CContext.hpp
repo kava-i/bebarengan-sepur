@@ -14,20 +14,17 @@ class CContext
 {
 protected:
 
-    typedef map<string, vector<void(CContext::*)(string&, CPlayer*)>>eventmanager; 
-    eventmanager m_eventmanager;
-
     typedef std::pair<string, string> event;
+    typedef map<string, vector<void(CContext::*)(string&, CPlayer*)>>eventmanager; 
 
-    typedef vector<event>(CContext::*parser)(std::string, CPlayer*);
-    parser m_parser;
-    
-
+    eventmanager m_eventmanager;
     bool m_permeable;
+
+
 
 public: 
     
-    CContext(bool permeable, parser newParser);
+    CContext();
     virtual ~CContext() {}
 
     // *** GETTER *** //
@@ -40,11 +37,8 @@ public:
     void throw_event(string, CPlayer* p);
 
     // *** PARSER *** //
-    vector<event> standardParser(std::string sInput, CPlayer* p);
-    vector<event> dialogParser(std::string sInput, CPlayer* p);
-    vector<event> fightParser(std::string sInput, CPlayer* p);
-    vector<event> worldParser(std::string sInput, CPlayer* p);
-    vector<event> choiceParser(std::string sInput, CPlayer* p);
+    virtual vector<event> parser(string, CPlayer*) { return {}; }
+
 
     // *** EVENTHANDLERS *** // 
     void h_help(string&, CPlayer*);
