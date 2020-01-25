@@ -1,10 +1,14 @@
 #include <iostream>
+#define CATCH_CONFIG_RUNNER
+#include "Catch2/single_include/catch2/catch.hpp"
+
 #include "CGame.hpp"
 #include "JanGeschenk/Webconsole.hpp"
 #include "JanGeschenk/Webgame.hpp"
 #include "SortedContext.hpp"
 
-CGame game;
+
+CGame *game;
 
 class WebserverGame
 {
@@ -59,7 +63,7 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		_id = game.checkLogin(_name,_password);
+		_id = game->checkLogin(_name,_password);
 		if(_id=="")
 		{
 		    _name = "";
@@ -68,7 +72,7 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		sInput = game.startGame(sInput,_id);
+		sInput = game->startGame(sInput,_id);
 		_cout->write(sInput);
 		_cout->flush();
 		return;
@@ -94,27 +98,23 @@ class WebserverGame
 	    }
 
 	    std::cout<<"Got input: "<<sInput<<"; With player id: "<<_id<<std::endl;
-	    std::string sOutput = game.play(sInput, _id,lk);
+	    std::string sOutput = game->play(sInput, _id,lk);
 	    std::cout<<"Received Output: "<<sOutput<<std::endl;
 	    _cout->write(sOutput);
 	    _cout->flush();
 	}
 };
 
-int main()
+int main(int argc, char **argv)
 {
-    CContextStack st;
-    st.insert((CContext*)0,0,"a");
-    st.insert((CContext*)1,1,"b");
-    st.insert((CContext*)2,2,"c");
-    st.insert((CContext*)3,3,"d");
-    auto &k = st.getSortedCtxList();
-    for(auto it : k)
-	std::cout<<it<<std::endl;
-    st.erase("c");
-    auto &fk = st.getSortedCtxList();
-    for(auto it2 : fk)
-	std::cout<<it2<<std::endl;
+    int result = Catch::Session().run( argc, argv );
+    if(result!=0)
+    {
+	std::cout<<"Some tests failed can not proceed with the programm!"<<std::endl;
+	return result;
+    }
+    CGame currentGame;
+    game = &currentGame;
     Webgame<WebserverGame> gl;
     gl.run();
 }

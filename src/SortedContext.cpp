@@ -40,3 +40,16 @@ const std::deque<CContext*> &CContextStack::getSortedCtxList()
     }
     return m_sortedQueue;
 }
+
+TEST_CASE("Testing CContextStack","[CContextStack]")
+{
+    CContextStack st;
+    st.insert((CContext*)0,0,"alex");
+    st.insert((CContext*)1,1,"blex");
+    st.insert((CContext*)2,2,"clex");
+    st.insert((CContext*)3,3,"dlex");
+    REQUIRE( st.getSortedCtxList().size() == 4);
+    st.erase("dlex");
+    REQUIRE( st.getSortedCtxList().size() == 3);
+    REQUIRE( st.getSortedCtxList().front() == (CContext*)2);
+}
