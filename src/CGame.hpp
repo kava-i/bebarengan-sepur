@@ -26,6 +26,8 @@ using std::string;
 using std::map;
 using std::vector;
 
+class Webconsole;
+
 class CGame
 {
 private:
@@ -43,7 +45,7 @@ public:
     // *** FACTORYS *** // 
     void playerFactory();
 
-    string startGame(string sInput, string sPasswordID);
+    string startGame(string sInput, string sPasswordID, Webconsole* _cout);
     string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
     string checkLogin(string sName, string sPassword);

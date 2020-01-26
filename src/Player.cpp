@@ -50,6 +50,7 @@ void CPlayer::setStatus(string status)      { m_status = status; }
 void CPlayer::setFirstLogin(bool val)       { m_firstLogin = val; }
 void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 void CPlayer::setPlayers(map<string, CPlayer*> players) { m_players = players; }
+void CPlayer::setWobconsole(Webconsole* webconsole) { _cout = webconsole; }
 
 
 
@@ -79,7 +80,24 @@ void CPlayer::startDialog(string sCharacter)
 
 void CPlayer::startChat(CPlayer* player)
 {
-    m_sPrint += "Trying to connect to " + player->getName() + "... \n$\nfailed.\n"; 
+    m_sPrint += "Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
+    if(player->getContexts().nonPermeableContextInList() == true)
+        m_sPrint += "\n" + player->getName() + " ist zur Zeit beschäftigt.\n"; 
+    else
+    {
+        //Add Chat context for both players
+        m_contextStack.insert(new CChatContext(player), 1, "chat");
+        player->getContexts().insert(new CChatContext(this), 1, "chat");
+        
+        //Send text by throwing event
+        throw_event("Hey " + player->getName() + ".");
+    }
+}
+
+void CPlayer::send(string sMessage)
+{
+    _cout->write(sMessage);
+    _cout->flush(); 
 }
 
 // *** Room *** 

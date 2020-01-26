@@ -72,7 +72,7 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		sInput = game->startGame(sInput,_id);
+		sInput = game->startGame(sInput,_id, _cout);
 		_cout->write(sInput);
 		_cout->flush();
 		return;

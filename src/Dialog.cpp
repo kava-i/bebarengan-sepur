@@ -135,7 +135,7 @@ void CDState::deleteDialogOption(string sStateID, size_t optID) {
 
 void CDState::changeDialog(string sCharacter, string sDialog, CPlayer* p)
 {
-    p->getWorld()->getCharacters()["sCharacter"]->setDialog(p->getWorld()->dialogFactory(sDialog));
+    p->getWorld()->getCharacters()[sCharacter]->setDialog(p->getWorld()->dialogFactory(sDialog));
 }
 
 int CDState::numOptions()
