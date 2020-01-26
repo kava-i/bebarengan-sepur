@@ -17,6 +17,7 @@
 #include "CFightContext.hpp"
 #include "CDialogContext.hpp"
 #include "CChoiceContext.hpp"
+#include "CChatContext.hpp"
 #include "CRoom.hpp"
 #include "CFight.hpp"
 #include "func.hpp"

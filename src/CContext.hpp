@@ -69,6 +69,7 @@ public:
     virtual void h_newFight(string&, CPlayer*) {}
     virtual void h_endFight(string&, CPlayer*) {}
     virtual void h_endDialog(string&, CPlayer*) {}
+    virtual void h_endChat(string&, CPlayer*) {}
     virtual void h_empty(string&, CPlayer*) {}
 
     // *** FIGHT CONTEXT *** //
@@ -79,6 +80,9 @@ public:
 
     // *** CHOICE CONTEXT *** //
     virtual void h_choose_equipe(string&, CPlayer*) {}
+
+    // *** CHAT CONTEXT *** //
+    virtual void h_chat(string&, CPlayer*) {}
 
     // *** PROGRAMMER *** //
     virtual void h_try(string&, CPlayer*) {}

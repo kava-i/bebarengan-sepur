@@ -274,7 +274,7 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 {
     for(auto it : m_players)
     {
-        if(fuzzy::fuzzy_cmp(it.second->getName(), sIdentifier) <= 0.2 && it.second->getRoom() == m_room)
+        if(fuzzy::fuzzy_cmp(it.second->getName(), sIdentifier) <= 0.2)
             return it.second;
     }
     return NULL;
