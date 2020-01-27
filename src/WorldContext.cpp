@@ -33,7 +33,10 @@ vector<CContext::event> CWorldContext::parser(string sInput, CPlayer* p)
     }
 
     if(events.size()==0)
-        return {std::make_pair("empty", "")};
+    {   
+        m_permeable = true;
+        return {};
+    }
 
     return events;
 }
@@ -65,8 +68,4 @@ void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
 
 void CWorldContext::h_newFight(string& sIdentifier, CPlayer* p) {
     p->setFight(new CFight(p, p->getWorld()->getCharacters()[sIdentifier]));
-}
-
-void CWorldContext::h_empty(string&, CPlayer*) {
-    m_permeable=true;
 }
