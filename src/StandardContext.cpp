@@ -1,6 +1,71 @@
 #include "CStandardContext.hpp"
 #include "CPlayer.hpp"
 
+
+// ***** PARSER ***** // 
+
+vector<CContext::event> CStandardContext::parser(std::string sInput, CPlayer* p)
+{
+    std::cout << "standardParser: " << sInput << std::endl;
+    //Create regular expressions for different command the player might have choosen
+    std::regex show("(show) (.*)");
+    std::regex examine("examine");
+    std::regex lookIn("(look in )(.*)");
+    std::regex pickUp("(pick up )(.*)");
+    std::regex consume("(drink|eat|smoke) (.*)");
+    std::regex equipe("(equipe) (.*)");
+    std::regex dequipe("(dequipe) (.*)");
+    std::regex goTo("(go to) (.*)");
+    std::regex talkTo("(talk to) (.*)");
+    std::regex help("help");
+    std::regex end_direct(":q");
+    std::regex tryMe("(try) (.*)");
+    //Create an instans of smatch
+    std::smatch m;
+
+    //Show 
+    if(std::regex_search(sInput, m, show))
+        return {std::make_pair("show", m[2])};
+    //Examine
+    else if(std::regex_match(sInput, examine))
+        return {std::make_pair("examine", "")};
+    //Look in
+    else if(std::regex_match(sInput, m, lookIn))
+        return {std::make_pair("lookIn", m[2])};
+    //Take
+    else if(std::regex_match(sInput, m, pickUp))
+        return {std::make_pair("take", m[2])}; 
+    //Consume
+    else if(std::regex_match(sInput, m, consume))
+        return {std::make_pair("consume", m[2])};
+    //Equipe
+    else if(std::regex_match(sInput, m, equipe))
+        return {std::make_pair("equipe", m[2])};
+    //Dequipe
+    else if(std::regex_match(sInput, m, dequipe))
+        return {std::make_pair("dequipe", m[2])};
+    //Change room
+    else if(std::regex_match(sInput, m, goTo))
+        return {std::make_pair("goTo", m[2])};
+    //Talk to 
+    else if(std::regex_match(sInput, m, talkTo))
+        return {std::make_pair("talkTo", m[2])};
+    //Help 
+    else if(std::regex_match(sInput, help))
+        return {std::make_pair("help", "standard.txt")};
+    //Developer option
+    else if(std::regex_match(sInput, m, tryMe))
+        return {std::make_pair("try", m[2])}; 
+    //Tutorial
+    else if(sInput == "startTutorial")
+        return {std::make_pair("startTutorial", "")};
+    else
+        return {std::make_pair("error", "")};
+}
+
+
+// **** HANDLER **** //
+
 void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     if(sIdentifier == "exits")
         p->appendPrint(p->getRoom()->showExits());
@@ -35,36 +100,22 @@ void CStandardContext::h_lookIn(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
-    //Get selected room
-    string room = p->getObject(p->getRoom()->getExtits(), sIdentifier);
-
-    //Check if room was found
-    if(room == "") {
-        p->appendPrint("Room/ exit not found");
-        return;
-    }
-
-    //Print description and change players current room
-    p->appendPrint(p->getWorld()->getRooms()[room]->showEntryDescription(p->getWorld()->getCharacters()));
-    p->setRoom((p->getWorld()->getRooms()[room]));
+    p->changeRoom(sIdentifier);
 }
 
 void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 {
     //Get selected character
     string character = p->getObject(p->getRoom()->getCharacters(), sIdentifier);
+    CPlayer* player = p->getPlayer(sIdentifier);
 
     //Check if character was found
-    if(character == "") {
-        p->appendPrint("Characters not found");
-        return;
-    }
-
-    //Update player status and call dialog state
-    p->newContext(new CDialogContext(false, &CContext::dialogParser), 1);
-    p->setDialog(p->getWorld()->getCharacters()[character]->getDialog());
-
-    p->throw_event(p->getDialog()->states["START"]->callState(p));
+    if(character != "") 
+        p->startDialog(character);
+    else if(player != NULL) 
+        p->startChat(player);
+    else
+        p->appendPrint("Character not found");
 }
 
 void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
@@ -97,18 +148,17 @@ void CStandardContext::h_error(string& sIdentifier, CPlayer* p) {
 }
 
 
+// **** SPECIAL HANDLER ***** //
 void CStandardContext::h_firstZombieAttack(string& sIdentifier, CPlayer* p)
 {
     //Get selected room
     if(p->getRoom()->getID() != "hospital_stairs")
         return;
 
-    p->appendPrint("\n$");
+    p->appendPrint("\n$\nA zombie comes running down the stairs and attacks you!");
 
     //Create fight
-    CFight* fight = new CFight("First Fight", "A zombie comes running down the stairs and attacks you!", p, p->getWorld()->getCharacters()["hospital_zombie1"]);
-    p->setFight(fight);
-
+    p->setFight(new CFight(p, p->getWorld()->getCharacters()["hospital_zombie1"]));
     delete_listener("goTo", 2);
 }
 
@@ -140,35 +190,14 @@ void CStandardContext::h_endTutorial(string& sIdentifier, CPlayer* p)
 
 }
 
+void CStandardContext::h_startTutorial(string&, CPlayer* p)
+{
+    p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.\n $\n");
+
+    p->appendPrint(p->getRoom()->getDescription());
+}
+
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier == "1") 
-    {
-        throw_event("go to neben", p);
-        throw_event("go to toil", p);
-        throw_event("go to mä", p);
-        throw_event("talk to tick", p);
-    }
-    if(sIdentifier == "2")
-    {
-        throw_event("go to vor", p);
-        throw_event("go to neben", p);
-        throw_event("go to eing", p);
-        throw_event("go to gleise", p);
-    }
-    if(sIdentifier == "3") 
-    {
-        throw_event("go to neben", p);
-        throw_event("go to toil", p);
-        throw_event("go to frau", p);
-    }
-    if(sIdentifier == "4")
-    {
-        throw_event("go to cor", p);
-        throw_event("look in box", p);
-        throw_event("pick up wine", p);
-        throw_event("pick up wine", p);
-        throw_event("drink wine", p);
-        throw_event("drink wine", p);
-    }
+   
 }

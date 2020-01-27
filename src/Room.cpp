@@ -23,6 +23,9 @@ CRoom::objectmap& CRoom::getExtits()        { return m_exists; }
 CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
 std::map<string, CItem*>& CRoom::getItems()  { return m_items; }
 
+// *** SETTER *** //
+void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
+
 
 // *** VARIOUS FUNCTIONS *** //
 
@@ -63,6 +66,7 @@ string CRoom::showExits()
     }
     return exits;
 }
+
 string CRoom::showCharacters()
 {
     string characters = "Characters: \n";
@@ -70,6 +74,13 @@ string CRoom::showCharacters()
     for(auto it : m_characters) {
         characters += std::to_string(counter) + ": " + it.second + "\n";
         counter++;
+    }
+    for(auto it : m_players) {
+        if(it.second == m_sID)
+        {
+            characters += std::to_string(counter) + ": " + it.first + "\n";
+            counter++;
+        }
     }
     return characters;
 }       

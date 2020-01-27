@@ -1,4 +1,5 @@
 #include "fuzzy.hpp"
+#include "Catch2/single_include/catch2/catch.hpp"
 //using levenshteinSSE::levenshtein;
 
 namespace fuzzy
@@ -116,9 +117,33 @@ double fuzzy_cmp(std::string sWord1, std::string sWord2)
 */
 void convertToLower(std::string &str)
 {
-    std::locale loc1("de_DE.UTF8");
+    std::locale loc1;
     for(unsigned int i=0; i<str.length(); i++)
         str[i] = tolower(str[i], loc1);
 }
-
 } //Close namespace
+
+TEST_CASE("Testing convertToLower","[CovertToLower]")
+{
+    std::string main="Alex";
+    fuzzy::convertToLower(main);
+    REQUIRE(main=="alex");
+
+    main="AlExAnDeR";
+    fuzzy::convertToLower(main);
+    REQUIRE(main=="alexander");
+}
+
+TEST_CASE("Fuzzy compare","[fuzzy_cmp]")
+{
+    std::string st="Hallo";
+    std::string st2="al";
+    REQUIRE(fuzzy::fuzzy_cmp(st,st2)<0.3);
+    st="fallo";
+    st2="gallo";
+    REQUIRE(fuzzy::fuzzy_cmp(st,st2)<0.3);
+
+    st="go to parsen";
+    st2="Go TO ParSen";
+    REQUIRE(fuzzy::fuzzy_cmp(st,st2)==0);
+}

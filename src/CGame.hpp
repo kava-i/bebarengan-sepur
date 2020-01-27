@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include <map>
 #include <vector>
 #include <stdio.h>
-#include <filesystem>
+#include <experimental/filesystem>
 #include <streambuf>
 #include "CWorld.hpp"
 #include "CRoom.hpp"
@@ -25,6 +26,8 @@ using std::string;
 using std::map;
 using std::vector;
 
+class Webconsole;
+
 class CGame
 {
 private:
@@ -34,6 +37,7 @@ private:
     CWorld* m_world;
 
     typedef std::pair<string, string> event;
+    typedef std::map<string, string> objectmap;
 
 public: 
     CGame();
@@ -41,8 +45,8 @@ public:
     // *** FACTORYS *** // 
     void playerFactory();
 
-    string startGame(string sInput, string sPasswordID);
-    string play(string sInput, string sPlayerID);
+    string startGame(string sInput, string sPasswordID, Webconsole* _cout);
+    string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
     string checkLogin(string sName, string sPassword);
 

@@ -10,12 +10,14 @@
 #include <ctime>
 #include "CWorld.hpp"
 #include "CPerson.hpp"
+#include "SortedContext.hpp"
 #include "CContext.hpp"
 #include "CWorldContext.hpp"
 #include "CStandardContext.hpp"
 #include "CFightContext.hpp"
 #include "CDialogContext.hpp"
 #include "CChoiceContext.hpp"
+#include "CChatContext.hpp"
 #include "CRoom.hpp"
 #include "CFight.hpp"
 #include "func.hpp"
@@ -48,7 +50,10 @@ private:
     equipment m_equipment;
 
 
-    std::deque<CContext*> m_contextStack;
+    map<string, CPlayer*> m_players;
+
+    CContextStack m_contextStack;
+    Webconsole* _cout;
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
     timeEvents m_timeEventes;
@@ -67,27 +72,35 @@ public:
     size_t getHighness();
     equipment& getEquipment();
     CWorld* getWorld();
-    std::deque<CContext*>& getContexts();
+    CContextStack& getContexts();
 
     // *** SETTER *** //
     void setRoom(CRoom* room);
     void setPrint(string);
     void appendPrint(string);
     void setStatus(string);
+    void setFirstLogin(bool val);
     void setHighness(size_t highness);
+    void setPlayers(map<string, CPlayer*> players);
+    void setWobconsole(Webconsole*);
 
     //*** FUNCTIONS *** // 
-
-    // Context-Stack
-    void newContext(CContext* context, size_t pos);
-    void deleteContext(size_t pos);
 
     //Fight
     void setFight(CFight* fight);
     void endFight();
 
+    //Dialog + Chat
+    void startDialog(string sCharacter);
+    void startChat(CPlayer* sPlayer);
+
+    void send(string sMessage);
+
     //Login
     string doLogin(string sName, string sPassword);
+
+    //Room
+    void changeRoom(string sIdentifier);
 
     //Item and inventory
     void printInventory();
@@ -105,7 +118,8 @@ public:
     //Others
     void checkHighness();
     typedef std::map<string, string> objectmap;
-    string getObject(objectmap& mapObjects, string sIdentifier);
+    string getObject(objectmap& mapObjects, string sIdentifier);    
+    CPlayer* getPlayer(string sIdentifier);
 
 
     void throw_event(string sInput);

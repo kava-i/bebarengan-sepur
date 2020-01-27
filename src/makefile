@@ -4,14 +4,13 @@ all:
 	make --no-print-directory spec
 server:
 	make --no-print-directory spec_server
-spec:
+spec: install
 	-rm build/CMakeCache.txt
 	mkdir -p build && cd build && cmake .. && make -j$(ok)
-spec_server:
+spec_server: install
 	-rm build/CMakeCache.txt
 	mkdir -p build && cd build && cmake .. -DMAKE_SERVER=1 && make -j$(ok)
 
 install:
-	rm -rf JanGeschenk
-	git clone https://github.com/ShadowItaly/JanGeschenk
-	sudo apt install libwebsocketpp-dev
+	git submodule init
+	git submodule update

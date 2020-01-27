@@ -8,8 +8,12 @@
 class CStandardContext : public CContext
 {
 public:
-    CStandardContext(bool permeable, parser newParser) : CContext(permeable, newParser)
+    CStandardContext() : CContext()
     {
+        //Set permeability
+        m_permeable = true;
+
+        //Add listeners
         add_listener("show", &CContext::h_show);
         add_listener("examine", &CContext::h_examine);
         add_listener("lookIn", &CContext::h_lookIn);
@@ -27,9 +31,17 @@ public:
         add_listener("goTo", &CContext::h_moveToHospital, 0);
         add_listener("goTo", &CContext::h_endTutorial);
 
+        //Tutorial
+        add_listener("startTutorial", &CContext::h_startTutorial);
+
+        //Developer
         add_listener("try", &CContext::h_try, 0);
     }
 
+    //parser
+    vector<event> parser(string, CPlayer*);
+
+    //Handler
     void h_show             (string& sIdentiier, CPlayer* p);
     void h_examine          (string& sIdentiier, CPlayer* p);
     void h_lookIn           (string& sIdentiier, CPlayer* p);
@@ -45,6 +57,9 @@ public:
     void h_firstZombieAttack (string& sIdentiier, CPlayer* p);
     void h_moveToHospital    (string& sIdentiier, CPlayer* p);
     void h_endTutorial       (string& sIdentiier, CPlayer* p);
+
+    //Tuturials
+    void h_startTutorial     (string&, CPlayer* p);
 
     //Programmer
     void h_try(string& sIdentiier, CPlayer* p);

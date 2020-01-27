@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 #include <stdio.h>
-#include <filesystem>
+#include <experimental/filesystem>
 #include <streambuf>
 #include "CRoom.hpp"
 #include "CDetail.hpp"
@@ -32,6 +32,7 @@ private:
     map<string, CCharacter*> m_characters;
     map<string, CAttack*>    m_attacks;
     map<string, nlohmann::json> m_items;
+
 public:
 
     CWorld();

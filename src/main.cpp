@@ -1,9 +1,14 @@
 #include <iostream>
+#define CATCH_CONFIG_RUNNER
+#include "Catch2/single_include/catch2/catch.hpp"
+
 #include "CGame.hpp"
 #include "JanGeschenk/Webconsole.hpp"
 #include "JanGeschenk/Webgame.hpp"
-    
-CGame game;
+#include "SortedContext.hpp"
+
+
+CGame *game;
 
 class WebserverGame
 {
@@ -23,7 +28,17 @@ class WebserverGame
 	    _cout->flush();
 	}
 
-	void onmessage(std::string sInput)
+	const std::string &GetName()
+	{
+	    return _name;
+	}
+	
+	const std::string &GetID()
+	{
+	    return _id;
+	}
+
+	void onmessage(std::string sInput,std::map<decltype(websocketpp::lib::weak_ptr<void>().lock().get()),WebserverGame*> *ptr)
         {
 	    if(_name=="")
 	    {
@@ -48,7 +63,7 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		_id = game.checkLogin(_name,_password);
+		_id = game->checkLogin(_name,_password);
 		if(_id=="")
 		{
 		    _name = "";
@@ -57,7 +72,7 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 		}
-		sInput = game.startGame(sInput,_id);
+		sInput = game->startGame(sInput,_id, _cout);
 		_cout->write(sInput);
 		_cout->flush();
 		return;
@@ -76,15 +91,30 @@ class WebserverGame
 		return;
 	    }
 
+	    std::list<std::string> lk;
+	    for(const auto &it : *ptr)
+	    {
+		lk.push_back(it.second->GetID());
+	    }
 
-	    std::string sOutput = game.play(sInput, _id);
+	    std::cout<<"Got input: "<<sInput<<"; With player id: "<<_id<<std::endl;
+	    std::string sOutput = game->play(sInput, _id,lk);
+	    std::cout<<"Received Output: "<<sOutput<<std::endl;
 	    _cout->write(sOutput);
 	    _cout->flush();
 	}
 };
 
-int main()
+int main(int argc, char **argv)
 {
+    int result = Catch::Session().run( argc, argv );
+    if(result!=0)
+    {
+	std::cout<<"Some tests failed can not proceed with the programm!"<<std::endl;
+	return result;
+    }
+    CGame currentGame;
+    game = &currentGame;
     Webgame<WebserverGame> gl;
     gl.run();
 }

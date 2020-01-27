@@ -8,6 +8,7 @@ CGame::CGame() {
     playerFactory();
     std::cout << "Finished parsing!\n";
 }
+    
 
 void CGame::playerFactory()
 {
@@ -43,29 +44,47 @@ string CGame::checkLogin(string sName, string sPassword)
 
 // ****************** FUNCTIONS CALLER ********************** //
 
-string CGame::startGame(string sInput, string sPasswordID)
+string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 {
-    if(m_players[sPasswordID]->getFirstLogin() == true)
-        m_curPlayer->throw_event("startTutorial");
+    m_players[sPasswordID]->setWobconsole(_cout);
+    if(m_players[sPasswordID]->getFirstLogin() == true) {
+        m_players[sPasswordID]->throw_event("startTutorial");
+        m_players[sPasswordID]->setFirstLogin(false);
+    }
     else
-        m_curPlayer->throw_event("show room");
+        m_players[sPasswordID]->throw_event("show room");
 
-    return m_curPlayer->getPrint();
+    return m_players[sPasswordID]->getPrint();
 }
 
-string CGame::play(string sInput, string sPlayerID)
+string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePlayers)
 {
     func::convertToLower(sInput);    
+
+    std::map<string, string> mapOnlinePlayers;
+    std::map<string, CPlayer*> mapOnlinePlayers2;
+    for(auto it : onlinePlayers)
+    {
+        if(it != m_players[sPlayerID]->getID())
+        {
+            mapOnlinePlayers[m_players[it]->getName()] = m_players[it]->getRoom()->getID();
+            mapOnlinePlayers2[m_players[it]->getID()] = m_players[it];
+        }
+    }
 
     //Create player
     m_curPlayer = m_players[sPlayerID];
     m_curPlayer->setPrint("");
+    m_curPlayer->getRoom()->setPlayers(mapOnlinePlayers);
+    m_curPlayer->setPlayers(mapOnlinePlayers2);
 
     //Throw event 
     m_curPlayer->throw_event(sInput);
 
     return m_curPlayer->getPrint(); 
 }
+
+    
 
 
 /*
