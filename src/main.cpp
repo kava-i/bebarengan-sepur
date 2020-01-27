@@ -104,7 +104,7 @@ class WebserverGame
 	    _cout->flush();
 	}
 };
-
+#ifdef _COMPILE_UNIT_TEST_
 int main(int argc, char **argv)
 {
     int result = Catch::Session().run( argc, argv );
@@ -113,8 +113,14 @@ int main(int argc, char **argv)
 	std::cout<<"Some tests failed can not proceed with the programm!"<<std::endl;
 	return result;
     }
+    return result;
+}
+#else
+int main(int, char **)
+{
     CGame currentGame;
     game = &currentGame;
     Webgame<WebserverGame> gl;
     gl.run();
 }
+#endif
