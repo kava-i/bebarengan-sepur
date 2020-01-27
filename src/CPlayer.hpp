@@ -17,6 +17,7 @@
 #include "CFightContext.hpp"
 #include "CDialogContext.hpp"
 #include "CChoiceContext.hpp"
+#include "CChatContext.hpp"
 #include "CRoom.hpp"
 #include "CFight.hpp"
 #include "func.hpp"
@@ -52,6 +53,7 @@ private:
     map<string, CPlayer*> m_players;
 
     CContextStack m_contextStack;
+    Webconsole* _cout;
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
     timeEvents m_timeEventes;
@@ -80,6 +82,7 @@ public:
     void setFirstLogin(bool val);
     void setHighness(size_t highness);
     void setPlayers(map<string, CPlayer*> players);
+    void setWobconsole(Webconsole*);
 
     //*** FUNCTIONS *** // 
 
@@ -90,6 +93,8 @@ public:
     //Dialog + Chat
     void startDialog(string sCharacter);
     void startChat(CPlayer* sPlayer);
+
+    void send(string sMessage);
 
     //Login
     string doLogin(string sName, string sPassword);

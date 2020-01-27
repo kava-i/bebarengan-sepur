@@ -79,6 +79,10 @@ public:
     // *** CHOICE CONTEXT *** //
     virtual void h_choose_equipe(string&, CPlayer*) {}
 
+    // *** CHAT CONTEXT *** //
+    virtual void h_send(string&, CPlayer*) {}
+    virtual void h_end(string&, CPlayer*) {}
+
     // *** PROGRAMMER *** //
     virtual void h_try(string&, CPlayer*) {}
 

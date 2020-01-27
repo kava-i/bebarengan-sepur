@@ -29,7 +29,6 @@ vector<CContext::event> CWorldContext::parser(string sInput, CPlayer* p)
             events.push_back(std::make_pair("endFight", ""));
         else if(std::regex_match(commands[i], endDialog))
             events.push_back(std::make_pair("endDialog", ""));
-       
     }
 
     if(events.size()==0)
@@ -65,6 +64,7 @@ void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
     p->getContexts().erase("dialog");
     m_permeable=false;
 }
+
 
 void CWorldContext::h_newFight(string& sIdentifier, CPlayer* p) {
     p->setFight(new CFight(p, p->getWorld()->getCharacters()[sIdentifier]));

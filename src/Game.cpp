@@ -44,8 +44,9 @@ string CGame::checkLogin(string sName, string sPassword)
 
 // ****************** FUNCTIONS CALLER ********************** //
 
-string CGame::startGame(string sInput, string sPasswordID)
+string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 {
+    m_players[sPasswordID]->setWobconsole(_cout);
     if(m_players[sPasswordID]->getFirstLogin() == true) {
         m_players[sPasswordID]->throw_event("startTutorial");
         m_players[sPasswordID]->setFirstLogin(false);
