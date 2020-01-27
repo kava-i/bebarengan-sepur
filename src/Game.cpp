@@ -1,8 +1,10 @@
-#include "CGame.hpp"
-
+#include "CGame.hpp" 
 
 CGame::CGame() {
     m_world = new CWorld();
+    
+    m_context = new CGameContext();
+    m_context->setGame(this);
 
     //Create players
     playerFactory();
@@ -59,6 +61,11 @@ string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 
 string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePlayers)
 {
+    //Check for programmer commands
+    m_context->throw_event(sInput, NULL);
+    if(m_context->getPermeable() == false)
+        return "";
+
     func::convertToLower(sInput);    
 
     std::map<string, string> mapOnlinePlayers;

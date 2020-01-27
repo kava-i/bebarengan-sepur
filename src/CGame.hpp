@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <experimental/filesystem>
 #include <streambuf>
+#include "CGameContext.hpp"
 #include "CWorld.hpp"
 #include "CRoom.hpp"
 #include "CDetail.hpp"
@@ -35,6 +36,8 @@ private:
     map<string, CPlayer*> m_players;
     CPlayer* m_curPlayer;
     CWorld* m_world;
+
+    CGameContext* m_context;
 
     typedef std::pair<string, string> event;
     typedef std::map<string, string> objectmap;

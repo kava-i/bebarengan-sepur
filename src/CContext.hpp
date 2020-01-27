@@ -10,6 +10,8 @@ using std::string;
 using std::map;
 using std::vector;
 class CPlayer; 
+class CGame;
+
 class CContext
 {
 protected:
@@ -20,15 +22,16 @@ protected:
     eventmanager m_eventmanager;
     bool m_permeable;
 
-
-
 public: 
     
     CContext() {}
     virtual ~CContext() {}
 
-    // *** GETTER *** //
+    // *** Setter *** //
     bool getPermeable();
+
+    // *** Setter *** //
+    virtual void setGame(CGame*);
 
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*));
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*), size_t pos);
@@ -63,6 +66,12 @@ public:
     //Tuturial
     virtual void h_startTutorial     (string&, CPlayer*) {}
 
+    // *** GAME CONTEXT *** //
+    virtual void h_reloadGame(string&, CPlayer*);
+    virtual void h_reloadPlayer(string&, CPlayer*);
+    virtual void h_reloadWorld(string&, CPlayer*);
+    virtual void h_updatePlayers(string&, CPlayer*);
+
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}
     virtual void h_addItem(string&, CPlayer*) {}
@@ -76,12 +85,12 @@ public:
     // *** DIALOG CONTEXT *** //
     virtual void h_call(string&, CPlayer*) {}
 
-    // *** CHOICE CONTEXT *** //
-    virtual void h_choose_equipe(string&, CPlayer*) {}
-
-    // *** CHAT CONTEXT *** //
+    // *** CHATCONTEXT *** //
     virtual void h_send(string&, CPlayer*) {}
     virtual void h_end(string&, CPlayer*) {}
+
+    // *** CHOICE CONTEXT *** //
+    virtual void h_choose_equipe(string&, CPlayer*) {}
 
     // *** PROGRAMMER *** //
     virtual void h_try(string&, CPlayer*) {}

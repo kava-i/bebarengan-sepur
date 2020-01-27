@@ -10,8 +10,6 @@
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
 
-
-
 - name: "jan"
   password: password
   id: jan-van-dick
@@ -30,3 +28,10 @@
   attacks:
     kick: "Kick"
     punsch: "Punsch"
+
+- name: "programmer"
+  password: password
+  id: programmer
+  room: train
+  attacks:
+
