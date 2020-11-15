@@ -4,6 +4,10 @@
 \usepackage{mystyle}
 \usepackage{csquotes}
 
+\let\tempone\itemize
+\let\temptwo\enditemize
+\renewenvironment{itemize}{\tempone\addtolength{\itemsep}{-0.5\baselineskip}}{\temptwo}
+
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{kawa-i}
@@ -144,8 +148,18 @@ Dieses Kollektiv ist vollständig auf Etage zwei platziert.
 Dieses Kollektiv nimmt an, dass sie in einem Traum gefangen sind der bestimmte Erfahrungen vorgaukeln will (aus welchen Gründen?).
 Es müssen nicht alle Charaktere dieses Kollektives davon wissen, aber es sollte irgendwo in der Charakterbeschreibung zumindest einen Hinweis darauf geben.
 Diese Gruppe könnte das Ziel haben/ entwickeln, den Zug zu Kapern (vielleicht mit dem Hintergedanke dadurch den Traum steuern zu können).
-Dieser Hintergedanke könnte sich so weiterentwickeln, dass sie versuchen den Zug zu kapern um einen ewigen Traum einzuleiten, in dem es Frieden und Wohlstand und Erfüllung sämtlicher Wünsche und Begierden gibt? (Naruto: Madara)
+Dieser Hintergedanke könnte sich so weiterentwickeln, dass sie versuchen den Zug
+zu kapern um einen ewigen Traum einzuleiten, in dem es Frieden und Wohlstand und Erfüllung sämtlicher Wünsche und Begierden gibt oder alle aktuell in dem Traum
+gefangenen Menschen so zu beeinflussen, dass sie (sobald der Traum zu Ende ist)
+für diese Welt eintreten.
 Dieses Kollektiv befinden sich vollständige auf Etage eins.
+
+\subsubsection{Mögliche Charakter}
+\begin{itemize}
+  \item Katjana E.
+  \item Dude, der gerade zu den habedön Regierrungsträumen forscht und dadurch
+    sofort auf den Gedanken kommt: ``safe sind wir in einem Traum gefangen
+\end{itemize}
 
 \subsection{Kollektiv - Experimente}
 Dieses Kollektiv glaubt, dass sie in dem Zug sind, aber, dass die ganze Zugfahrt/der Krankenhausaufenthalt ein Experiment ist. 
@@ -458,15 +472,15 @@ Hier werden alle Charaktere ausführlich aufgeführt.
 Die Charaktere sind Hauptbestandteil des Spieles. 
 Neben den Charakteren sollen hier auch Hintergundgeschichten aufgelistet werden, die mehr als nur einen Charaktere, sondern vielmehr Gruppen und Welten beschreibt in denen sich einzelne Personen bewegen.
 \todo[noline]{Wichtig ist noch zu entscheiden, welches Aspekte jedes Charakters \qq{real} sind und welche für das jeweilige Experiment \qq{eingeimpft} wurden.}
+
 \section{Hintergrundgeschichten}
 
 \subsection{Die Träumenden} 
 
 \subsubsection{Kleines Wörterbuch}
-Dieser Gruppe würden wir gerne einen Starken Slang geben, bzw. für viele Wörter, eigene Wörter finden. 
+Dieser Gruppe würden wir gerne einen starken Slang geben, bzw. für viele Wörter, eigene Wörter finden. 
 Dazu hier eine Liste mit den wichtigsten Wörtern, und deren Bedeutungen (bzw. Vorschläge, welche Wörter ersetzt werden sollten):
 \begin{itemize}
-  \setlength\itemsep{0em}
   \item Traum (Traum, in einer \qq{Traum-Maschine}) [mechat (russ. Traum), Illyziya (russ. Illusion), videniye (russ. Vision), ngimpi (jav. Traum), khayalan (jav. Illusion)]
   \item träumen (träumen in einer \qq{Traum-Maschine}) [siehe oben]
   \item träumen, slang (träumen in einer \qq{Traum-Maschine}, meistens auf Grund von Suchtbefriedigung) \underline{ngimpi} (jav. Traum)
@@ -476,6 +490,7 @@ Dazu hier eine Liste mit den wichtigsten Wörtern, und deren Bedeutungen (bzw. V
   \item Künstler (diejenigen, die Träume [jeder Traum wird als eine Form der Kunst angesehen])) \underline{artis} (jav. Künstler)
   \item Junkies (Menschen, die nach Träumen Abhängig sind und in denen sich kaum mehr etwas anderes zeigt, als diese Abhängigkeit: z.B. keine Beteiligung an der Community, dem Vorstand oder der Traum-Entwicklung) [ngimpi, (jav. Traum), narkoman (russ. Junkie)]
   \item Nicht-Eingeweihte (Menschen die nicht von dem Untergrund der Träumenden wissen) [???]
+  \item Projekt Mondauge (Das Projekt der Fraktion >>Welt der Träumenden<<
 \end{itemize}
 
 
@@ -497,9 +512,9 @@ Ein Grund für die erfolgreiche Geheimhaltung mochte sein, dass es für viele Me
 
 Den Kern der Szene bildeten zum einen Techniker*innen und Informatiker*innen, die an den Maschinen arbeiteten und sie weiterentwickelten (und dabei tatsächlich beeindruckende Fortschritte machten, die trotz der Unabhängigkeit von der Regierung mit deren Neuerungen mithalten konnten) und zum anderen Künstler*innen, die an immer aufregenderen, skurileren und beeindruckenderen Träumen arbeiteten. 
 Regeln und Konzepte wurden aufgestellt in die beeindruckender Weise streng elitär waren und zugleich eine hohe Anzahl Menschen in die Untergrund-Welt der Träumenden eintreten ließ.
-Elitär soll in diesem Zusammenhang heißen, dass die Menschen, die sich zu den Träumenden zählten streng den Regeln gemäß die Geheimhaltung des Gruppe gewährleistete. \\
+Elitär soll in diesem Zusammenhang heißen, dass die Menschen, die sich zu den Träumenden zählten streng den Regeln gemäß die Geheimhaltung der Gruppe gewährleistete. \\
 Zunächst war noch Katja E. eine Art Führerin dieses Kollektives doch bald schon entwickelte sich ein erweiterter Kreis, vielleicht etwas wie ein \qq{Vorstand}, der koordinatorische Aufgaben übernahm, aber auch gewisse Zielsetzungen formulierte.\\
-Dabei formulierten sich insbesondere folgende verschiedene Gruppen:
+Dabei formulierten sich insbesondere folgende verschiedene Fraktionen:
 \begin{itemize}
   \setlength\itemsep{0em}
   \item Die Schließer (Plädieren für strengere Geheimhaltung und weniger Mitglieder)
@@ -514,17 +529,67 @@ Dabei formulierten sich insbesondere folgende verschiedene Gruppen:
 Im Vordergrund steht die Angst vor der Regierung entdeckt zu werden. 
 Jedenfalls ist das der Grund, der für eine Reduzierung der >>Eingeweihten<< nach außen hin bekannt gegeben wird. 
 Andere Gründe sind beispielsweise die Kritik an den >>Junkies<< die aus reiner Sucht sich jeden Tag mehrmals in einen Traum fallen lassen und keinerlei sublimierende oder künstlerische Anteile suchen. Außerdem würden sich die >>Junkies<< weder mit dem kreieren von Träumen noch mit der Organisation des Kollektives befassen. 
-\todo[noline]{Wem steht diese Gruppe kritisch gegenüber?}
+Teile der Schließer, die im Vorstand übrigens kaum vertreten sind, vermuten eine Art Verschwörung  der Fraktion um Katjana E. >>Welt der Träumenden<<.
+Diese Fraktion, so behaupten sie, sei insgeheim von der Regierung gesteuert. 
+Einige behaupten gar, das Militär hätte Katjana E. geschickt, um das Projekt \underline{Mondauge} zu initiieren, mit dem (ganz im gegensatz zur Vorstellung oder zu den Aussagen der Fraktion) die Menschen Russlands dem autoritären Regim völlig gefügig gemacht werden sollen. 
+generell sympatisiert diese Fraktion am ehsten mit den >>Lüsternen<< und den >>Radikalen<<.
+Gerade die Radikalen wünschen sich ebenso mehr Vorsicht und sind daher den Ideen der >>Schließer<< nicht abgeneigt.
 
 \subsubsection{Die Öffner}
+Die Öffner gelte (vor allem bei den >>Radikalen<< und der >>Welt der Träumenden<< aber auch zu, Teil bei den >>Schließern<<) als Liberalos. 
+Sie plädieren für die Öffnung des Untergrundes, für das Rantreten an die Öffentlichkeit und für Vereinbarungen mit der Regierung >>Träumen<< als (sozusagene) freizeitbeschäftigung neben Kino, Theater etc. zu etablieren. 
+Dabei argumentieren sie (gegen Vorwürfe aus anderen Fraktionen, >>die Sache<< in Gefahr zu bringen), die Regierung würde sich -- bei gut vorgelegten Konzepten -- potentiellen Steuereinnahmen, sowie einem globalen Aushängeschild, eine neue Kunstform etabliert zu haben, niemals entgehen lassen wollen.
+
+Andere Fraktionen (abgesehen von den >>Schließern<< [und den >>Radikalen<<]\todo{nicht sicher was die Radikalen angeht}) sympatisieren zwar teilweise mit einer Öffnung bzw. Legalisierung, kritisieren jedoch die rein wirtschaftliche und (national) ökonomisch orientierte Argumentationsweise.
+
+Die Öffner sind im Vorstand verhältnismäßig starkt vertreten. 
+Auch in der Masse gewinnen sie -- wie das mit liberalen Positionen eben so ist -- mehr und mehr an popularität.
+(Dies ist evtl.~vergleichbar mit der Kritik an sogenannten >>techno-Turisten<< innerhalb der -- vor allem älteren -- Technoszene: 
+Die Technoszene würde mehr und mehr dominiert von Menschen, die es nciht nur wegen der musik, sondern wegen dem Flair genießen, bzw. Techno-Parties veranstalten oder Clubs leiten, ohne primär an der Musik, sondern vor allem an Kapitalakkumulation interessiert zu sein. 
+Wie dort, wird auch hier kritisiert, dass dadurch die Qualität der Sache selbst abnimmt und alles auf kulturindustrieelle Gleichstellung hinauslaufe. 
+Die Wahre >>Kunst der Träume<< sei nur innerhalb einer nicht dem Markt (hemmungslos) geöffneten Struktur möglich.
+Das liberale Gegenargument der Öffner lautet -- wie sich die informierte Leserin oder der informierte Leser denken kann -- das die Öffnung (auch hin zum Markt) selbstverständlich mehr Menschen in das Kreieren von Träumen einführen würde, wodurch erst die echte Vielfalt erschaffen werden könnte.)
 
 \subsubsection{Die Lüsternen}
+Die >>Lüsternen<< bilden eine von vielen gemochten, oder zumindest mit einem lieben Lächeln beschaute, Fraktion.
+Sie verwehren sich offiziell der Teilnahme am Vorstand (wobei einige Menschen mit verwandten Positionen oder Sympathien und zum äußeren Kreis der Lüsternen gehörenden Menschen ihre Positionen dort vertreten), da sie sich für eine radikalte Nutzung der Träume/ des Träumends zur reinen Lustbefreiung und für die Entwicklung von Träumen mit künstlerisch-sexuellem Fokus aussprechen und jede Form politischer Instrumentalisierung whement ablehnen.
+Insgeheim sehen auch andere Fraktionen (z.B.~die >>Radikalen<< oder die >>Welt der Träumenden<<) diese Vorstellung als Ideal an, sind jedoch der Meinung, dass um dies zu ermöglichen, politisches Verhalten notwendig ist.
 
 \subsubsection{Die Radikalen}
+Linke Erzählungen drehen sich stets um >>Das Andere<<.
+Dieses >>Andere<< ist all das, was nicht von der herrschenden Meinung und Ideologie eingenommen ist.
+Dieses Andere ist zum Beispiel auch Kunst, auch Subkultur im allgemeinen. 
+So haben sich innerhalb der Träumenden bald auch Linke eingefunden, die in den Träumen das Potential entdeckten, nach der Befreiten Gesellschaft zu suchen und für sie zu kämpfen.
+Sie plädieren demnach die Kunst der Träume dazu zu nutzen Träume zu entwerfen, die nach einer neuen Gesellschaft außerhalb der westlich-kapitalistischen suchen.
+-- So zumindest die stets wiederholte Aussage der Vertreterinnen innerhalb des Vorstandes. 
+Neben dem Entwurf möglicher Utopie geht es den Radikalen vor allem darum (ähnlich, wie das Milität) Szenarien zu entwerfen, sie auf die Potentielle >>Befreiung<< vorzubereiten:
+es werden Träume entworfen, in denen diverse Demonstrations-Szenarien eingeübt, in denen Kämpfe gegen reaktionäre Kräfte (die Polizei) trainiert und Techniken zur Koordination von Massen entwickelt werden können. 
+
+Wie es unter Linken ebenfalls üblich ist, hassen sich Linke untereinander ebenso wie, oder noch mehr, als ihre eigentlichen Feinde.
+So finden wir gerade zwischen den >>Radikalen<< und der >>Welt der Träumenden<< (die in der Überwindung des Kapitalismus wohl am radikalsten Dispositioniertesten) eine große (aber auch nicht unverständliche) Feindschaft. 
+(So muss, den \qq{überkritischen}, Linken zu Gute gehalten werden, dass hier nicht der beliebte Fehler begannen wird >>alles was hinkt, für einen Vergleich zu nehmen<< und durchaus sich einer Sache genauer zu überlassen, bevor sie >>meine Sache<< genannt wird.)
+Im Gegensatz zur >>Welt der Träumenden<< sehen die Radikalen das Träumen nur als eine Möglichkeit \emph{zur} Befreiung und nicht als \emph{die} Befreiung selbst:
+
+>>Es ist unbedingt zu verhindern, den Traum, in welchem wir versuchen uns eine Utopie \emph{vorstellbar} zu machen, mit der Utopie \emph{selbst} zu verwechseln:
+wir begehen sonst den gleichen Fehler, wie die Anhänger*innen der Religion: wir gäben uns damit zufrieden ein glückliches Schwein zu sein;
+aber lieber sind wir ein unglücklicher Mensch!
+Kein Traum kann uns den Traum nehmen eines Tages, glückliche \emph{Menschen} zu sein!<< (Auszug einer Rede, gehalten von einem Fraktionsangehörigen der >>Radikalen<<).
 
 \subsubsection{Welt der Träumenden}
+Die >>Welt der Träumenden<< ist, zusammen mit den >>Radikalen<<, eine der linksradikalen Fraktionen, die innerhalb des Vorstandes recht stark vertreten sind. 
+Trotz ihrer -- ja, dass muss ich trotz meines Bemühens nach Neutralität schon zugeben -- sehr verrückten Überzeugungen erfreuen sie sich einer recht hohen Beliebtheit.
+Dies mag vor allem daran liegen, dass diese Fraktion von Katjana E.~gegründet wurde, und Katjana E.~auch heute noch eines ihrer wichtigsten Mitglieder, wenn nicht sogar \emph{das} wichtigste Mitglied ist.
 
-Welt der Träumenden errichten. Problem mit geheimhaltung und Abhänigigen. Streit innerhalb der Szene...
+``In den >>Träumen<< kann die perfekte Welt erschaffen werden. 
+Es können Träume kreiert werden, in denen eine Utopie erfahrbar wird. 
+Träume werden bereits genutzt, um Menschen Alternativen vorstellbar zu machen,
+um die Veränderbarkeit des Bestehenden den Menschen bewusst zu machen.
+Aber warum nur \emph{eine} Uptopie. 
+Warum nicht \emph{die} Utopie?
+Wir können den Menschen auch \emph{unsere} Utopie zeigen.
+Und letztendlich, warum sollten wir uns die Utopie im hier und jetzt erkämpfen
+und sie nicht jetzt(!) \emph{wirklich} machen, indem wir \emph{den} Traum, den
+Traum für alle Menschen erschaffen?''\\ 
 
 \section{Charaktere}
 Ideen für Charaktere:
@@ -535,8 +600,8 @@ Ideen für Charaktere:
 \item Ein Charaktere, der Stumm ist.
 \end{itemize}
 
-\section{Katjana (Katja) E.}
-[Abstrakt/ Kurzbeschreibung (Eher für uns)]
+\subsection{Katjana (Katja) E.}
+[Abstrakt/ Kurzbeschreibung (eher für uns)]
 \subsubsection{Background}
 
 \subsubsection{Psychologie}
@@ -548,14 +613,14 @@ Katja E. behauptet selbst ihren Nachnamen vergessen zu haben.
 Es befinden sich in ihrem Raum, dem Textadventure und an anderen Stellen Hinweise auf ihren echten Namen. 
 Im laufe des Spieles erfährt sie irgendwann ihren Nachnamen (oder kommt durch die Hinweise von selbst darauf). 
 
-\section{Johnny-Maria Murdo-Gonzales}
+\subsection{Johnny-Maria Murdo-Gonzales}
 Völlig durchgeknallter Kameraman, hört nie auf alles zu Filmen, rennt rum, schneidet Grimassen, lässt die anderen Grimassen schneiden, völlig irre der Typ, durchgeknallt! 
 Er ist allerdings der oberste Leiter des Experiments \glqq spielt\grqq{} den verrückten Kameramann. 
 
-\section{Victoria Sackville}
+\subsection{Victoria Sackville}
 Schriftstellerin, die lieber im 19. Jahrhundert gelebt hätte. Sie liebt Hunde; Menschen sind Victoria eigentlich zu kompliziert, unzuverlässige Gestalten, die einen immer irgendwann verlassen. Ihre engste Freundin nennt sie Vita, aufgrund ihres lebhaften Gemüts und der Angewohnheit sich in alle Situationen vollständig zu stürzen.
 
-\section{Ödipus}
+\subsection{Ödipus}
 Timo Eber glaubt Ödipus zu sein, nachdem er Teben verlassen und sich die Augen ausgestochen hat.
 Er trägt das gesammte Leid, des vermutlich tragischsten Helden der Dramen-Welt.
 Außerdem ist er auf der Suche nach seiner Mutter.
