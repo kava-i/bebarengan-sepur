@@ -1,0 +1,51 @@
+\ProvidesPackage{mystyle}[2020/05/21 FUX's custom LaTeX style]
+
+%Custom preamble
+\usepackage{secdot} % Dots in Section Numbers
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+\usepackage{soul}
+\usepackage{comment}
+
+\usepackage{fancyhdr}
+\usepackage[textwidth=90, backgroundcolor=blue]{todonotes}
+\usepackage{hyperref}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Huge\bfseries}{}{0pt}{\Huge\bfseries}
+\newcommand\frontmatter{ \cleardoublepage \pagenumbering{roman}}
+\newcommand\mainmatter{ \cleardoublepage \pagenumbering{arabic}}
+\newcommand\backmatter{ \if@openright \cleardoublepage \else \clearpage \fi }
+
+\usepackage[autostyle]{csquotes}
+\usepackage[
+    backend=biber,
+    style=authortitle-ibid,
+    sortlocale=de_DE,
+    natbib=true,
+    url=false,
+    doi=true,
+    eprint=false
+    ]{biblatex}
+\addbibresource{literatur.bib}
+
+\usepackage{xparse}
+\DeclareDocumentCommand \ATcite{m}{\citeauthor{#1}, \emph{\citefield{#1}{shorttitle}}}
+\DeclareDocumentCommand \footATCite{ o o m } {%
+  \IfNoValueTF {#2}{%
+         \IfNoValueTF {#2}%
+            {\footnote{\ATcite{#3}.}}%
+            {\footnote{#1 \ATcite{#3}.}}}%
+         {%
+         \IfNoValueTF {#1}%
+            {\footnote{\ATcite{#3}, S. #2.}}%
+            {\footnote{#1 \ATcite{#3}, S. #2.}}}}
+
+\DeclareDocumentCommand \qq{m}{\glqq #1\grqq}
+\DeclareDocumentCommand \q{m}{\glq #1\glq}
+
+\endinput
